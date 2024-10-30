@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.fixture.mapper.FixtureMaterialCategoryProdTypeMapper">
+    <resultMap id="FixtureMaterialCategoryResult" type="FixtureMaterialCategoryProdType">
+        <result property="id" column="ID" javaType="Long" jdbcType="NUMERIC"/>
+        <result property="mId" column="M_ID" javaType="Long" jdbcType="NUMERIC"/>
+        <result property="cId" column="C_ID" javaType="Long" jdbcType="NUMERIC"/>
+        <result property="pId" column="P_ID" javaType="Long" jdbcType="NUMERIC"/>
+        <result property="createBy" column="CREATE_BY" javaType="String" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="UPDATE_BY" javaType="String" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="UPDATE_TIME" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="deptId" column="DEPT_ID" javaType="Long" jdbcType="INTEGER"/>
+        <result property="userId" column="USER_ID" javaType="Long" jdbcType="NUMERIC"/>
+        <result property="remark" column="REMARK" javaType="String" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="fixtureMaterialCategoryProdTypeVo">
+        SELECT ID,
+               M_ID,
+               C_ID,
+               P_ID,
+               DEPT_ID,
+               USER_ID,
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME,
+               REMARK
+        FROM IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD
+    </sql>
+
+    <insert id="addFixtureMaterialCategoryProdType" parameterType="FixtureMaterialCategoryProdType">
+        <!-- 使用 @SelectKey 获取自增主键 -->
+        <selectKey keyProperty="id" order="AFTER" resultType="long">
+            SELECT ID FROM IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD WHERE ROWID =
+            (SELECT MAX(ROWID) FROM IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD)
+        </selectKey>
+
+        INSERT INTO IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mId != null">M_ID,</if>
+            <if test="cId != null">C_ID,</if>
+            <if test="pId != null">P_ID,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="deptId != null">DEPT_ID,</if>
+            <if test="remark != null">REMARK,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="mId != null">#{mId},</if>
+            <if test="cId != null">#{cId},</if>
+            <if test="pId != null">#{pId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+
+    <update id="editFixtureMaterialCategoryProdType" parameterType="FixtureMaterialCategoryProdType">
+        UPDATE IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mId != null">M_ID = #{mId},</if>
+            <if test="cId != null">C_ID = #{cId},</if>
+            <if test="pId != null">P_ID = #{pId},</if>
+            <if test="createBy != null and createBy != ''">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null and remark != ''">REMARK = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="removeFixtureMaterialCategoryProdType" parameterType="FixtureMaterialCategoryProdType">
+        DELETE FROM IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD
+        <where>
+            <if test="(mId == null and pId == null) and id != null">ID = #{id}</if>
+            <if test="mId != null"> AND M_ID = #{mId}</if>
+            <if test="pId != null"> AND P_ID = #{pId}</if>
+            <if test="deptId != null"> AND DEPT_ID = #{deptId}</if>
+            <if test="userId != null"> AND USER_ID = #{userId}</if>
+            <!-- ${params.dataScope} -->
+        </where>
+    </delete>
+
+    <select id="selectFixtureMaterialCategoryProdTypeList" resultMap="FixtureMaterialCategoryResult">
+        <include refid="fixtureMaterialCategoryProdTypeVo"/>
+        <where>
+            <if test="mId != null">AND M_ID = #{mId}</if>
+            <if test="pId != null">AND P_ID = #{pId}</if>
+            <if test="cId != null">AND C_ID = #{cId}</if>
+            <if test="deptId != null">AND DEPT_ID = #{deptId}</if>
+            <!-- ${params.dataScope} -->
+        </where>
+    </select>
+
+</mapper>

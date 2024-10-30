@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.fixture.mapper.FixtureSharedInfoHistoryMapper">
+
+    <resultMap type="FixtureSharedInfo" id="FixtureSharedInfoHistoryResult">
+        <result property="hid" column="hid"/>
+        <result property="prodType" column="prod_type"/>
+        <result property="fixtureCategory" column="fixture_ctg"/>
+        <result property="fixtureName" column="fixture_name"/>
+        <result property="fixtureSpec" column="fixture_spec"/>
+        <result property="fixtureVersion" column="fixture_version"/>
+        <result property="materialNmb" column="material_nmb"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="opsTime" column="ops_time"/>
+        <result property="buckle" column="buckle"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectFixtureSharedInfoHistoryVo">
+        select hid,
+               material_nmb,
+               prod_type,
+               fixture_ctg,
+               fixture_name,
+               fixture_spec,
+               fixture_version,
+               buckle,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               ops_time,
+               dept_id,
+               remark
+        from imbiz.im_fixture_shared_info_history ta
+    </sql>
+
+    <insert id="addFixtureSharedInfoHistory" parameterType="FixtureSharedInfo"
+            useGeneratedKeys="true" keyProperty="hid">
+        insert into imbiz.im_fixture_shared_info_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialNmb != null">material_nmb,</if>
+            <if test="prodType != null">prod_type,</if>
+            <if test="fixtureCategory != null">fixture_ctg,</if>
+            <if test="fixtureName != null">fixture_name,</if>
+            <if test="fixtureSpec != null">fixture_spec,</if>
+            <if test="fixtureVersion != null">fixture_version,</if>
+            <if test="buckle != null">buckle,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="opsTime != null">ops_time,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialNmb != null">#{materialNmb},</if>
+            <if test="prodType != null">#{prodType},</if>
+            <if test="fixtureCategory != null">#{fixtureCategory},</if>
+            <if test="fixtureName != null">#{fixtureName},</if>
+            <if test="fixtureSpec != null">#{fixtureSpec},</if>
+            <if test="fixtureVersion != null">#{fixtureVersion},</if>
+            <if test="buckle != null">#{buckle},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="opsTime != null">#{opsTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <select id="selectFixtureSharedInfoHistoryList"
+            resultMap="FixtureSharedInfoHistoryResult">
+        <include refid="selectFixtureSharedInfoHistoryVo"></include>
+        <where>
+            <if test="prodType != null and prodType != ''">and prod_type like concat('%', #{prodType}, '%')</if>
+            <if test="materialNmb != null and materialNmb != ''">and material_nmb = #{materialNmb}</if>
+            <if test="deptId != null">and dept_id = #{deptId}</if>
+            <if test="userId != null">and user_id = #{userId}</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''">
+                and ops_time between TO_DATE(#{params.beginCreateDate}, 'yyyy-mm-dd hh24:mi:ss')
+                and TO_DATE(#{params.endCreateDate}, 'yyyy-mm-dd hh24:mi:ss')
+            </if>
+        </where>
+        order by ops_time desc
+    </select>
+</mapper>

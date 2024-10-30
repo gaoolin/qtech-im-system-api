@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.wb.mapper.WbOlpStdModelDetailMapper">
+        <resultMap type="WbOlpStdModDetail" id="WbOlpStdModelDetailResult">
+        <result property="id"    column="ID"    />
+        <result property="source"    column="SOURCE"    />
+        <result property="mcId"    column="MC_ID"    />
+        <result property="lineNo"    column="LINE_NO"    />
+        <result property="leadX"    column="LEAD_X"    />
+        <result property="leadY"    column="LEAD_Y"    />
+        <result property="padX"    column="PAD_X"    />
+        <result property="padY"    column="PAD_Y"    />
+        <result property="leadDiff"    column="LEAD_DIFF"    />
+        <result property="padDiff"    column="PAD_DIFF"    />
+        <result property="leadThreshold"    column="LEAD_THRESHOLD"    />
+        <result property="padThreshold"    column="PAD_THRESHOLD"    />
+        <result property="wireLen"    column="WIRE_LEN"    />
+        <result property="createBy"    column="CREATE_BY"    />
+        <result property="createTime"    column="CREATE_TIME"    />
+        <result property="updateBy"    column="UPDATE_BY"    />
+        <result property="updateTime"    column="UPDATE_TIME"    />
+        <result property="remark"    column="REMARK"    />
+    </resultMap>
+
+    <sql id="selectWbOlpStdModelDetailVo">
+        SELECT ID,
+               "SOURCE",
+               MC_ID,
+               LINE_NO,
+               LEAD_X,
+               LEAD_Y,
+               PAD_X,
+               PAD_Y,
+               LEAD_DIFF,
+               PAD_DIFF,
+               LEAD_THRESHOLD,
+               PAD_THRESHOLD,
+               WIRE_LEN,
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME,
+               REMARK
+        FROM IMBIZ.WB_OLP_STD_MODEL_DETAIL
+    </sql>
+
+    <insert id="insertWbOlpStdModDetail">
+        INSERT INTO IMBIZ.WB_OLP_STD_MODEL_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="source != null">"SOURCE",</if>
+            <if test="mcId != null">MC_ID,</if>
+            <if test="lineNo != null">LINE_NO,</if>
+            <if test="leadX != null">LEAD_X,</if>
+            <if test="leadY != null">LEAD_Y,</if>
+            <if test="padX != null">PAD_X,</if>
+            <if test="padY != null">PAD_Y,</if>
+            <if test="leadDiff != null">LEAD_DIFF,</if>
+            <if test="padDiff != null">PAD_DIFF,</if>
+            <if test="leadThreshold != null">LEAD_THRESHOLD,</if>
+            <if test="padThreshold != null">PAD_THRESHOLD,</if>
+            <if test="wireLen != null">WIRE_LEN,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="source != null">#{source},</if>
+            <if test="mcId != null">#{mcId},</if>
+            <if test="lineNo != null">#{lineNo},</if>
+            <if test="leadX != null">#{leadX},</if>
+            <if test="leadY != null">#{leadY},</if>
+            <if test="padX != null">#{padX},</if>
+            <if test="padY != null">#{padY},</if>
+            <if test="leadDiff != null">#{leadDiff},</if>
+            <if test="padDiff != null">#{padDiff},</if>
+            <if test="leadThreshold != null">#{leadThreshold},</if>
+            <if test="padThreshold != null">#{padThreshold},</if>
+            <if test="wireLen != null">#{wireLen},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWbOlpStdModDetail" parameterType="WbOlpStdModDetail">
+        UPDATE IMBIZ.WB_OLP_STD_MODEL_DETAIL
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="source != null">"SOURCE" = #{source},</if>
+            <if test="mcId != null">MC_ID = #{mcId},</if>
+            <if test="lineNo != null">LINE_NO = #{lineNo},</if>
+            <if test="leadX != null">LEAD_X = #{leadX},</if>
+            <if test="leadY != null">LEAD_Y = #{leadY},</if>
+            <if test="padX != null">PAD_X = #{padX},</if>
+            <if test="padY != null">PAD_Y = #{padY},</if>
+            <if test="leadDiff != null">LEAD_DIFF = #{leadDiff},</if>
+            <if test="padDiff != null">PAD_DIFF = #{padDiff},</if>
+            <if test="leadThreshold != null">LEAD_THRESHOLD = #{leadThreshold},</if>
+            <if test="padThreshold != null">PAD_THRESHOLD = #{padThreshold},</if>
+            <if test="wireLen != null">WIRE_LEN = #{wireLen},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteWbOlpStdModDetailById" parameterType="java.lang.Long">
+        DELETE FROM IMBIZ.WB_OLP_STD_MODEL_DETAIL WHERE ID = #{id}
+    </delete>
+
+    <delete id="deleteWbOlpStdModDetailByIds">
+        DELETE FROM IMBIZ.WB_OLP_STD_MODEL_DETAIL WHERE ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectWbOlpStdModDetailById" parameterType="Long" resultMap="WbOlpStdModelDetailResult">
+        <include refid="selectWbOlpStdModelDetailVo"/>
+        WHERE ID = #{id}
+    </select>
+
+    <select id="selectWbOlpStdModDetailList" parameterType="WbOlpStdModDetail" resultMap="WbOlpStdModelDetailResult">
+        <include refid="selectWbOlpStdModelDetailVo"/>
+        <where>
+            <if test="mcId != null  and mcId != ''"> AND MC_ID = #{mcId} </if>
+        </where>
+        ORDER BY MC_ID ASC, LINE_NO ASC
+    </select>
+
+    <select id="countWbOlpStdModDetailByMcId" resultType="java.lang.Integer">
+        SELECT count(1) FROM IMBIZ.WB_OLP_STD_MODEL_DETAIL
+        <where>
+            <if test="mcId != null"> AND MC_ID = #{mcId}</if>
+        </where>
+    </select>
+
+</mapper>

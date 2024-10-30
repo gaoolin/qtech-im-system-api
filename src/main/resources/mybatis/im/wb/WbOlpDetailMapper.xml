@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.wb.mapper.WbOlpDetailMapper">
+    <resultMap id="wbOlpDetailResult" type="WbOlpParticularsVo">
+        <result property="factoryName" column="company_name" />
+        <result property="groupName" column="group_name" />
+        <result property="eqId" column="eq_id" />
+        <result property="mcId" column="mc_id" />
+        <result property="prodType" column="prod_type" />
+        <result property="dt" column="dt" />
+        <result property="code" column="code" />
+        <result property="description" column="description" />
+    </resultMap>
+
+    <select id="getDetail" resultMap="wbOlpDetailResult">
+        select
+            company_name,
+            group_name,
+            eq_id,
+            mc_id,
+            prod_type,
+            dt,
+            code,
+            description
+        from
+                (
+            select
+                company_name,
+                group_name,
+                device_m_id as eq_id,
+                machine_no as mc_id,
+                mc_id as prod_type,
+                dt,
+                code,
+                description
+            from
+                    (
+                select
+                    a.device_id,
+                    b.company_name,
+                    b.dep_name,
+                    b.group_name,
+                    a.device_m_id,
+                    devicetype,
+                    a.devicename,
+                    devicenetip,
+                    c.pbox_id,
+                    machine_no
+                from
+                        qtech_eq_ods.ems_t_device a
+                inner join qtech_eq_ods.ems_t_pbox_info c on
+                        c.dev_id = a.device_id
+                left join qtech_eq_ods.ems_v_code_name b on
+                        a.hierarchy_code = b.hierarchy_show_code
+                left join qtech_eq_ods.ems_t_collector_program d on
+                        c.collector_program_id = d.id) ta,
+                    (
+                select
+                    sim_id,
+                    mc_id,
+                    dt,
+                    code,
+                    description
+                from
+                        qtech_eq_dwd.im_wb_olp_chk_result_detail
+                <where>
+                    <choose>
+                        <when test="flag == 'err'">
+                            and code > 0
+                        </when>
+                        <when test="flag == 'ok'">
+                            and code = 0
+                        </when>
+                        <when test="code == 5">
+                            and (code = 2 or code = 4)
+                        </when>
+                        <when test="code != null">
+                            and code = #{code}
+                        </when>
+                    </choose>
+                    <if test="params.beginDate != null and params.beginDate != '' and params.endDate != null and params.endDate != ''">
+                        and dt between #{params.beginDate} and #{params.endDate}
+                    </if>
+                </where>) tb
+            <where>
+                ta.pbox_id = tb.sim_id
+                <if test="factoryName != null and factoryName != ''"> and company_name = #{factoryName}</if>
+                <if test="groupName != null and groupName != ''"> and group_name = #{groupName}</if>
+                <if test="eqId != null and eqId != ''"> and device_m_id = #{eqId}</if>
+                <if test="prodType != null and prodType != ''"> and mc_id like concat('%', #{prodType}, '%')</if>
+            </where>
+        ) tc
+        order by
+            dt desc,
+            case
+                company_name
+                when '古城厂区' then 1
+                when '台虹厂区' then 2
+                when '汉浦厂区' then 3
+                when '总计' then 5
+                else 4
+            end asc,
+            case
+                when group_name like '%COB一%' then 1
+                when group_name like '%COB二%' then 2
+                when group_name like '%COB三%' then 3
+                when group_name like '%COB四%' then 4
+                when group_name like '%COB五%' then 5
+                when group_name like '%COB六%' then 6
+                when group_name like '%COB七%' then 7
+                when group_name like '%COB八%' then 8
+                when group_name like '%COB九%' then 9
+                when group_name like '%COB十%' then 10
+                when group_name like '%光学一%' then 11
+                when group_name like '%光学二%' then 12
+                when group_name like '%光学三%' then 13
+                when group_name like '%光学四%' then 14
+                when group_name like '%试产一%' then 15
+                when group_name like '%试产二%' then 16
+                when group_name like '%试产三%' then 17
+                when group_name like '小计' then 19
+                else 18
+            end asc,
+            eq_id asc
+    </select>
+
+
+</mapper>

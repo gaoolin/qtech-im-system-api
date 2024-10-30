@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.fixture.mapper.FixtureMaterialInfoMapper">
+
+    <resultMap id="FixtureMaterialResult" type="FixtureMaterialInfo">
+        <result property="mId" column="m_id" />
+        <result property="materialNmb" column="material_nmb" />
+        <result property="fixtureName" column="fixture_name" />
+        <result property="fixtureSpec" column="fixture_spec" />
+        <result property="fixtureVersion" column="fixture_version" />
+        <result property="buckle" column="buckle" />
+        <result property="deptId" column="dept_id" />
+        <result property="userId" column="user_id" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <sql id="fixtureMaterialInfoVo">
+        SELECT m_id, material_nmb, fixture_name, fixture_spec, fixture_version, buckle, create_by, create_time, update_by, update_time, dept_id, remark FROM imbiz.im_fixture_material_info ta
+    </sql>
+
+    <update id="editFixtureMaterialInfo" parameterType="FixtureMaterialInfo">
+        update imbiz.im_fixture_material_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fixtureName != null and fixtureName != ''">fixture_name = #{fixtureName},</if>
+            <if test="fixtureSpec != null and fixtureSpec != ''">fixture_spec = #{fixtureSpec},</if>
+            <if test="fixtureVersion != null and fixtureVersion != ''">fixture_version = #{fixtureVersion},</if>
+            <if test="buckle != null and buckle != ''">buckle = #{buckle},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null and fixtureSpec != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        <where>
+            <if test="materialNmb != null and materialNmb != ''">material_nmb = #{materialNmb}</if>
+            <if test="deptId != null and deptId != ''">and dept_id = #{deptId}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+        </where>
+    </update>
+
+    <delete id="removeFixtureMaterialInfo">
+        delete from imbiz.im_fixture_material_info ta
+        <where>
+            <if test="mId != null and mId != ''">and m_id = #{mId}</if>
+            <if test="materialNmb != null and materialNmb != ''">and material_nmb = #{materialNmb}</if>
+            <if test="fixtureName != null and fixtureName != ''">and fixture_name = #{fixtureName}</if>
+            <if test="deptId != null and deptId != ''">and dept_id = #{deptId}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+--             ${params.dataScope}
+        </where>
+    </delete>
+
+    <select id="selectFixtureMaterialInfoList" resultMap="FixtureMaterialResult">
+        <include refid="fixtureMaterialInfoVo"/>
+        <where>
+            <if test="mId != null and mId != ''">and m_id = #{mId}</if>
+            <if test="materialNmb != null and materialNmb != ''">and material_nmb = #{materialNmb}</if>
+            <if test="fixtureName != null and fixtureName != ''">and fixture_name = #{fixtureName}</if>
+            <if test="fixtureSpec != null and fixtureSpec != ''">and fixture_spec = #{fixtureSpec}</if>
+            <if test="fixtureVersion != null and fixtureVersion != ''">and fixture_version = #{fixtureVersion}</if>
+            <if test="createBy != null and createBy != ''">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != ''">and update_by = #{updateBy}</if>
+            <if test="buckle != null and buckle != '' or buckle == 0">and buckle = #{buckle}</if>
+            <if test="deptId == null ">and dept_id = #{deptId}</if>
+            <if test="userId != null">and user_id = #{userId}</if>
+        </where>
+    </select>
+
+    <insert id="addFixtureMaterialInfo" parameterType="FixtureMaterialInfo" useGeneratedKeys="true" keyProperty="mId" keyColumn="m_id">
+        insert into imbiz.im_fixture_material_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialNmb != null">material_nmb,</if>
+            <if test="fixtureName != null">fixture_name,</if>
+            <if test="fixtureSpec != null">fixture_spec,</if>
+            <if test="fixtureVersion != null">fixture_version,</if>
+            <if test="buckle != null">buckle,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialNmb != null">#{materialNmb},</if>
+            <if test="fixtureName != null">#{fixtureName},</if>
+            <if test="fixtureSpec != null">#{fixtureSpec},</if>
+            <if test="fixtureVersion != null">#{fixtureVersion},</if>
+            <if test="buckle != null">#{buckle},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+</mapper>

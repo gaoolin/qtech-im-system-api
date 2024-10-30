@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.common.mapper.QtechImEqsInfoMapper">
+
+    <resultMap id="qtechImCommonInfoResult" type="ImEqsNetworkingAndRemoteInfoVo">
+        <result property="factoryName" column="company_name" />
+        <result property="deptName" column="dep_name" />
+        <result property="groupName" column="group_name" />
+        <result property="deviceType" column="devicetype" />
+        <result property="eqId" column="device_m_id" />
+        <result property="mcId" column="machine_no" />
+        <result property="simId" column="pbox_id" />
+        <result property="ttlEqs" column="ttl_eqs" />
+        <result property="onlineEqs" column="online_eqs" />
+        <result property="offlineEqs" column="offline_eqs" />
+        <result property="remoteCode" column="remote_control" />
+        <result property="status" column="status" />
+    </resultMap>
+
+    <select id="listEqsInfo" resultMap="qtechImCommonInfoResult">
+        with ta as (
+            select
+                b.company_name,
+                b.dep_name,
+                b.group_name,
+                a.device_m_id,
+                a.devicename,
+                a.devicetype,
+                a.machine_no,
+                c.pbox_id
+            from
+                QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
+            left join QT_MODEL_EMS.V_CODE_NAME b
+                on
+                a.hierarchy_code = b.hierarchy_show_code
+            left join QT_MODEL_EMS.T_PBOX_INFO c
+                on
+                c.dev_id = a.device_id
+            left join QT_MODEL_EMS.T_COLLECTOR_PROGRAM d
+                on
+                c.collector_program_id = d.id
+            where
+                dep_name like '%COB%'
+                <choose>
+                    <when test = "deviceType != null or deviceType != ''">
+                        and devicetype = #{deviceType}
+                    </when>
+                    <otherwise>
+                        and devicetype in ('AA', 'WB', 'DB', 'HM')
+                    </otherwise>
+                </choose>),
+
+            tb as (
+                select
+                    eqid,
+                    machine_no,
+                    is_valid,
+                    device_type,
+                    version,
+                    ask_date
+                from
+                    QT_MODEL_MES.T_PARAMETER_RESULT
+                    <where>
+                        /* 近15分钟有采集数据上来的设备 */
+                        ask_date > minutes_sub(now(), 15)
+                        <choose>
+                            <when test = "deviceType != null or deviceType != ''">
+                                and device_type = #{deviceType}
+                            </when>
+                            <otherwise>
+                                and device_type in ('AA', 'WB', 'DB', 'HM')
+                            </otherwise>
+                        </choose>
+                    </where>),
+
+            tc as (
+                select
+                    distinct eqid
+                from tb),
+
+            td as (
+                select
+                    case
+                        when a.company_name is null then '总计'
+                        else a.company_name
+                    end as company_name,
+                    case
+                        when a.group_name is null then '小计'
+                        else a.group_name
+                    end as group_name,
+                    <choose>
+                        <when test = "deviceType == null or deviceType == ''">
+                            case
+                                when a.devicetype is null then '小计'
+                                else a.devicetype
+                            end as devicetype,
+                        </when>
+                    </choose>
+                    count(1) offline_eqs
+                from
+                    ta a
+                where
+                    a.device_m_id not in (select eqid from tc)
+                group by
+                    <choose>
+                        <when test = "deviceType != null or deviceType != ''">
+                            rollup (a.company_name, a.group_name)
+                        </when>
+                        <otherwise>
+                            rollup (a.company_name, a.group_name, a.devicetype)
+                        </otherwise>
+                    </choose>),
+
+            te as (
+                select
+                    case
+                        when a.company_name is null then '总计'
+                        else a.company_name
+                    end as company_name,
+                    case
+                        when a.group_name is null then '小计'
+                        else a.group_name
+                    end as group_name,
+                    <choose>
+                        <when test = "deviceType == null or deviceType == ''">
+                            case
+                                when a.devicetype is null then '小计'
+                                else a.devicetype
+                            end as devicetype,
+                    </when>
+                    </choose>
+                    count(1) ttl_eqs
+                from
+                    ta a
+                group by
+                    <choose>
+                        <when test = "deviceType != null or deviceType != ''">
+                            rollup (a.company_name, a.group_name)
+                        </when>
+                        <otherwise>
+                            rollup (a.company_name, a.group_name, a.devicetype)
+                        </otherwise>
+                    </choose>)
+
+        select
+            case
+                when a.company_name is null then '总计'
+                else a.company_name
+            end as company_name,
+            case
+                when a.group_name is null then '小计'
+                else a.group_name
+            end as group_name,
+            <choose>
+                <when test = "deviceType == null or deviceType == ''">
+                    case
+                        when a.devicetype is null then '小计'
+                        else a.devicetype
+                    end as devicetype,
+                </when>
+            </choose>
+            a.ttl_eqs,
+            nvl(b.offline_eqs, 0) offline_eqs
+        from
+            te a
+        left join td b
+            on a.company_name = b.company_name and a.group_name = b.group_name
+            <choose>
+                <when test = "deviceType == null or deviceType == ''">
+                    and a.devicetype = b.devicetype
+                </when>
+            </choose>
+    </select>
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.fixture.mapper.FixtureProdTypeInfoMapper">
+    <resultMap id="FixtureProdTypeInfoResult" type="FixtureProdTypeInfo">
+        <result property="pId" column="p_id" />
+        <result property="prodType" column="prod_type" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="deptId" column="dept_id" />
+        <result property="userId" column="user_id" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <sql id="FixtureProdTypeInfoVo">
+        SELECT p_id, prod_type, create_by, create_time, update_by, update_time, dept_id, remark FROM imbiz.im_fixture_prod_info ta
+    </sql>
+
+    <insert id="upsertFixtureProdType"  parameterType="FixtureProdTypeInfo" useGeneratedKeys="true" keyProperty="pId" keyColumn="p_id">
+        insert into qtech_biz_2.fixture_prod_info ta
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prodType != null and prodType != ''">prod_type,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null and updateBy != ''">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="deptId != null and deptId != ''">dept_id,</if>
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="prodType != null and prodType != ''">#{prodType},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null and deptId != ''">#{deptId},</if>
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+        </trim>
+        on conflict on constraint fixture_prod_type_info_un
+        do update set prod_type = #{prodType}, dept_id = #{deptId}, user_id = #{userId}, remark = #{remark}
+    </insert>
+
+    <update id="editFixtureProdTypeInfo">
+        update imbiz.im_fixture_prod_info ta
+        <trim prefix="SET"  suffixOverrides=",">
+            <if test="prodType != null and prodType != ''">prod_type = #{prodType},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+        </trim>
+        <where>
+            <if test="pId != null and pId != ''">and p_id = #{pId}</if>
+            <if test="deptId != null and deptId != ''">and dept_id = #{deptId}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+--             ${params.dataScope}
+        </where>
+    </update>
+
+    <delete id="removeFixtureProdTypeInfo">
+        delete from imbiz.im_fixture_prod_info ta
+        <where>
+            <if test="pId != null and pId != ''">and p_id = #{pId}</if>
+            <if test="prodType != null and prodType != ''">and prod_type = #{prodType}</if>
+            <if test="createBy != null and createBy != ''">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != ''">and update_by = #{updateBy}</if>
+            <if test="deptId != null and deptId != ''">and dept_id = #{deptId}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+--             ${params.dataScope}
+        </where>
+    </delete>
+
+    <select id="selectFixtureProdTypeInfoList" resultMap="FixtureProdTypeInfoResult">
+        <include refid="FixtureProdTypeInfoVo" />
+        <where>
+            <if test="prodType != null and prodType != ''">and prod_type = #{prodType}</if>
+            <if test="createBy != null and createBy != ''">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != ''">and update_by = #{updateBy}</if>
+            <if test="deptId != null and deptId != ''">and dept_id = #{deptId}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+--             ${params.dataScope}
+        </where>
+    </select>
+
+    <insert id="addFixtureProdTypeInfo" parameterType="FixtureProdTypeInfo" useGeneratedKeys="true"
+            keyProperty="pId" keyColumn="p_id">
+        insert into imbiz.im_fixture_prod_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prodType != null and prodType != ''">prod_type,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null and updateBy != ''">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="prodType != null and prodType != ''">#{prodType},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+</mapper>

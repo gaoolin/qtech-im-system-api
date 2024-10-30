@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.fixture.mapper.FixtureCategoryInfoMapper">
+    <resultMap id="FixtureCategoryInfoResult" type="FixtureCategoryInfo">
+        <result property="cId" column="C_ID"/>
+        <result property="fixtureCategory" column="FIXTURE_CTG"/>
+        <result property="createBy" column="CREATE_BY"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateBy" column="UPDATE_BY"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="deptId" column="DEPT_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="remark" column="REMARK"/>
+    </resultMap>
+
+    <sql id="FixtureCategoryInfoVo">
+        SELECT C_ID,
+               FIXTURE_CTG,
+               CREATE_BY,
+               CREATE_TIME,
+               UPDATE_BY,
+               UPDATE_TIME,
+               DEPT_ID,
+               REMARK
+        FROM IMBIZ.IM_FIXTURE_CATEGORY_INFO TA
+    </sql>
+
+    <insert id="addFixtureCategoryInfo" useGeneratedKeys="true" keyProperty="cId" keyColumn="C_ID">
+        INSERT INTO IMBIZ.IM_FIXTURE_CATEGORY_INFO
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fixtureCategory != null and fixtureCategory != ''">FIXTURE_CTG,</if>
+            <if test="createBy != null and createBy != ''">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null and updateBy != ''">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="deptId != null">DEPT_ID,</if>
+            <if test="userId != null">USER_ID,</if>
+            <if test="remark != null and remark != ''">REMARK,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fixtureCategory != null and fixtureCategory != ''">#{fixtureCategory},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="editFixtureCategoryInfo" parameterType="FixtureCategoryInfo">
+        UPDATE IMBIZ.IM_FIXTURE_CATEGORY_INFO ta
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fixtureCategory != null and fixtureCategory != ''">FIXTURE_CTG = #{fixtureCategory},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null and remark != ''">REMARK = #{remark},</if>
+        </trim>
+        <where>
+            <if test="cId != null">AND C_ID = #{cId}</if>
+            <if test="deptId != null">AND DEPT_ID = #{deptId}</if>
+            <if test="userId != null">AND USER_ID = #{userId}</if>
+            <!-- ${params.dataScope} -->
+        </where>
+    </update>
+
+    <delete id="removeFixtureCategoryInfo" parameterType="java.lang.Long">
+        DELETE FROM IMBIZ.IM_FIXTURE_CATEGORY_INFO
+        <where>
+            <if test="cId != null">AND C_ID = #{cId}</if>
+        </where>
+    </delete>
+
+    <select id="selectFixtureCategoryInfoOne" resultMap="FixtureCategoryInfoResult">
+        <include refid="FixtureCategoryInfoVo"/>
+        <where>
+            <if test="cId != null">AND C_ID = #{cId}</if>
+            <if test="fixtureCategory != null and fixtureCategory != ''">and FIXTURE_CTG = #{fixtureCategory}</if>
+            <if test="createBy != null">AND CREATE_BY = #{createBy}</if>
+            <if test="updateBy != null">AND UPDATE_BY = #{updateBy}</if>
+            <if test="deptId != null">AND DEPT_ID = #{deptId}</if>
+            <if test="userId != null">AND USER_ID = #{userId}</if>
+            -- ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="selectFixtureCategoryInfoList" resultMap="FixtureCategoryInfoResult">
+        <include refid="FixtureCategoryInfoVo"/>
+        <where>
+            <if test="fixtureCategory != null and fixtureCategory != ''">AND FIXTURE_CTG = #{fixtureCategory}</if>
+            <if test="deptId != null">AND DEPT_ID = #{deptId}</if>
+            <if test="userId != null">AND USER_ID = #{userId}</if>
+            ${params.dataScope}
+        </where>
+    </select>
+
+</mapper>

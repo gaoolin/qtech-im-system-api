@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.aa.mapper.AaListParamsStdModelInfoMapper">
+    <resultMap id="aaListParamsStdModelInfoResult" type="AaListParamsStdModelInfoVo">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="prodType" column="PROD_TYPE" jdbcType="VARCHAR"/>
+        <result property="listParams" column="LIST_PARAMS" jdbcType="VARCHAR"/>
+        <result property="itemParams" column="ITEM_PARAMS" jdbcType="VARCHAR"/>
+        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
+        <result property="provider" column="PROVIDER" jdbcType="VARCHAR"/>
+        <result property="belongTo" column="BELONG_TO" jdbcType="VARCHAR"/>
+        <result property="createBy" column="CREATE_BY" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="UPDATE_BY" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="aaListParamsStdModelInfoSql">
+        ID, PROD_TYPE, LIST_PARAMS, ITEM_PARAMS, STATUS, PROVIDER, BELONG_TO, CREATE_BY, CREATE_TIME, UPDATE_BY,
+        UPDATE_TIME, REMARK
+    </sql>
+
+    <insert id="insertAaListParamsStdModelInfo" useGeneratedKeys="true">
+        insert into IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">ID,</if>
+            <if test="prodType != null">PROD_TYPE,</if>
+            <if test="listParams != null">LIST_PARAMS,</if>
+            <if test="itemParams != null">ITEM_PARAMS,</if>
+            <if test="status != null">STATUS,</if>
+            <if test="provider != null">PROVIDER,</if>
+            <if test="belongTo != null">BELONG_TO,</if>
+            <if test="createBy != null">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null">REMARK,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="prodType != null">#{prodType},</if>
+            <if test="listParams != null">#{listParams},</if>
+            <if test="itemParams != null">#{itemParams},</if>
+            <if test="status != null">#{status},</if>
+            <if test="provider != null">#{provider},</if>
+            <if test="belongTo != null">#{belongTo},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAaListParamsStdModelInfo">
+        update IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO
+        <trim prefix="set" suffixOverrides=",">
+            <if test="prodType != null">PROD_TYPE = #{prodType},</if>
+            <if test="listParams != null">LIST_PARAMS = #{listParams},</if>
+            <if test="itemParams != null">ITEM_PARAMS = #{itemParams},</if>
+            <if test="status != null">STATUS = #{status},</if>
+            <if test="provider != null">PROVIDER = #{provider},</if>
+            <if test="belongTo != null">BELONG_TO = #{belongTo},</if>
+            <if test="createBy != null">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        <where>
+            <if test="id != null">and id = #{id}</if>
+            <if test="prodType != null">and prod_type = #{prodType}</if>
+        </where>
+    </update>
+
+    <delete id="deleteAaListParamsStdModelInfoByIds">
+        delete from IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO
+        where ID in
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="selectAaListParamsStdModelInfoList" resultType="AaListParamsStdModelInfoVo">
+        select
+        <include refid="aaListParamsStdModelInfoSql"/>
+        from IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO
+        <where>
+            <if test="id != null">and ID = #{id}</if>
+            <if test="prodType != null">and PROD_TYPE = #{prodType}</if>
+            <if test="status != null">and STATUS = #{status}</if>
+            <if test="provider != null">and PROVIDER = #{provider}</if>
+            <if test="belongTo != null">and BELONG_TO = #{belongTo}</if>
+            <if test="createBy != null">and CREATE_BY = #{createBy}</if>
+            <if test="updateBy != null">and UPDATE_BY = #{updateBy}</if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.wire.mapper.WireUsageStandardMapper">
+
+    <resultMap type="WireUsageStandard" id="WireUsageStandardResult">
+        <result property="mcId" column="mc_id"/>
+        <result property="wireWidth" column="wire_width"/>
+        <result property="standardWireUsage" column="standard_wire_usage"/>
+        <result property="flag" column="flag"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="standby" column="standby"/>
+    </resultMap>
+
+    <sql id="selectWireUsageStandardVo">
+        select mc_id, wire_width, standard_wire_usage, flag, remark, create_by, create_time, update_by, update_time, standby from qtech_biz_2.ads_wirebond_standard_usage
+    </sql>
+
+    <select id="selectWireUsageStandardList" parameterType="WireUsageStandard" resultMap="WireUsageStandardResult">
+        <include refid="selectWireUsageStandardVo"/>
+        <where>
+            <if test="mcId != null  and mcId != ''">and mc_id = #{mcId}</if>
+            <if test="wireWidth != null  and wireWidth != ''">and wire_width = #{wireWidth}</if>
+        </where>
+        order by create_time desc, mc_id
+    </select>
+
+    <select id="selectWireUsageStandardByMcId" parameterType="String" resultMap="WireUsageStandardResult">
+        <include refid="selectWireUsageStandardVo"/>
+        where mc_id = #{mcId}
+    </select>
+
+    <insert id="insertWireUsageStandard" parameterType="WireUsageStandard">
+<!--        <selectKey keyProperty="id" order="BEFORE" resultType="string">
+            select replace(uuid(), '-', '')
+        </selectKey>-->
+        insert into qtech_biz_2.ads_wirebond_standard_usage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mcId != null">mc_id,</if>
+            <if test="wireWidth != null">wire_width,</if>
+            <if test="standardWireUsage != null">standard_wire_usage,</if>
+            <if test="flag != null">flag,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="standby != null">standby,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mcId != null">trim(#{mcId}),</if>
+            <if test="wireWidth != null">trim(#{wireWidth}),</if>
+            <if test="standardWireUsage != null">trim(#{standardWireUsage}),</if>
+            <if test="flag != null">trim(#{flag}),</if>
+            <if test="remark != null">trim(#{remark}),</if>
+            <if test="createBy != null">trim(#{createBy}),</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">trim(#{updateBy}),</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="standby != null">trim(#{standby}),</if>
+        </trim>
+    </insert>
+
+    <update id="updateWireUsageStandard" parameterType="WireUsageStandard">
+        update qtech_biz_2.ads_wirebond_standard_usage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="wireWidth != null">wire_width = trim(#{wireWidth}),</if>
+            <if test="standardWireUsage != null">standard_wire_usage = trim(#{standardWireUsage}),</if>
+            <if test="flag != null">flag = trim(#{flag}),</if>
+            <if test="remark != null">remark = trim(#{remark}),</if>
+            <if test="createBy != null">create_by = trim(#{createBy}),</if>
+            <if test="createTime != null">create_time = trim(#{createTime}),</if>
+            <if test="updateBy != null">update_by = trim(#{updateBy}),</if>
+            <if test="updateTime != null">update_time = trim(#{updateTime}),</if>
+            <if test="standby != null">standby = trim(#{standby}),</if>
+        </trim>
+        where mc_id = #{mcId}
+    </update>
+
+    <delete id="deleteWireUsageStandardByMcId" parameterType="String">
+        delete from qtech_biz_2.ads_wirebond_standard_usage where mc_id = #{mcId}
+    </delete>
+</mapper>

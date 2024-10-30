@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.fixture.mapper.FixtureStatisticsInfoMapper">
+    <resultMap id="FixtureCategoryInfoResult" type="FixtureStatisticsInfo">
+        <result property="deptId" column="DEPT_ID"/>
+        <result property="sharedFixtureCnt" column="SHARED_FIXTURE_CNT"/>
+        <result property="unSharedFixtureCnt" column="UNSHARED_FIXTURE_CNT"/>
+        <result property="ttlProdTypeCnt" column="TTL_PROD_TYPE_CNT"/>
+        <result property="weekNum" column="WEEK_NUM"/>
+        <result property="sharedRatio" column="SHARED_RATIO"/>
+    </resultMap>
+
+
+    <sql id="FixturePanelDataVo">
+        SELECT tb.DEPT_ID,
+               unshared_fixture AS UNSHARED_FIXTURE_CNT,
+               shared_fixture   AS SHARED_FIXTURE_CNT,
+               p_id_distinct    AS TTL_PROD_TYPE_CNT
+        FROM (SELECT DEPT_ID,
+                     SUM(CASE WHEN p_cnt = 1 THEN 1 ELSE 0 END) AS unshared_fixture,
+                     SUM(CASE WHEN p_cnt > 1 THEN 1 ELSE 0 END) AS shared_fixture
+              FROM (SELECT DEPT_ID,
+                           m_id,
+                           COUNT(p_id) AS p_cnt
+                    FROM IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD
+                    GROUP BY DEPT_ID, m_id) ta
+              GROUP BY DEPT_ID) tb
+                 LEFT JOIN (SELECT DEPT_ID,
+                                   COUNT(DISTINCT p_id) AS p_id_distinct
+                            FROM IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD
+                            GROUP BY DEPT_ID) tc
+                           ON tb.DEPT_ID = tc.DEPT_ID
+        ORDER BY tb.DEPT_ID ASC
+    </sql>
+
+
+    <select id="selectFixturePanelData" resultMap="FixtureCategoryInfoResult">
+        <include refid="FixturePanelDataVo"/>
+    </select>
+
+    <select id="getFixtureTrendingData" parameterType="string" resultMap="FixtureCategoryInfoResult">
+        SELECT dept_id,
+               TO_CHAR(year) || '-' || TO_CHAR(week_num) AS week_num,
+               p_cnt,
+               m_cnt,
+               (p_cnt / m_cnt) - 1                       AS shared_ratio
+        FROM (SELECT dept_id,
+                     EXTRACT(YEAR FROM create_time) AS year,
+                 TO_CHAR(create_time, 'IW') AS week_num,
+                 COUNT(DISTINCT m_id) AS m_cnt,
+                 COUNT(p_id) AS p_cnt
+              FROM IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD
+              WHERE create_time > ADD_MONTHS(TO_DATE(#{dt}, 'YYYY-MM-DD'), -6)
+              GROUP BY dept_id,
+                  EXTRACT (YEAR FROM create_time),
+                  TO_CHAR(create_time, 'IW')) ta
+        ORDER BY dept_id ASC,
+                 week_num ASC;
+    </select>
+
+
+    <select id="getFixtureTrendingDataCurrentWeek" resultMap="FixtureCategoryInfoResult">
+
+    </select>
+
+    <select id="getFixtureHistoryTrendingData" resultType="FixtureStatisticsInfo">
+        SELECT * FROM IMBIZ.IM_FIXTURE_STATISTICS
+    </select>
+</mapper>

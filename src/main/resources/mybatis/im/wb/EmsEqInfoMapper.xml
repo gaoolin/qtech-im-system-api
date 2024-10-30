@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.wb.mapper.EmsEqInfoMapper">
+    <resultMap id="qtechImCommonInfoResult" type="ImEqsNetworkingAndRemoteInfoVo">
+        <result property="factoryName" column="company_name" />
+        <result property="groupName" column="group_name" />
+        <result property="eqId" column="eq_id" />
+        <result property="mcId" column="mc_id" />
+        <result property="simId" column="sim_id" />
+        <result property="prodType" column="prod_type" />
+    </resultMap>
+
+    <sql id="selectEmsEqInfoListVo">
+        select company_name,
+               group_name,
+               device_m_id as eq_id,
+               machine_no as mc_id,
+               mc_id as prod_type,
+               pbox_id as sim_id
+        from (select sim_id, mc_id
+              from (select sim_id, mc_id, dt, row_number() over(partition by sim_id order by dt desc) "num"
+                    from qtech_eq_dwd.im_wb_olp_chk_result_detail
+                    where dt > date_sub(now(), interval 30 day)) t
+              where num = 1) a,
+             (
+                 select a.device_id,
+                        b.company_name,
+                        b.dep_name,
+                        b.group_name,
+                        a.device_m_id,
+                        devicetype,
+                        a.devicename,
+                        devicenetip,
+                        c.pbox_id,
+                        machine_no
+                 from qtech_eq_ods.ems_t_device a
+                          inner join qtech_eq_ods.ems_t_pbox_info c on c.dev_id = cast(a.device_id as double)
+                          left join qtech_eq_ods.ems_v_code_name b on a.hierarchy_code = b.hierarchy_show_code
+                          left join qtech_eq_ods.ems_t_collector_program d on c.collector_program_id = d.id
+             ) b
+        where a.sim_id = b.pbox_id
+        group by company_name, group_name, device_m_id, machine_no, mc_id, pbox_id
+    </sql>
+
+    <select id="selectEmsEqInfoList" resultMap="qtechImCommonInfoResult">
+        select * from (<include refid="selectEmsEqInfoListVo" />) tmp
+        <where>
+            <if test="eqId != null and eqId != ''"> and eq_id = #{eqId}</if>
+            <if test="simId != null and simId != ''"> and sim_id = #{simId}</if>
+            <if test="prodType != null and prodType != ''"> and prod_type like concat('%', #{prodType}, '%')</if>
+            <if test="mcId != null and mcId != ''"> and mc_id = #{mcId}</if>
+        </where>
+        order by sim_id
+    </select>
+</mapper>

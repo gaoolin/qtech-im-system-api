@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.fixture.mapper.FixtureParamsLockMapper">
+    <resultMap id="fixtureParamsLockResult" type="FixtureParamsLock">
+        <result property="id" column="ID"/>
+        <result property="materialNmb" column="MATERIAL_NMB"/>
+        <result property="fixtureName" column="FIXTURE_NAME"/>
+        <result property="fixtureSpec" column="FIXTURE_SPEC"/>
+        <result property="fixtureVersion" column="FIXTURE_VERSION"/>
+        <result property="fixtureCategory" column="FIXTURE_CTG"/>
+        <result property="lensModel" column="LENS_MODEL"/>
+        <result property="prodLevel" column="PROD_LEVEL"/>
+        <result property="fixtureSharedStatus" column="FIXTURE_SHARED_STATUS"/>
+        <result property="mcId" column="MC_ID"/>
+        <result property="vhType" column="V_H_TYPE"/>
+        <result property="vhInnerDiameter" column="V_H_INNER_DIAMETER"/>
+        <result property="vcmDriverIc" column="VCM_DRIVER_IC"/>
+        <result property="lensThread" column="LENS_THREAD"/>
+        <result property="lensOuterDiameter" column="LENS_OUTER_DIAMETER"/>
+        <result property="lensBottomOuterDiameter" column="LENS_BOTTOM_OUTER_DIAMETER"/>
+        <result property="lensEndDiameter" column="LENS_END_DIAMETER"/>
+        <result property="lensNumberOfPetals" column="LENS_NUMBER_OF_PETALS"/>
+        <result property="deptId" column="DEPT_ID"/>
+        <result property="remark" column="REMARK"/>
+    </resultMap>
+
+
+    <sql id="fixtureParamsLockVo">
+        select *
+        from (select ta.ID,
+                     ta.MATERIAL_NMB,
+                     ta.FIXTURE_NAME,
+                     ta.FIXTURE_SPEC,
+                     ta.FIXTURE_VERSION,
+                     tb.FIXTURE_CTG,
+                     ta.MC_ID,
+                     ta.PROD_LEVEL,
+                     ta.V_H_TYPE,
+                     ta.V_H_LENGTH_WIDTH,
+                     ta.VCM_PIN_CATEGORY,
+                     ta.V_H_INNER_DIAMETER,
+                     ta.VCM_DRIVER_IC,
+                     ta.LENS_MODEL,
+                     ta.LENS_THREAD,
+                     ta.LENS_OUTER_DIAMETER,
+                     ta.LENS_BOTTOM_OUTER_DIAMETER,
+                     ta.LENS_END_DIAMETER,
+                     ta.LENS_NUMBER_OF_PETALS,
+                     ta.DEPT_ID,
+                     case
+                         when td.M_ID is not null then 1
+                         else 0
+                         end as IM_FIXTURE_SHARED_STATUS,
+                     ta.REMARK
+              from IMBIZ.IM_FIXTURE_PARAMS_LOCK ta
+                       left join IMBIZ.IM_FIXTURE_CATEGORY_INFO tb
+                                 on ta.C_ID = tb.C_ID
+                       left join IMBIZ.IM_FIXTURE_MATERIAL_INFO tc
+                                 on ta.MATERIAL_NMB = tc.MATERIAL_NMB
+                                     and tc.DEPT_ID = 211
+                       left join
+                   (select distinct M_ID
+                    from IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD) td
+                   on tc.M_ID = td.M_ID
+                       and tc.DEPT_ID = 211) te
+    </sql>
+
+
+    <insert id="addFixtureParamsLock" useGeneratedKeys="true" parameterType="FixtureParamsLock">
+        insert into IMBIZ.IM_FIXTURE_PARAMS_LOCK
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialNmb != null">MATERIAL_NMB,</if>
+            <if test="fixtureName != null">FIXTURE_NAME,</if>
+            <if test="fixtureSpec != null">FIXTURE_SPEC,</if>
+            <if test="fixtureVersion != null">FIXTURE_VERSION,</if>
+            <if test="cId != null">C_ID,</if>
+            <if test="mcId != null">MC_ID,</if>
+            <if test="lensModel != null">LENS_MODEL,</if>
+            <if test="lensThread != null">LENS_THREAD,</if>
+            <if test="prodLevel != null">PROD_LEVEL,</if>
+            <if test="vhType != null">V_H_TYPE,</if>
+            <if test="vhLengthWidth != null">V_H_LENGTH_WIDTH,</if>
+            <if test="vcmPinCategory != null">VCM_PIN_CATEGORY,</if>
+            <if test="vhInnerDiameter != null">V_H_INNER_DIAMETER,</if>
+            <if test="vcmDriverIc != null">VCM_DRIVER_IC,</if>
+            <if test="lensOuterDiameter != null">LENS_OUTER_DIAMETER,</if>
+            <if test="lensBottomOuterDiameter != null">LENS_BOTTOM_OUTER_DIAMETER,</if>
+            <if test="lensEndDiameter != null">LENS_END_DIAMETER,</if>
+            <if test="lensNumberOfPetals != null">LENS_NUMBER_OF_PETALS,</if>
+            <if test="deptId != null">DEPT_ID,</if>
+            <if test="remark != null">REMARK,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialNmb != null">#{materialNmb},</if>
+            <if test="fixtureName != null">#{fixtureName},</if>
+            <if test="fixtureSpec != null">#{fixtureSpec},</if>
+            <if test="fixtureVersion != null">#{fixtureVersion},</if>
+            <if test="cId != null">#{cId},</if>
+            <if test="mcId != null">#{mcId},</if>
+            <if test="lensModel != null">#{lensModel},</if>
+            <if test="lensThread != null">#{lensThread},</if>
+            <if test="prodLevel != null">#{prodLevel},</if>
+            <if test="vhType != null">#{vhType},</if>
+            <if test="vhLengthWidth != null">#{vhLengthWidth},</if>
+            <if test="vcmPinCategory != null">#{vcmPinCategory},</if>
+            <if test="vhInnerDiameter != null">#{vhInnerDiameter},</if>
+            <if test="vcmDriverIc != null">#{vcmDriverIc},</if>
+            <if test="lensOuterDiameter != null">#{lensOuterDiameter},</if>
+            <if test="lensBottomOuterDiameter != null">#{lensBottomOuterDiameter},</if>
+            <if test="lensEndDiameter != null">#{lensEndDiameter},</if>
+            <if test="lensNumberOfPetals != null">#{lensNumberOfPetals},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+
+    <update id="editFixtureParamsLock">
+        update IMBIZ.IM_FIXTURE_PARAMS_LOCK
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialNmb != null">MATERIAL_NMB = #{materialNmb},</if>
+            <if test="fixtureName != null">FIXTURE_NAME = #{fixtureName},</if>
+            <if test="fixtureSpec != null">FIXTURE_SPEC = #{fixtureSpec},</if>
+            <if test="fixtureVersion != null">FIXTURE_VERSION = #{fixtureVersion},</if>
+            <if test="cId != null">C_ID = #{cId},</if>
+            <if test="mcId != null">MC_ID = #{mcId},</if>
+            <if test="lensModel != null">LENS_MODEL = #{lensModel},</if>
+            <if test="lensThread != null">LENS_THREAD = #{lensThread},</if>
+            <if test="prodLevel != null">PROD_LEVEL = #{prodLevel},</if>
+            <if test="vhType != null">V_H_TYPE = #{vhType},</if>
+            <if test="vhInnerDiameter != null">V_H_INNER_DIAMETER = #{vhInnerDiameter},</if>
+            <if test="vhLengthWidth != null">V_H_LENGTH_WIDTH = #{vhLengthWidth},</if>
+            <if test="vcmDriverIc != null">VCM_DRIVER_IC = #{vcmDriverIc},</if>
+            <if test="vcmPinCategory != null">VCM_PIN_CATEGORY = #{vcmPinCategory},</if>
+            <if test="lensOuterDiameter != null">LENS_OUTER_DIAMETER = #{lensOuterDiameter},</if>
+            <if test="lensBottomOuterDiameter != null">LENS_BOTTOM_OUTER_DIAMETER = #{lensBottomOuterDiameter},</if>
+            <if test="lensEndDiameter != null">LENS_END_DIAMETER = #{lensEndDiameter},</if>
+            <if test="lensNumberOfPetals != null">LENS_NUMBER_OF_PETALS = #{lensNumberOfPetals},</if>
+            <if test="deptId != null">DEPT_ID = #{deptId},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
+        </trim>
+        <where>
+            ID = #{id}
+        </where>
+    </update>
+
+
+    <delete id="removeFixtureParamsLock">
+        delete from IMBIZ.IM_FIXTURE_PARAMS_LOCK
+        <where>
+            <if test="id != null">ID = #{id}</if>
+            <if test="materialNmb != null">and MATERIAL_NMB = #{materialNmb}</if>
+            <if test="deptId != null">and DEPT_ID = #{deptId}</if>
+        </where>
+    </delete>
+
+
+    <select id="selectFixtureParamsLockList" resultType="FixtureParamsLock">
+        <include refid="fixtureParamsLockVo"/>
+        <where>
+            <if test="id != null">and ID = #{id}</if>
+            <if test="materialNmb != null and materialNmb != ''">and MATERIAL_NMB = #{materialNmb}</if>
+            <if test="fixtureName != null and fixtureName != ''">and FIXTURE_NAME = #{fixtureName}</if>
+            <if test="fixtureSpec != null and fixtureSpec != ''">and FIXTURE_SPEC = #{fixtureSpec}</if>
+            <if test="fixtureVersion != null and fixtureVersion != ''">and FIXTURE_VERSION = #{fixtureVersion}</if>
+            <if test="fixtureCategory != null">and FIXTURE_CTG = #{fixtureCategory}</if>
+            <if test="lensModel != null and lensModel != ''">and LENS_MODEL like '%' || #{lensModel} || '%'</if>
+            <if test="prodLevel != null">and PROD_LEVEL = #{prodLevel}</if>
+            <if test="vhType != null and vhType != ''">and V_H_TYPE like '%' || #{vhType} || '%'</if>
+            <if test="vhInnerDiameter != null">
+                and V_H_INNER_DIAMETER between #{vhInnerDiameter} * (1 - #{deviation} / 100)
+                and #{vhInnerDiameter} * (1 + #{deviation} / 100)
+            </if>
+            <if test="vcmDriverIc != null and vcmDriverIc != ''">and VCM_DRIVER_IC like '%' || #{vcmDriverIc} || '%'
+            </if>
+            <if test="lensThread != null">and LENS_THREAD = #{lensThread}</if>
+            <if test="lensOuterDiameter != null">
+                and LENS_OUTER_DIAMETER between #{lensOuterDiameter} * (1 - #{deviation} / 100)
+                and #{lensOuterDiameter} * (1 + #{deviation} / 100)
+            </if>
+            <if test="lensBottomOuterDiameter != null">
+                and LENS_BOTTOM_OUTER_DIAMETER between #{lensBottomOuterDiameter} * (1 - #{deviation} / 100)
+                and #{lensBottomOuterDiameter} * (1 + #{deviation} / 100)
+            </if>
+            <if test="lensEndDiameter != null">
+                and LENS_END_DIAMETER between #{lensEndDiameter} * (1 - #{deviation} / 100)
+                and #{lensEndDiameter} * (1 + #{deviation} / 100)
+            </if>
+            <if test="lensNumberOfPetals != null">and LENS_NUMBER_OF_PETALS = #{lensNumberOfPetals}</if>
+            <if test="mcId != null">and MC_ID = #{mcId}</if>
+            <if test="vcmPinCategory != null">and VCM_PIN_CATEGORY = #{vcmPinCategory}</if>
+            <if test="vhLengthWidth != null">and V_H_LENGTH_WIDTH like '%' || #{vhLengthWidth} || '%'</if>
+            <if test="deptId != null">and DEPT_ID = #{deptId}</if>
+            <if test="remark != null and remark != ''">and REMARK like '%' || #{remark} || '%'</if>
+            <if test="fixtureSharedStatus != null">and FIXTURE_SHARED_STATUS = #{fixtureSharedStatus}</if>
+        </where>
+    </select>
+
+</mapper>

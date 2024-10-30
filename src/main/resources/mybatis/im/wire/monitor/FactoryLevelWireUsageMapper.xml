@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.wire.mapper.FactoryLevelWireUsageMapper">
+
+    <resultMap type="FactoryLevelWireUsage" id="FactoryLevelWireUsageResult">
+        <result property="factoryName" column="factory_name"/>
+        <result property="prodType" column="prod_type"/>
+        <result property="wireWidth" column="wire_width"/>
+        <result property="actualWireUsage" column="actual_wire_usage"/>
+        <result property="standardWireUsage" column="standard_wire_usage"/>
+        <result property="bomWireUsage" column="bom_wire_usage"/>
+        <result property="yield" column="yield"/>
+        <result property="percents" column="percents"/>
+        <result property="createDate" column="create_date"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <sql id="selectFactoryLevelWireUsageVo">
+        select factory_name, prod_type, wire_width, actual_wire_usage, standard_wire_usage, bom_wire_usage, yield, percents, create_date, status from qtech_biz_2.dwd_wb_wire_usage_detail
+    </sql>
+
+    <select id="selectFactoryLevelWireUsageList" parameterType="FactoryLevelWireUsage"
+            resultMap="FactoryLevelWireUsageResult">
+        SELECT
+            factory_name,
+            prod_type,
+            actual_wire_usage,
+            standard_wire_usage,
+            wire_width,
+            tf.qty AS bom_wire_usage,
+            percents,
+            IF(percents IS NULL, 2, IF(percents > 0, 1, 0)) AS status,
+            yield
+        FROM
+            (SELECT
+                    factory_name,
+                    prod_type,
+                    actual_wire_usage,
+                    standard_wire_usage,
+                    wire_width,
+                    percents,
+                    IF(percents IS NULL,2,IF(percents > 0, 1, 0)) AS status,
+                    yield
+                FROM
+                    (SELECT
+                            factory_name,
+                            prod_type,
+                            actual_wire_usage,
+                            standard_wire_usage,
+                            wire_width,
+                            round(actual_wire_usage / standard_wire_usage * 100 - 100, 2) AS percents,
+                            yield
+                        FROM
+                            (SELECT
+                                    factory_name,
+                                    prod_type,
+                                    round(wire_dosage / yield / 1000000, 7) AS actual_wire_usage,
+                                    tb.wire_width,
+                                    round(CAST(tb.standard_wire_usage AS float), 7) AS standard_wire_usage,
+                                    yield
+                                FROM
+                                    (SELECT
+                                            factory_name,
+                                            prod_type,
+                                            sum(wire_usage) wire_dosage,
+                                            sum(yield) yield
+                                        FROM
+                                            qtech_biz_2.dwd_wb_wire_usage_detail
+                                    <where>
+                                        <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''">
+                                            and create_date between #{params.beginCreateDate} and #{params.endCreateDate}
+                                        </if>
+                                        <if test="factoryName != null  and factoryName != ''">and factory_name = #{factoryName}</if>
+                                        <if test="prodType != null  and prodType != ''">and prod_type = #{prodType}</if>
+                                    </where>
+                                    group by factory_name, prod_type) ta
+                                    left join qtech_biz_2.ads_wirebond_standard_usage tb on ta.prod_type = tb.mc_id) tc) td) te
+                                    left join qtech_biz_2.ads_aa_bom_info tf on te.prod_type = tf.part_spec
+        <where>
+            <if test="wireWidth != null ">and wire_width = #{wireWidth}</if>
+            <if test="status != null  and status != ''">and status = #{status}</if>
+        </where>
+        order by yield desc
+    </select>
+
+    <select id="selectFactoryLevelWireUsageByFactoryName" parameterType="String"
+            resultMap="FactoryLevelWireUsageResult">
+        <include refid="selectFactoryLevelWireUsageVo"/>
+        where factory_name = #{factoryName}
+    </select>
+
+    <insert id="insertFactoryLevelWireUsage" parameterType="FactoryLevelWireUsage">
+        insert into qtech_biz_2.dwd_wb_wire_usage_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="factoryName != null">factory_name,</if>
+            <if test="prodType != null">prod_type,</if>
+            <if test="wireWidth != null">wire_width,</if>
+            <if test="actualWireUsage != null">actual_wire_usage,</if>
+            <if test="standardWireUsage != null">standard_wire_usage,</if>
+            <if test="bomWireUsage != null">bom_wire_usage,</if>
+            <if test="yield != null">yield,</if>
+            <if test="percents != null">percents,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="factoryName != null">#{factoryName},</if>
+            <if test="prodType != null">#{prodType},</if>
+            <if test="wireWidth != null">#{wireWidth},</if>
+            <if test="actualWireUsage != null">#{actualWireUsage},</if>
+            <if test="standardWireUsage != null">#{standardWireUsage},</if>
+            <if test="bomWireUsage != null">#{bomWireUsage},</if>
+            <if test="yield != null">#{yield},</if>
+            <if test="percents != null">#{percents},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFactoryLevelWireUsage" parameterType="FactoryLevelWireUsage">
+        update qtech_biz_2.dwd_wb_wire_usage_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="prodType != null">prod_type = #{prodType},</if>
+            <if test="wireWidth != null">wire_width = #{wireWidth},</if>
+            <if test="actualWireUsage != null">actual_wire_usage = #{actualWireUsage},</if>
+            <if test="standardWireUsage != null">standard_wire_usage = #{standardWireUsage},</if>
+            <if test="bomWireUsage != null">bom_wire_usage = #{bomWireUsage},</if>
+            <if test="yield != null">yield = #{yield},</if>
+            <if test="percents != null">percents = #{percents},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where factory_name = #{factoryName}
+    </update>
+
+    <delete id="deleteFactoryLevelWireUsageByFactoryName" parameterType="String">
+        delete from qtech_biz_2.dwd_wb_wire_usage_detail where factory_name = #{factoryName}
+    </delete>
+
+    <delete id="deleteFactoryLevelWireUsageByFactoryNames" parameterType="String">
+        delete from qtech_biz_2.dwd_wb_wire_usage_detail where factory_name in
+        <foreach item="factoryName" collection="array" open="(" separator="," close=")">
+            #{factoryName}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.fixture.mapper.FixtureParamsPoGoPinMapper">
+    <resultMap id="FixtureParamsPoGoPinResult" type="FixtureParamsPoGoPin">
+        <result property="id" column="ID"/>
+        <result property="materialNmb" column="MATERIAL_NMB"/>
+        <result property="fixtureName" column="FIXTURE_NAME"/>
+        <result property="fixtureSpec" column="FIXTURE_SPEC"/>
+        <result property="buckle" column="BUCKLE"/>
+        <result property="fixtureVersion" column="FIXTURE_VERSION"/>
+        <result property="connectorModel" column="CONNECTOR_MODEL"/>
+        <result property="cId" column="C_ID"/>
+        <result property="fixtureCategory" column="FIXTURE_CTG"/>
+        <result property="connectorTtlWidth" column="CONNECTOR_TTL_WIDTH"/>
+        <result property="connectorTtlLength" column="CONNECTOR_TTL_LENGTH"/>
+        <result property="connectorExposedCopperWidth" column="CONNECTOR_EXPOSED_COPPER_WIDTH"/>
+        <result property="pinPins" column="PIN_PINS"/>
+        <result property="pinSpacing" column="PIN_SPACING"/>
+        <result property="isFixedPin" column="IS_FIXED_PIN"/>
+        <result property="connectorSheetWidth" column="CONNECTOR_SHEET_WIDTH"/>
+        <result property="connectorSheetLength" column="CONNECTOR_SHEET_LENGTH"/>
+        <result property="moduleHeadWidth" column="MODULE_HEAD_WIDTH"/>
+        <result property="moduleHeadLength" column="MODULE_HEAD_LENGTH"/>
+        <result property="moduleBodyHeight" column="MODULE_BODY_HEIGHT"/>
+        <result property="heightOfLensCenterToConnectorCenter" column="HEIGHT_OF_LENS_CENTER_TO_CONNECTOR_CENTER"/>
+        <result property="connectorSubstrateThickness" column="CONNECTOR_SUBSTRATE_THICKNESS"/>
+        <result property="leftRightOffsetHeightLensCenterToConnectorCenter"
+                column="LEFT_RIGHT_OFFSET_HEIGHT_LENS_CENTER_TO_CONNECTOR_CENTER"/>
+        <result property="fovAngle" column="FOV_ANGLE"/>
+        <result property="isRegularFpc" column="IS_REGULAR_FPC"/>
+        <result property="fpcMaximumWidth" column="FPC_MAXIMUM_WIDTH"/>
+        <result property="modulePlacement" column="MODULE_PLACEMENT"/>
+        <result property="mcId" column="MC_ID"/>
+        <result property="testFixtures" column="TEST_FIXTURES"/>
+        <result property="prodLevel" column="PROD_LEVEL"/>
+        <result property="fixtureSharedStatus" column="FIXTURE_SHARED_STATUS"/>
+        <result property="remark" column="REMARK"/>
+        <result property="deptId" column="DEPT_ID"/>
+    </resultMap>
+
+    <sql id="FixtureParamsPoGoPinVo">
+        SELECT *
+        FROM (SELECT ta.ID,
+                     ta.MATERIAL_NMB,
+                     ta.FIXTURE_NAME,
+                     ta.FIXTURE_SPEC,
+                     ta.BUCKLE,
+                     ta.FIXTURE_VERSION,
+                     ta.CONNECTOR_MODEL,
+                     tb.FIXTURE_CTG,
+                     ta.CONNECTOR_TTL_WIDTH,
+                     ta.CONNECTOR_TTL_LENGTH,
+                     ta.CONNECTOR_EXPOSED_COPPER_WIDTH,
+                     ta.PIN_PINS,
+                     ta.PIN_SPACING,
+                     ta.IS_FIXED_PIN,
+                     ta.CONNECTOR_SHEET_WIDTH,
+                     ta.CONNECTOR_SHEET_LENGTH,
+                     ta.MODULE_HEAD_WIDTH,
+                     ta.MODULE_HEAD_LENGTH,
+                     ta.MODULE_BODY_HEIGHT,
+                     ta.HEIGHT_OF_LENS_CENTER_TO_CONNECTOR_CENTER,
+                     ta.CONNECTOR_SUBSTRATE_THICKNESS,
+                     ta.LEFT_RIGHT_OFFSET_HEIGHT_LENS_CENTER_TO_CONNECTOR_CENTER,
+                     ta.FOV_ANGLE,
+                     ta.IS_REGULAR_FPC,
+                     ta.FPC_MAXIMUM_WIDTH,
+                     ta.MODULE_PLACEMENT,
+                     ta.MC_ID,
+                     ta.TEST_FIXTURES,
+                     ta.PROD_LEVEL,
+                     CASE
+                         WHEN td.M_ID IS NOT NULL THEN 1
+                         ELSE 0
+                         END AS FIXTURE_SHARED_STATUS,
+                     ta.REMARK
+              FROM IMBIZ.IM_FIXTURE_PARAMS_POGOPIN ta
+                       LEFT JOIN
+                   IMBIZ.IM_FIXTURE_CATEGORY_INFO tb
+                   ON
+                       ta.C_ID = tb.C_ID
+                       LEFT JOIN
+                   IMBIZ.IM_FIXTURE_MATERIAL_INFO tc
+                   ON
+                               ta.MATERIAL_NMB = tc.MATERIAL_NMB
+                           AND tc.DEPT_ID = 209
+                       LEFT JOIN
+                   (SELECT DISTINCT M_ID
+                    FROM IMBIZ.IM_FIXTURE_MATERIAL_CATEGORY_PROD) td
+                   ON
+                               tc.M_ID = td.M_ID
+                           AND tc.DEPT_ID = 209) te
+    </sql>
+
+    <insert id="addFixtureParamsPoGoPin" useGeneratedKeys="true" keyProperty="id" keyColumn="ID" parameterType="long">
+        INSERT INTO IMBIZ.IM_FIXTURE_PARAMS_POGOPIN
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="materialNmb != null and materialNmb != ''">MATERIAL_NMB,</if>
+            <if test="fixtureName != null and fixtureName != ''">FIXTURE_NAME,</if>
+            <if test="fixtureSpec != null and fixtureSpec != ''">FIXTURE_SPEC,</if>
+            <if test="buckle != null">BUCKLE,</if>
+            <if test="fixtureVersion != null and fixtureVersion != ''">FIXTURE_VERSION,</if>
+            <if test="connectorModel != null and connectorModel != ''">CONNECTOR_MODEL,</if>
+            <if test="cId != null">C_ID,</if>
+            <if test="connectorTtlWidth != null">CONNECTOR_TTL_WIDTH,</if>
+            <if test="connectorTtlLength != null">CONNECTOR_TTL_LENGTH,</if>
+            <if test="connectorExposedCopperWidth != null">CONNECTOR_EXPOSED_COPPER_WIDTH,</if>
+            <if test="pinPins != null">PIN_PINS,</if>
+            <if test="pinSpacing != null">PIN_SPACING,</if>
+            <if test="isFixedPin != null">IS_FIXED_PIN,</if>
+            <if test="connectorSheetWidth != null">CONNECTOR_SHEET_WIDTH,</if>
+            <if test="connectorSheetLength != null">CONNECTOR_SHEET_LENGTH,</if>
+            <if test="moduleHeadWidth != null">MODULE_HEAD_WIDTH,</if>
+            <if test="moduleHeadLength != null">MODULE_HEAD_LENGTH,</if>
+            <if test="moduleBodyHeight != null">MODULE_BODY_HEIGHT,</if>
+            <if test="heightOfLensCenterToConnectorCenter != null">HEIGHT_OF_LENS_CENTER_TO_CONNECTOR_CENTER,</if>
+            <if test="connectorSubstrateThickness != null">CONNECTOR_SUBSTRATE_THICKNESS,</if>
+            <if test="leftRightOffsetHeightLensCenterToConnectorCenter != null">
+                LEFT_RIGHT_OFFSET_HEIGHT_LENS_CENTER_TO_CONNECTOR_CENTER,
+            </if>
+            <if test="fovAngle != null">FOV_ANGLE,</if>
+            <if test="isRegularFpc != null">IS_REGULAR_FPC,</if>
+            <if test="fpcMaximumWidth != null">FPC_MAXIMUM_WIDTH,</if>
+            <if test="modulePlacement != null">MODULE_PLACEMENT,</if>
+            <if test="mcId != null">MC_ID,</if>
+            <if test="testFixtures != null">TEST_FIXTURES,</if>
+            <if test="prodLevel != null">PROD_LEVEL,</if>
+            <if test="remark != null and remark != ''">REMARK,</if>
+            <if test="createBy != null and createBy != ''">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="updateBy != null and updateBy != ''">UPDATE_BY,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="materialNmb != null and materialNmb != ''">#{materialNmb},</if>
+            <if test="fixtureName != null and fixtureName != ''">#{fixtureName},</if>
+            <if test="fixtureSpec != null and fixtureSpec != ''">#{fixtureSpec},</if>
+            <if test="buckle != null">#{buckle},</if>
+            <if test="fixtureVersion != null and fixtureVersion != ''">#{fixtureVersion},</if>
+            <if test="connectorModel != null and connectorModel != ''">#{connectorModel},</if>
+            <if test="cId != null">#{cId},</if>
+            <if test="connectorTtlWidth != null">#{connectorTtlWidth},</if>
+            <if test="connectorTtlLength != null">#{connectorTtlLength},</if>
+            <if test="connectorExposedCopperWidth != null">#{connectorExposedCopperWidth},</if>
+            <if test="pinPins != null">#{pinPins},</if>
+            <if test="pinSpacing != null">#{pinSpacing},</if>
+            <if test="isFixedPin != null">#{isFixedPin},</if>
+            <if test="connectorSheetWidth != null">#{connectorSheetWidth},</if>
+            <if test="connectorSheetLength != null">#{connectorSheetLength},</if>
+            <if test="moduleHeadWidth != null">#{moduleHeadWidth},</if>
+            <if test="moduleHeadLength != null">#{moduleHeadLength},</if>
+            <if test="moduleBodyHeight != null">#{moduleBodyHeight},</if>
+            <if test="heightOfLensCenterToConnectorCenter != null">#{heightOfLensCenterToConnectorCenter},</if>
+            <if test="connectorSubstrateThickness != null">#{connectorSubstrateThickness},</if>
+            <if test="leftRightOffsetHeightLensCenterToConnectorCenter != null">
+                #{leftRightOffsetHeightLensCenterToConnectorCenter},
+            </if>
+            <if test="fovAngle != null">#{fovAngle},</if>
+            <if test="isRegularFpc != null">#{isRegularFpc},</if>
+            <if test="fpcMaximumWidth != null">#{fpcMaximumWidth},</if>
+            <if test="modulePlacement != null">#{modulePlacement},</if>
+            <if test="mcId != null">#{mcId},</if>
+            <if test="testFixtures != null">#{testFixtures},</if>
+            <if test="prodLevel != null">#{prodLevel},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="editFixtureParamsPoGoPin">
+        UPDATE IMBIZ.IM_FIXTURE_PARAMS_POGOPIN
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fixtureName != null and fixtureName != ''">FIXTURE_NAME = #{fixtureName},</if>
+            <if test="fixtureSpec != null and fixtureSpec != ''">FIXTURE_SPEC = #{fixtureSpec},</if>
+            <if test="buckle != null">BUCKLE = #{buckle},</if>
+            <if test="fixtureVersion != null and fixtureVersion != ''">FIXTURE_VERSION = #{fixtureVersion},</if>
+            <if test="connectorModel != null and connectorModel != ''">CONNECTOR_MODEL = #{connectorModel},</if>
+            <if test="cId != null">C_ID = #{cId},</if>
+            <if test="connectorTtlWidth != null">CONNECTOR_TTL_WIDTH = #{connectorTtlWidth},</if>
+            <if test="connectorTtlLength != null">CONNECTOR_TTL_LENGTH = #{connectorTtlLength},</if>
+            <if test="connectorExposedCopperWidth != null">CONNECTOR_EXPOSED_COPPER_WIDTH =
+                #{connectorExposedCopperWidth},
+            </if>
+            <if test="pinPins != null">PIN_PINS = #{pinPins},</if>
+            <if test="pinSpacing != null">PIN_SPACING = #{pinSpacing},</if>
+            <if test="isFixedPin != null">IS_FIXED_PIN = #{isFixedPin},</if>
+            <if test="connectorSheetWidth != null">CONNECTOR_SHEET_WIDTH = #{connectorSheetWidth},</if>
+            <if test="connectorSheetLength != null">CONNECTOR_SHEET_LENGTH = #{connectorSheetLength},</if>
+            <if test="moduleHeadWidth != null">MODULE_HEAD_WIDTH = #{moduleHeadWidth},</if>
+            <if test="moduleHeadLength != null">MODULE_HEAD_LENGTH = #{moduleHeadLength},</if>
+            <if test="moduleBodyHeight != null">MODULE_BODY_HEIGHT = #{moduleBodyHeight},</if>
+            <if test="heightOfLensCenterToConnectorCenter != null">HEIGHT_OF_LENS_CENTER_TO_CONNECTOR_CENTER =
+                #{heightOfLensCenterToConnectorCenter},
+            </if>
+            <if test="connectorSubstrateThickness != null">CONNECTOR_SUBSTRATE_THICKNESS =
+                #{connectorSubstrateThickness},
+            </if>
+            <if test="leftRightOffsetHeightLensCenterToConnectorCenter != null">
+                LEFT_RIGHT_OFFSET_HEIGHT_LENS_CENTER_TO_CONNECTOR_CENTER =
+                #{leftRightOffsetHeightLensCenterToConnectorCenter},
+            </if>
+            <if test="fovAngle != null">FOV_ANGLE = #{fovAngle},</if>
+            <if test="isRegularFpc != null">IS_REGULAR_FPC = #{isRegularFpc},</if>
+            <if test="fpcMaximumWidth != null">FPC_MAXIMUM_WIDTH = #{fpcMaximumWidth},</if>
+            <if test="modulePlacement != null">MODULE_PLACEMENT = #{modulePlacement},</if>
+            <if test="mcId != null">MC_ID = #{mcId},</if>
+            <if test="testFixtures != null">TEST_FIXTURES = #{testFixtures},</if>
+            <if test="prodLevel != null">PROD_LEVEL = #{prodLevel},</if>
+            <if test="remark != null and remark != ''">REMARK = #{remark},</if>
+            <if test="createBy != null and createBy != ''">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="updateBy != null and updateBy != ''">UPDATE_BY = #{updateBy},</if>
+        </trim>
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="removeFixtureParamsPoGoPin">
+        DELETE FROM IMBIZ.IM_FIXTURE_PARAMS_POGOPIN
+        <where>
+            <if test="id != null">AND ID = #{id}</if>
+            <if test="materialNmb != null and materialNmb != ''">AND MATERIAL_NMB = #{materialNmb}</if>
+            <if test="deptId != null">AND DEPT_ID = #{deptId}</if>
+            <!-- ${params.dataScope} -->
+        </where>
+    </delete>
+
+    <select id="selectFixtureParamsPoGoPinList" resultMap="FixtureParamsPoGoPinResult">
+        <include refid="FixtureParamsPoGoPinVo"/>
+        <where>
+            <if test="id != null">AND ID = #{id}</if>
+            <if test="materialNmb != null">AND MATERIAL_NMB = #{materialNmb}</if>
+            <if test="connectorModel != null">AND CONNECTOR_MODEL = #{connectorModel}</if>
+            <if test="fixtureCategory != null">AND FIXTURE_CTG = #{fixtureCategory}</if>
+            <if test="connectorTtlWidth != null">
+                AND CONNECTOR_TTL_WIDTH BETWEEN #{connectorTtlWidth} * (1 - #{deviation} / 100)
+                AND #{connectorTtlWidth} * (1 + #{deviation} / 100)
+            </if>
+            <if test="connectorTtlLength != null">
+                AND CONNECTOR_TTL_LENGTH BETWEEN #{connectorTtlLength} * (1 - #{deviation} / 100)
+                AND #{connectorTtlLength} * (1 + #{deviation} / 100)
+            </if>
+            <if test="connectorExposedCopperWidth != null">
+                AND CONNECTOR_EXPOSED_COPPER_WIDTH BETWEEN #{connectorExposedCopperWidth} * (1 - #{deviation} / 100)
+                AND #{connectorExposedCopperWidth} * (1 + #{deviation} / 100)
+            </if>
+            <if test="pinPins != null">
+                AND PIN_PINS BETWEEN #{pinPins} * (1 - #{deviation} / 100) AND #{pinPins} * (1 + #{deviation} / 100)
+            </if>
+            <if test="pinSpacing != null">
+                AND PIN_SPACING BETWEEN #{pinSpacing} * (1 - #{deviation} / 100) AND #{pinSpacing} * (1 + #{deviation} /
+                100)
+            </if>
+            <if test="isFixedPin != null">
+                AND IS_FIXED_PIN BETWEEN #{isFixedPin} * (1 - #{deviation} / 100) AND #{isFixedPin} * (1 + #{deviation}
+                / 100)
+            </if>
+            <if test="connectorSheetWidth != null">
+                AND CONNECTOR_SHEET_WIDTH BETWEEN #{connectorSheetWidth} * (1 - #{deviation} / 100)
+                AND #{connectorSheetWidth} * (1 + #{deviation} / 100)
+            </if>
+            <if test="connectorSheetLength != null">
+                AND CONNECTOR_SHEET_LENGTH BETWEEN #{connectorSheetLength} * (1 - #{deviation} / 100)
+                AND #{connectorSheetLength} * (1 + #{deviation} / 100)
+            </if>
+            <if test="moduleHeadWidth != null">
+                AND MODULE_HEAD_WIDTH BETWEEN #{moduleHeadWidth} * (1 - #{deviation} / 100)
+                AND #{moduleHeadWidth} * (1 + #{deviation} / 100)
+            </if>
+            <if test="moduleHeadLength != null">
+                AND MODULE_HEAD_LENGTH BETWEEN #{moduleHeadLength} * (1 - #{deviation} / 100)
+                AND #{moduleHeadLength} * (1 + #{deviation} / 100)
+            </if>
+            <if test="moduleBodyHeight != null">
+                AND MODULE_BODY_HEIGHT BETWEEN #{moduleBodyHeight} * (1 - #{deviation} / 100)
+                AND #{moduleBodyHeight} * (1 + #{deviation} / 100)
+            </if>
+            <if test="heightOfLensCenterToConnectorCenter != null">
+                AND HEIGHT_OF_LENS_CENTER_TO_CONNECTOR_CENTER BETWEEN #{heightOfLensCenterToConnectorCenter} * (1 -
+                #{deviation} / 100)
+                AND #{heightOfLensCenterToConnectorCenter} * (1 + #{deviation} / 100)
+            </if>
+            <if test="connectorSubstrateThickness != null">
+                AND CONNECTOR_SUBSTRATE_THICKNESS BETWEEN #{connectorSubstrateThickness} * (1 - #{deviation} / 100)
+                AND #{connectorSubstrateThickness} * (1 + #{deviation} / 100)
+            </if>
+            <if test="leftRightOffsetHeightLensCenterToConnectorCenter != null">
+                AND LEFT_RIGHT_OFFSET_HEIGHT_LENS_CENTER_TO_CONNECTOR_CENTER BETWEEN
+                #{leftRightOffsetHeightLensCenterToConnectorCenter} * (1 - #{deviation} / 100)
+                AND #{leftRightOffsetHeightLensCenterToConnectorCenter} * (1 + #{deviation} / 100)
+            </if>
+            <if test="fovAngle != null">
+                AND FOV_ANGLE BETWEEN #{fovAngle} * (1 - #{deviation} / 100) AND #{fovAngle} * (1 + #{deviation} / 100)
+            </if>
+            <if test="isRegularFpc != null">
+                AND IS_REGULAR_FPC BETWEEN #{isRegularFpc} * (1 - #{deviation} / 100) AND #{isRegularFpc} * (1 +
+                #{deviation} / 100)
+            </if>
+            <if test="fpcMaximumWidth != null">
+                AND FPC_MAXIMUM_WIDTH BETWEEN #{fpcMaximumWidth} * (1 - #{deviation} / 100) AND #{fpcMaximumWidth} * (1
+                + #{deviation} / 100)
+            </if>
+            <if test="modulePlacement != null">AND MODULE_PLACEMENT = #{modulePlacement}</if>
+            <if test="mcId != null">AND MC_ID = #{mcId}</if>
+            <if test="testFixtures != null">AND TEST_FIXTURES = #{testFixtures}</if>
+            <if test="prodLevel != null">AND PROD_LEVEL = #{prodLevel}</if>
+        </where>
+    </select>
+
+    <select id="selectOneFixtureParamsPoGoPin" resultMap="FixtureParamsPoGoPinResult">
+        <include refid="FixtureParamsPoGoPinVo"/>
+        <where>
+            <if test="id != null">AND ID = #{id}</if>
+        </where>
+    </select>
+
+</mapper>

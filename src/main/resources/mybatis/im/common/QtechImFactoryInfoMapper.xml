@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.common.mapper.QtechImFactoryNamesMapper">
+    <resultMap id="ImReportBaseInfoResult" type="ImReportBaseInfo">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="factoryName" column="company_name" jdbcType="VARCHAR"/>
+        <result property="groupName" column="group_name" jdbcType="VARCHAR"/>
+        <result property="deptName" column="dept_name" jdbcType="VARCHAR"/>
+        <result property="deviceType" column="device_type" jdbcType="VARCHAR"/>
+        <result property="eqId" column="eq_id" jdbcType="VARCHAR"/>
+        <result property="mcId" column="mc_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getHistoryFactoryNames" resultMap="ImReportBaseInfoResult">
+        select
+            distinct company_name
+        from
+            qtech_eq_ods.ems_t_device a
+        inner join qtech_eq_ods.ems_t_pbox_info c on
+            c.dev_id = a.device_id
+        inner join qtech_eq_ods.ems_v_code_name b on
+            a.hierarchy_code = b.hierarchy_show_code
+        inner join (
+            select
+                distinct sim_id
+            from
+                qtech_eq_dwd.im_aa_list_chk_result_detail
+            <where>
+                <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                    and chk_dt between #{params.beginTime} and #{params.endTime}
+                </if>
+            </where>
+        ) d on
+            c.pbox_id = d.sim_id
+        order by
+            case
+                when company_name like '%台虹%' then 1
+                when company_name like '%古城%' then 2
+                when company_name like '%India%' then 3
+                else 4
+            end
+    </select>
+    <select id="getLatestFactoryNames" resultMap="ImReportBaseInfoResult">
+        select
+            distinct company_name
+        from
+            qtech_eq_ods.ems_t_device a
+        inner join qtech_eq_ods.ems_t_pbox_info c on
+            c.dev_id = a.device_id
+        inner join qtech_eq_ods.ems_v_code_name b on
+            a.hierarchy_code = b.hierarchy_show_code
+        inner join (
+            select
+                distinct sim_id
+            from
+                qtech_eq_ads.im_eq_reverse_control_info
+            where source = 'aa-list'
+        ) d on
+            c.pbox_id = d.sim_id
+        order by
+            case
+                when company_name like '%台虹%' then 1
+                when company_name like '%古城%' then 2
+                when company_name like '%India%' then 3
+                else 4
+            end
+    </select>
+</mapper>

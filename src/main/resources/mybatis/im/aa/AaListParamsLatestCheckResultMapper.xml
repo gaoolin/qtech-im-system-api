@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.aa.mapper.AaListParamsLatestCheckResultMapper">
+    <resultMap id="aaListParamsLatestCheckResultListResult" type="AaListParamsCheckResultVo">
+        <result property="factoryName" column="company_name"/>
+        <result property="groupName" column="group_name"/>
+        <result property="eqId" column="eq_id"/>
+        <result property="mcId" column="mc_id"/>
+        <result property="prodType" column="prod_type"/>
+        <result property="simId" column="sim_id"/>
+        <result property="dt" column="chk_dt"/>
+        <result property="code" column="code"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+    <sql id="aaListParamsLatestCheckResultSql">
+        select
+            company_name,
+            group_name,
+            eq_id,
+            mc_id,
+            prod_type,
+            sim_id,
+            chk_dt,
+            code,
+            description
+        from
+            (
+                select
+                    company_name,
+                    group_name,
+                    device_m_id as eq_id,
+                    machine_no as mc_id,
+                    prod_type,
+                    pbox_id as sim_id,
+                    chk_dt,
+                    code,
+                    description
+                from
+                    (
+                        select
+                            a.device_id,
+                            b.company_name,
+                            b.dep_name,
+                            b.group_name,
+                            a.device_m_id,
+                            devicetype,
+                            a.devicename,
+                            devicenetip,
+                            c.pbox_id,
+                            machine_no
+                        from
+                            qtech_eq_ods.ems_t_device a
+                        inner join qtech_eq_ods.ems_t_pbox_info c on
+                            c.dev_id = a.device_id
+                        left join qtech_eq_ods.ems_v_code_name b on
+                            a.hierarchy_code = b.hierarchy_show_code
+                        left join qtech_eq_ods.ems_t_collector_program d on
+                            c.collector_program_id = d.id
+                    ) ta,
+        ( select * from qtech_eq_ads.im_eq_reverse_control_info
+        <where>
+            <if test="simId != null">and sim_id = #{simId}</if>
+            <if test="code != null">and code = #{code}</if>
+            <if test="true"> and source = 'aa-list'</if>
+        </where>
+        ) tb
+        <where>
+            ta.pbox_id = tb.sim_id
+            <if test="factoryName != null">and company_name = #{factoryName}</if>
+        </where>
+        ) tc
+    </sql>
+
+    <select id="selectAaListParamsLatestCheckResultList"
+            resultMap="aaListParamsLatestCheckResultListResult">
+        <include refid="aaListParamsLatestCheckResultSql"/>
+        <where>
+            <if test="groupName != null">and group_name = #{groupName}</if>
+            <if test="eqId != null">and eq_id = #{eqId}</if>
+            <if test="mcId != null">and mc_id = #{mcId}</if>
+            <if test="prodType != null">and prod_type = #{prodType}</if>
+        </where>
+        order by chk_dt desc
+    </select>
+
+    <select id="selectGroupNameList" resultMap="aaListParamsLatestCheckResultListResult">
+        select
+            distinct
+            group_name
+        from
+            (
+            select
+                distinct
+                company_name,
+                group_name
+            from
+                qtech_eq_ods.ems_t_device a
+            inner join qtech_eq_ods.ems_t_pbox_info c on
+                c.dev_id = a.device_id
+            inner join qtech_eq_ods.ems_v_code_name b on
+                a.hierarchy_code = b.hierarchy_show_code
+            inner join (
+                select
+                    distinct sim_id as sim_id
+                from
+                    qtech_eq_ads.im_eq_reverse_control_info
+                where source = 'aa-list') d on
+                c.pbox_id = d.sim_id) ta
+        <where>
+            <if test="factoryName != null and factoryName != ''">
+                and company_name = #{factoryName}
+            </if>
+        </where>
+        order by
+            case
+                when group_name like '%试产一%' then 11
+                when group_name like '%试产二%' then 12
+                when group_name like '%试产三%' then 13
+                when group_name like '%一%' then 1
+                when group_name like '%二%' then 2
+                when group_name like '%三%' then 3
+                when group_name like '%四%' then 4
+                when group_name like '%五%' then 5
+                when group_name like '%六%' then 6
+                when group_name like '%七%' then 7
+                when group_name like '%八%' then 8
+                when group_name like '%九%' then 9
+                when group_name like '%十%' then 10
+                else 14
+            end
+    </select>
+
+    <select id="selectFactoryNames" resultMap="aaListParamsLatestCheckResultListResult">
+        select
+            distinct
+            company_name
+        from
+            qtech_eq_ods.ems_t_device a
+        inner join qtech_eq_ods.ems_t_pbox_info c on
+            c.dev_id = a.device_id
+        inner join qtech_eq_ods.ems_v_code_name b on
+            a.hierarchy_code = b.hierarchy_show_code
+        inner join (
+            select
+                distinct sim_id as sim_id
+            from
+                qtech_eq_ads.im_eq_reverse_control_info
+            where source = 'aa-list') d on
+            c.pbox_id = d.sim_id
+    </select>
+</mapper>
