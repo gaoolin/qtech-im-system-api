@@ -30,7 +30,7 @@ import static com.qtech.im.aa.utils.Constants.REDIS_COMPARISON_MODEL_KEY_PREFIX;
  */
 
 @Slf4j
-@DataSource(DataSourceType.SECOND)
+@DataSource(DataSourceType.FOURTH)
 @Service
 public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdModelInfoService {
 

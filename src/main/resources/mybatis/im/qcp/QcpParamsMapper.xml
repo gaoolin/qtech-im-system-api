@@ -60,7 +60,7 @@
 
              tc as (select eqid, machine_no, is_valid, device_type, version, ask_date
                     from QT_MODEL_MES.T_PARAMETER_RESULT
-                    where ask_date > hours_sub(now(), 3)
+                    where ask_date > minutes_sub(now(), 15)
                       and device_type in ('AA', 'WB', 'DB', 'HM')),
 
              td as (select distinct (eqid) from tc),

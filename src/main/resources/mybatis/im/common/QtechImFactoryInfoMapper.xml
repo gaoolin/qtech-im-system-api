@@ -42,6 +42,7 @@
                 else 4
             end
     </select>
+
     <select id="getLatestFactoryNames" resultMap="ImReportBaseInfoResult">
         select
             distinct company_name
@@ -66,5 +67,16 @@
                 when company_name like '%India%' then 3
                 else 4
             end
+    </select>
+
+    <select id="getWireFactoryNames" resultMap="ImReportBaseInfoResult">
+        select distinct factory_name as company_name
+        from qtech_biz_2.dwd_wb_wire_usage_detail
+        <where>
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                and create_date between #{params.beginTime} and #{params.endTime}
+            </if>
+        </where>
+        order by company_name asc;
     </select>
 </mapper>

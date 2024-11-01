@@ -1,6 +1,6 @@
 package com.qtech.im.wire.service;
 
-import com.qtech.im.wire.domain.WireUsageStandard;
+import com.qtech.im.wire.domain.ImWireUsageStandard;
 
 import java.util.List;
 
@@ -15,47 +15,47 @@ public interface IWireUsageStandardService
     /**
      * 查询金线标准用量信息
      *
-     * @param mcId 金线标准用量信息主键
+     * @param prodType 金线标准用量信息主键
      * @return 金线标准用量信息
      */
-    public WireUsageStandard selectWireUsageStandardByMcId(String mcId);
+    public ImWireUsageStandard selectWireUsageStandardByProdType(String prodType);
 
     /**
      * 查询金线标准用量信息列表
      *
-     * @param wireUsageStandard 金线标准用量信息
+     * @param imWireUsageStandard 金线标准用量信息
      * @return 金线标准用量信息集合
      */
-    public List<WireUsageStandard> selectWireUsageStandardList(WireUsageStandard wireUsageStandard);
+    public List<ImWireUsageStandard> selectWireUsageStandardList(ImWireUsageStandard imWireUsageStandard);
 
     /**
      * 新增金线标准用量信息
      *
-     * @param wireUsageStandard 金线标准用量信息
+     * @param imWireUsageStandard 金线标准用量信息
      * @return 结果
      */
-    public int insertWireUsageStandard(WireUsageStandard wireUsageStandard);
+    public int insertWireUsageStandard(ImWireUsageStandard imWireUsageStandard);
 
     /**
      * 修改金线标准用量信息
      *
-     * @param wireUsageStandard 金线标准用量信息
+     * @param imWireUsageStandard 金线标准用量信息
      * @return 结果
      */
-    public int updateWireUsageStandard(WireUsageStandard wireUsageStandard);
+    public int updateWireUsageStandard(ImWireUsageStandard imWireUsageStandard);
 
     /**
      * 删除金线标准用量信息信息
      *
-     * @param mcId 金线标准用量信息主键
+     * @param prodType 金线标准用量信息主键
      * @return 结果
      */
-    public int deleteWireUsageStandardByMcId(String mcId);
+    public int deleteWireUsageStandardByProdType(String prodType);
 
     /**
      * @description  批量导入金线标准用量数据
-     * @param wireUsageStandards
+     * @param imWireUsageStandards
      * @return int
      */
-    public String importWireUsageStandard(List<WireUsageStandard> wireUsageStandards);
+    public String importWireUsageStandard(List<ImWireUsageStandard> imWireUsageStandards);
 }

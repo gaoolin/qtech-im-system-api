@@ -43,4 +43,14 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
             throw new RuntimeException("查询数据库失败，请联系系统负责人!");
         }
     }
+
+    @Override
+    public List<ImReportBaseInfo> getWireFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        try {
+            return qtechImFactoryNamesMapper.getWireFactoryNames(imReportBaseInfo);
+        } catch (Exception e) {
+            log.error("查询数据库失败" , e);
+            throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
+        }
+    }
 }

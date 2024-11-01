@@ -42,7 +42,7 @@ public class ImReportBaseInfo extends BaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dt;
     /** 默认值 null */
-    @Excel(name = "状态")
+    @Excel(name = "代码")
     private Integer code;
     @Excel(name = "描述")
     private String description;

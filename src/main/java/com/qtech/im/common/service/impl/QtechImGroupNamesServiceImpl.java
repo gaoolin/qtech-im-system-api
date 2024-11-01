@@ -31,6 +31,7 @@ public class QtechImGroupNamesServiceImpl implements IQtechImGroupNamesService {
         try {
             return qtechImGroupNamesMapper.getHistoryGroupNames(imReportBaseInfo);
         } catch (Exception e) {
+            log.error("查询数据库失败" , e);
             throw new RuntimeException("查询数据发生异常，请联系系统负责人！");
         }
     }
@@ -42,6 +43,16 @@ public class QtechImGroupNamesServiceImpl implements IQtechImGroupNamesService {
         } catch (Exception e) {
             log.error("查询数据库失败" , e);
             throw new RuntimeException("查询数据发生异常，请联系系统负责人！");
+        }
+    }
+
+    @Override
+    public List<ImReportBaseInfo> getWireGroupNames(ImReportBaseInfo imReportBaseInfo) {
+        try {
+            return qtechImGroupNamesMapper.getWireGroupNames(imReportBaseInfo);
+        } catch (Exception e) {
+            log.error("查询数据库失败" , e);
+            throw new RuntimeException("系统处理数据发什么异常，请联系系统负责人！");
         }
     }
 }

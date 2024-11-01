@@ -4,7 +4,7 @@ package com.qtech.im.common.exception;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/12/05 09:32:38
- * desc   :  TODO
+ * desc   :
  */
 
 

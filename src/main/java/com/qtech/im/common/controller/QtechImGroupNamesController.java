@@ -59,4 +59,13 @@ public class QtechImGroupNamesController {
         }
         return R.ok(list);
     }
+
+    @GetMapping("/wire")
+    public R<List<ImReportBaseInfo>> listWireGroupNames(ImReportBaseInfo imReportBaseInfo) {
+        List<ImReportBaseInfo> list = qtechImGroupNamesService.getWireGroupNames(imReportBaseInfo);
+        if (list.isEmpty()) {
+            return R.fail("未查询到线体信息");
+        }
+        return R.ok(list);
+    }
 }

@@ -9,10 +9,12 @@ spring:
                 url: jdbc:oracle:thin:@10.170.6.144:1521/qtechIm
                 username: imWeb
                 password: p@#b$9xX6
+                validationQuery: select 1 from dual
+                connectionTestQuery: select 1 from dual
             # 从库数据源
             second:
                 # 从数据源开关/默认关闭
-                enabled: enable
+                enabled: true
                 url: jdbc:mysql://10.170.6.40:32333/qtech_eq_dwd?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
                 driver-class-name: com.mysql.cj.jdbc.Driver
                 username: root
@@ -24,6 +26,13 @@ spring:
                 driver-class-name: com.mysql.cj.jdbc.Driver
                 username: imd
                 password: imd@123
+            fourth:
+                enabled: true
+                url: jdbc:oracle:thin:@//10.170.6.144:1521/qtechIm
+                username: imBiz
+                password: M5F5JkfnQ
+                validationQuery: select 1 from dual
+                connectionTestQuery: select 1 from dual
             # 初始连接数
             initialSize: 5
             # 最小连接池数量

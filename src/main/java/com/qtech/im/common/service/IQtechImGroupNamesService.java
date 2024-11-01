@@ -14,6 +14,8 @@ import java.util.List;
 
 public interface IQtechImGroupNamesService {
 
-    List<ImReportBaseInfo> getHistoryGroupNames(ImReportBaseInfo imReportBaseInfo);
-    List<ImReportBaseInfo> getLatestGroupNames(ImReportBaseInfo imReportBaseInfo);
+    public List<ImReportBaseInfo> getHistoryGroupNames(ImReportBaseInfo imReportBaseInfo);
+    public List<ImReportBaseInfo> getLatestGroupNames(ImReportBaseInfo imReportBaseInfo);
+
+    public List<ImReportBaseInfo> getWireGroupNames(ImReportBaseInfo imReportBaseInfo);
 }

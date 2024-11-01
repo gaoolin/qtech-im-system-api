@@ -32,7 +32,7 @@ import static com.qtech.im.aa.utils.Constants.REDIS_COMPARISON_MODEL_KEY_PREFIX;
  * @description 针对表【IM_AA_LIST_PARAMS_STD_MODEL】的数据库操作Service实现
  * @createDate 2024-10-29 14:30:19
  */
-@DataSource(value = DataSourceType.SECOND)
+@DataSource(value = DataSourceType.FOURTH)
 @Slf4j
 @Service
 public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaListParamsStdModelDetailMapper, ImAaListParamsStdModelDetail>

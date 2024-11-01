@@ -21,7 +21,7 @@ import java.util.List;
  */
 
 @Slf4j
-@DataSource(DataSourceType.SECOND)
+@DataSource(DataSourceType.FOURTH)
 @Service
 public class AaStdProgramManagementServiceImpl implements IAaStdProgramManagementService {
     private final AaStdProgramManagementMapper aaStdProgramManagementMapper;

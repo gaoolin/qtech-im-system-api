@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.wire.mapper.ImWireUsageMapper">
+    <resultMap id="BaseResult" type="ImWireUsage">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result property="factoryName" column="factory_name"/>
+        <result property="groupName" column="workshop"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="eqId" column="device_m_id"/>
+        <result property="mcId" column="mc_id"/>
+        <result property="prodType" column="prod_type"/>
+        <result property="simId" column="sim_id"/>
+        <result property="dt" column="create_date"/>
+        <result property="code" column="code"/>
+        <result property="description" column="description"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="wireWidth" column="wire_width"/>
+        <result property="actualWireUsage" column="actual_wire_usage"/>
+        <result property="standardWireUsage" column="standard_wire_usage"/>
+        <result property="bomWireUsage" column="bom_wire_usage"/>
+        <result property="yield" column="yield"/>
+        <result property="percents" column="percents"/>
+        <result property="status" column="status"/>
+
+    </resultMap>
+    <select id="selectEqLevelWireUsageList" resultMap="BaseResult">
+        select
+            factory_name,
+            workshop,
+            device_m_id,
+            prod_type,
+            actual_wire_usage,
+            standard_wire_usage,
+            wire_width,
+            tf.qty as bom_wire_usage,
+            percents,
+            if(
+                percents is null,
+                2,
+                if(
+                    percents > 0,
+                    1,
+                    0
+                )
+            ) as status,
+            yield
+        from
+            (
+                select
+                    factory_name,
+                    workshop,
+                    device_m_id,
+                    prod_type,
+                    actual_wire_usage,
+                    standard_wire_usage,
+                    wire_width,
+                    percents,
+                    if(percents is null, 2,
+                    if(percents > 0, 1, 0)) as status,
+                    yield
+                from
+                    (
+                        select
+                            factory_name,
+                            workshop,
+                            device_m_id,
+                            prod_type,
+                            actual_wire_usage,
+                            standard_wire_usage,
+                            wire_width,
+                            round(actual_wire_usage / standard_wire_usage * 100 - 100, 2) as percents,
+                            yield
+                        from
+                            (
+                                select
+                                    factory_name,
+                                    workshop,
+                                    device_m_id,
+                                    prod_type,
+                                    round(wire_dosage / yield / 1000000, 7) as actual_wire_usage,
+                                    tb.wire_width,
+                                    round(cast(tb.standard_wire_usage as float), 7) as standard_wire_usage,
+                                    yield
+                                from
+                                    (
+                                        select
+                                            factory_name,
+                                            workshop,
+                                            device_m_id,
+                                            prod_type,
+                                            sum(wire_usage) wire_dosage,
+                                            sum(yield) yield
+                                        from
+                                            qtech_biz_2.dwd_wb_wire_usage_detail
+                <where>
+                    <if test = "params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                        and create_date between #{params.beginTime} and #{params.endTime}
+                    </if>
+                </where>
+                group by factory_name, workshop, device_m_id, prod_type) ta
+                left join qtech_biz_2.ads_wirebond_standard_usage tb on ta.prod_type = tb.mc_id) tc) td) te
+                left join qtech_biz_2.ads_aa_bom_info tf on te.prod_type = tf.part_spec
+                <where>
+                    <if test="prodType != null  and prodType != ''">and prod_type = #{prodType}</if>
+                    <if test="factoryName != null  and factoryName != ''">and factory_name = #{factoryName}</if>
+                    <if test="groupName != null  and groupName != ''">and workshop = #{groupName}</if>
+                    <if test="eqId != null and eqId != ''">and device_m_id = #{eqId}</if>
+                    <if test="status !=null">and status = #{status}</if>
+                    <if test="wireWidth != null">and wire_width = #{wireWidth}</if>
+                </where>
+                order by prod_type, workshop
+    </select>
+
+    <select id="selectGroupLevelWireUsageList" resultMap="BaseResult">
+        select
+            factory_name,
+            workshop,
+            prod_type,
+            actual_wire_usage,
+            standard_wire_usage,
+            wire_width,
+            tf.qty as bom_wire_usage,
+            percents,
+            if(percents is null, 2, if(percents > 0, 1, 0)) as status,
+            yield
+        from
+            (
+                select
+                    factory_name,
+                    workshop,
+                    prod_type,
+                    actual_wire_usage,
+                    standard_wire_usage,
+                    wire_width,
+                    percents,
+                    if(percents is null, 2, if(percents > 0, 1, 0)) as status,
+                    yield
+                from
+                    (
+                        select
+                            factory_name,
+                            workshop,
+                            prod_type,
+                            actual_wire_usage,
+                            standard_wire_usage,
+                            wire_width,
+                            round(actual_wire_usage / standard_wire_usage * 100 - 100, 2) as percents,
+                            yield
+                        from
+                            (
+                                select
+                                    factory_name,
+                                    workshop,
+                                    prod_type,
+                                    round(wire_dosage / yield / 1000000, 7) as actual_wire_usage,
+                                    tb.wire_width,
+                                    round(cast(tb.standard_wire_usage as float), 7) as standard_wire_usage,
+                                    yield
+                                from
+                                    (
+                                        select
+                                            factory_name,
+                                            workshop,
+                                            prod_type,
+                                            sum(wire_usage) wire_dosage,
+                                            sum(yield) yield
+                                        from
+                                            qtech_biz_2.dwd_wb_wire_usage_detail
+                <where>
+                    <if test = "params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                        and create_date between #{params.beginTime} and #{params.endTime}
+                    </if>
+                    <if test = "factoryName != null  and factoryName != ''">
+                        and factory_name = #{factoryName}
+                    </if>
+                    <if test = "groupName != null  and groupName != ''">
+                        and workshop = #{groupName}
+                    </if>
+                    <if test = "prodType != null  and prodType != ''">
+                        and prod_type = #{prodType}
+                    </if>
+                </where>
+                    group by
+                        factory_name,
+                        workshop,
+                        prod_type) ta
+        left join qtech_biz_2.ads_wirebond_standard_usage tb on ta.prod_type = tb.mc_id) tc
+                    ) td
+            ) te
+        left join qtech_biz_2.ads_aa_bom_info tf on te.prod_type = tf.part_spec
+                <where>
+                    <if test = "wireWidth != null">
+                        and wire_width = #{wireWidth}
+                    </if>
+                    <if test = "status !=null">
+                        and status = #{status}
+                    </if>
+                </where>
+        order by
+            yield desc
+    </select>
+
+    <select id="selectFactoryLevelWireUsageList" resultMap="BaseResult">
+        SELECT
+            factory_name,
+            prod_type,
+            actual_wire_usage,
+            standard_wire_usage,
+            wire_width,
+            tf.qty AS bom_wire_usage,
+            percents,
+            IF(percents IS NULL, 2, IF(percents > 0, 1, 0)) AS status,
+            yield
+        FROM
+            (SELECT
+                    factory_name,
+                    prod_type,
+                    actual_wire_usage,
+                    standard_wire_usage,
+                    wire_width,
+                    percents,
+                    IF(percents IS NULL,2,IF(percents > 0, 1, 0)) AS status,
+                    yield
+                FROM
+                    (SELECT
+                            factory_name,
+                            prod_type,
+                            actual_wire_usage,
+                            standard_wire_usage,
+                            wire_width,
+                            round(actual_wire_usage / standard_wire_usage * 100 - 100, 2) AS percents,
+                            yield
+                        FROM
+                            (SELECT
+                                    factory_name,
+                                    prod_type,
+                                    round(wire_dosage / yield / 1000000, 7) AS actual_wire_usage,
+                                    tb.wire_width,
+                                    round(CAST(tb.standard_wire_usage AS float), 7) AS standard_wire_usage,
+                                    yield
+                                FROM
+                                    (SELECT
+                                            factory_name,
+                                            prod_type,
+                                            sum(wire_usage) wire_dosage,
+                                            sum(yield) yield
+                                        FROM
+                                            qtech_biz_2.dwd_wb_wire_usage_detail
+                                    <where>
+                                        <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                                            and create_date between #{params.beginTime} and #{params.endTime}
+                                        </if>
+                                        <if test="factoryName != null  and factoryName != ''">and factory_name = #{factoryName}</if>
+                                        <if test="prodType != null  and prodType != ''">and prod_type = #{prodType}</if>
+                                    </where>
+                                    group by factory_name, prod_type) ta
+                                    left join qtech_biz_2.ads_wirebond_standard_usage tb on ta.prod_type = tb.mc_id) tc) td) te
+                                    left join qtech_biz_2.ads_aa_bom_info tf on te.prod_type = tf.part_spec
+        <where>
+            <if test="wireWidth != null ">and wire_width = #{wireWidth}</if>
+            <if test="status != null">and status = #{status}</if>
+        </where>
+        order by yield desc
+    </select>
+</mapper>

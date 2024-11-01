@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 @Slf4j
-@DataSource(DataSourceType.SECOND)
+@DataSource(DataSourceType.FOURTH)
 @Service
 public class WbOlpStdModelInfoServiceImpl implements IWbOlpStdModelInfoService {
     @Autowired

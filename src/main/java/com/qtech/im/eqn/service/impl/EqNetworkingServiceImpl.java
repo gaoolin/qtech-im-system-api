@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @Slf4j
-@DataSource(DataSourceType.SECOND)
+@DataSource(DataSourceType.THIRD)
 @Service
 public class EqNetworkingServiceImpl implements IEqNetworkingService {
 

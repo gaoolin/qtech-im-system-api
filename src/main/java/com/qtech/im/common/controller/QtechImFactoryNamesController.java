@@ -61,4 +61,12 @@ public class QtechImFactoryNamesController extends BaseController {
         return R.ok(list);
     }
 
+    @GetMapping("/wire")
+    public R<List<ImReportBaseInfo>> listWireNames(ImReportBaseInfo imReportBaseInfo) {
+        List<ImReportBaseInfo> list = qtechImFactoryInfoService.getWireFactoryNames(imReportBaseInfo);
+        if (list.isEmpty()) {
+            return R.fail("未查询到厂区信息");
+        }
+        return R.ok(list);
+    }
 }

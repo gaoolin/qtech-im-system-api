@@ -3,45 +3,65 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.wire.mapper.WireUsageStandardMapper">
-
-    <resultMap type="WireUsageStandard" id="WireUsageStandardResult">
-        <result property="mcId" column="mc_id"/>
-        <result property="wireWidth" column="wire_width"/>
-        <result property="standardWireUsage" column="standard_wire_usage"/>
-        <result property="flag" column="flag"/>
-        <result property="remark" column="remark"/>
+    <resultMap type="ImWireUsageStandard" id="WireUsageStandardResult">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result property="factoryName" column="factory_name"/>
+        <result property="groupName" column="workshop"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="eqId" column="device_m_id"/>
+        <result property="prodType" column="mc_id"/>
+        <result property="simId" column="sim_id"/>
+        <result property="dt" column="create_date"/>
+        <result property="code" column="code"/>
+        <result property="description" column="description"/>
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
-        <result property="standby" column="standby"/>
+        <result property="remark" column="remark"/>
+        <result property="wireWidth" column="wire_width"/>
+        <result property="actualWireUsage" column="actual_wire_usage"/>
+        <result property="standardWireUsage" column="standard_wire_usage"/>
+        <result property="bomWireUsage" column="bom_wire_usage"/>
+        <result property="yield" column="yield"/>
+        <result property="percents" column="percents"/>
+        <result property="status" column="status"/>
+        <result column="flag" property="flag"/>
     </resultMap>
 
     <sql id="selectWireUsageStandardVo">
-        select mc_id, wire_width, standard_wire_usage, flag, remark, create_by, create_time, update_by, update_time, standby from qtech_biz_2.ads_wirebond_standard_usage
+        select mc_id,
+               wire_width,
+               standard_wire_usage,
+               flag,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               standby
+        from qtech_biz_2.ads_wirebond_standard_usage
     </sql>
 
-    <select id="selectWireUsageStandardList" parameterType="WireUsageStandard" resultMap="WireUsageStandardResult">
+    <select id="selectWireUsageStandardList" parameterType="ImWireUsageStandard" resultMap="WireUsageStandardResult">
         <include refid="selectWireUsageStandardVo"/>
         <where>
-            <if test="mcId != null  and mcId != ''">and mc_id = #{mcId}</if>
-            <if test="wireWidth != null  and wireWidth != ''">and wire_width = #{wireWidth}</if>
+            <if test="prodType != null">and mc_id = #{prodType}</if>
+            <if test="wireWidth != null">and wire_width = #{wireWidth}</if>
         </where>
         order by create_time desc, mc_id
     </select>
 
-    <select id="selectWireUsageStandardByMcId" parameterType="String" resultMap="WireUsageStandardResult">
+    <select id="selectWireUsageStandardByProdType" parameterType="String" resultMap="WireUsageStandardResult">
         <include refid="selectWireUsageStandardVo"/>
-        where mc_id = #{mcId}
+        where mc_id = #{prodType}
     </select>
 
-    <insert id="insertWireUsageStandard" parameterType="WireUsageStandard">
-<!--        <selectKey keyProperty="id" order="BEFORE" resultType="string">
-            select replace(uuid(), '-', '')
-        </selectKey>-->
+    <insert id="insertWireUsageStandard" parameterType="ImWireUsageStandard">
         insert into qtech_biz_2.ads_wirebond_standard_usage
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="mcId != null">mc_id,</if>
+            <if test="prodType != null">mc_id,</if>
             <if test="wireWidth != null">wire_width,</if>
             <if test="standardWireUsage != null">standard_wire_usage,</if>
             <if test="flag != null">flag,</if>
@@ -53,7 +73,7 @@
             <if test="standby != null">standby,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="mcId != null">trim(#{mcId}),</if>
+            <if test="prodType != null">trim(#{prodType}),</if>
             <if test="wireWidth != null">trim(#{wireWidth}),</if>
             <if test="standardWireUsage != null">trim(#{standardWireUsage}),</if>
             <if test="flag != null">trim(#{flag}),</if>
@@ -66,7 +86,7 @@
         </trim>
     </insert>
 
-    <update id="updateWireUsageStandard" parameterType="WireUsageStandard">
+    <update id="updateWireUsageStandard" parameterType="ImWireUsageStandard">
         update qtech_biz_2.ads_wirebond_standard_usage
         <trim prefix="SET" suffixOverrides=",">
             <if test="wireWidth != null">wire_width = trim(#{wireWidth}),</if>
@@ -79,10 +99,12 @@
             <if test="updateTime != null">update_time = trim(#{updateTime}),</if>
             <if test="standby != null">standby = trim(#{standby}),</if>
         </trim>
-        where mc_id = #{mcId}
+        where mc_id = #{prodType}
     </update>
 
-    <delete id="deleteWireUsageStandardByMcId" parameterType="String">
-        delete from qtech_biz_2.ads_wirebond_standard_usage where mc_id = #{mcId}
+    <delete id="deleteWireUsageStandardByProdType" parameterType="String">
+        delete
+        from qtech_biz_2.ads_wirebond_standard_usage
+        where mc_id = #{prodType}
     </delete>
 </mapper>

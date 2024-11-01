@@ -29,7 +29,7 @@ import java.util.Map;
  */
 
 @Slf4j
-@DataSource(DataSourceType.SECOND)
+@DataSource(DataSourceType.FOURTH)
 @Service
 public class WbOlpStdModelDetailServiceImpl implements IWbOlpStdModelDetailService {
     @Autowired

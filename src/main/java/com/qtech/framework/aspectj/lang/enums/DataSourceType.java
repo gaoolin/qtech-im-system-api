@@ -20,5 +20,10 @@ public enum DataSourceType
     /**
      * 第三个数据库
      */
-    THIRD
+    THIRD,
+
+    /**
+     * 第四个数据库
+     */
+    FOURTH
 }

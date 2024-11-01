@@ -17,4 +17,6 @@ public interface QtechImFactoryNamesMapper {
     public List<ImReportBaseInfo> getHistoryFactoryNames(ImReportBaseInfo imReportBaseInfo);
 
     public List<ImReportBaseInfo> getLatestFactoryNames(ImReportBaseInfo imReportBaseInfo);
+
+    public List<ImReportBaseInfo> getWireFactoryNames(ImReportBaseInfo imReportBaseInfo);
 }
