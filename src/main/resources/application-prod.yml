@@ -114,3 +114,7 @@ spring:
           adaptive: true
           # 定时刷新时间 毫秒
           period: 2000
+
+fixture:
+  statistics:
+    url: http://fixture-statistics.fixture-statistics:5000/fixture/statistics/line

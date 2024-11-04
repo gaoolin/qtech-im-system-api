@@ -63,7 +63,6 @@
         ORDER BY MATERIAL_NMB ASC, FIXTURE_NAME, FIXTURE_CTG, FIXTURE_VERSION, BUCKLE, PROD_TYPE
     </select>
 
-
     <select id="selectFixtureSharedInfoOne" parameterType="FixtureSharedInfo" resultMap="FixtureSharedInfoResult">
         <include refid="selectFixtureSharedInfoVo"/>
         <where>
@@ -85,14 +84,12 @@
         </where>
     </select>
 
-
     <select id="selectFixtureSharedInfoById" resultMap="FixtureSharedInfoResult">
         <include refid="selectFixtureSharedInfoVo"/>
         <where>
             <if test="id != null">AND ID = #{id}</if>
         </where>
     </select>
-
 
     <delete id="deleteFixtureSharedInfoById" parameterType="Long">
         DELETE FROM IMBIZ.IM_FIXTURE_SHARED_INFO ta
@@ -104,7 +101,6 @@
         </where>
     </delete>
 
-
     <delete id="deleteFixtureSharedInfoByIds" parameterType="String">
         DELETE FROM IMBIZ.IM_FIXTURE_SHARED_INFO ta WHERE ID IN
         <foreach item="id" collection="array" open="(" separator="," close=")">
@@ -112,12 +108,13 @@
         </foreach>
     </delete>
 
-
     <select id="selectFixtureSharedInfoDeptIds" resultMap="FixtureSharedInfoResult">
-        SELECT dept_id FROM sys_dept ta
+        SELECT dept_id
+        FROM sys_dept ta
         <where>
-            <if test="deptId != null">and dept_id = #{deptId}</if>
-            <if test="deptId != null">or find_in_set( #{deptId} , ancestors )</if>
+            <if test="deptId != null">
+                and (dept_id = #{deptId} or IMWEB.find_in_set(#{deptId}, ancestors) > 0)
+            </if>
         </where>
     </select>
 
