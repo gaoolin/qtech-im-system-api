@@ -59,4 +59,9 @@ public class QcpParamsServiceImpl implements IQcpParamsService {
             throw new RuntimeException("获取最大时间失败，请联系系统负责人!");
         }
     }
+
+    @Override
+    public boolean checkIotStatus() {
+        return qcpParamsMapper.checkIotStatus();
+    }
 }

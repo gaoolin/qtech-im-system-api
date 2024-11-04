@@ -20,5 +20,7 @@ public interface IQcpParamsService {
 
     public List<QcpParamsDetailVo> selectQcpParamsList(QcpParamsDetailVo qcpParamsDetailVo);
 
+    public boolean checkIotStatus();
+
     public String getMaxTime();
 }

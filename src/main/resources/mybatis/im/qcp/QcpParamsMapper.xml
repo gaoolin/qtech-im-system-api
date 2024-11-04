@@ -222,4 +222,9 @@
     <select id="getMaxTime" resultType="java.lang.String">
         select max(ask_date) maxTime from QT_MODEL_MES.T_PARAMETER_RESULT
     </select>
+    <select id="checkIotStatus" resultType="java.lang.Boolean">
+        select count(1) > 0 from QT_MODEL_MES.T_PARAMETER_RESULT
+        where ask_date > minutes_sub(now(), 8)
+    </select>
+
 </mapper>

@@ -21,4 +21,6 @@ public interface QcpParamsMapper {
     public List<QcpParamsDetailVo> selectQcpParamsList(QcpParamsDetailVo qcpParamsDetailVo);
 
     public String getMaxTime();
+
+    public boolean checkIotStatus();
 }

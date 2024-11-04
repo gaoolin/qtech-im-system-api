@@ -7,7 +7,7 @@ ruoyi:
   # 版权年份
   copyrightYear: 2024
   # 文件路径 示例（ Windows配置D:/qtech/uploadPath，Linux配置 /home/qtech/uploadPath）
-  profile: D:/qtech/uploadPath
+  profile: /home/qtech/uploadPath
   # 获取ip地址开关
   addressEnabled: false
   # 验证码类型 math 数字计算 char 字符验证
@@ -52,7 +52,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles:
-    active: druid
+    active: prod
   # 文件上传
   servlet:
     multipart:
@@ -133,34 +133,34 @@ token:
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
   expireTime: 30
-  
+
 # MyBatis配置
 mybatis:
-    # 搜索指定包别名
-    typeAliasesPackage: com.qtech.**.domain
-    # 配置mapper的扫描，找到所有的mapper.xml映射文件
-    mapperLocations: classpath*:mybatis/**/*Mapper.xml
-    # 加载全局的配置文件
-    configLocation: classpath:mybatis/mybatis-config.xml
-    configuration:
-      jdbc-type-for-null: null
-      call-setters-on-nulls: true
-      useGeneratedKeys: false
+  # 搜索指定包别名
+  typeAliasesPackage: com.qtech.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mybatis/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+  configuration:
+    jdbc-type-for-null: null
+    call-setters-on-nulls: true
+    useGeneratedKeys: false
 
 mybatis-plus:
-    # 搜索指定包别名
-    typeAliasesPackage: com.qtech.**.domain
-    # 配置mapper的扫描，找到所有的mapper.xml映射文件
-    mapperLocations: classpath*:mybatis/**/*Mapper.xml
-    # 加载全局的配置文件
-    configLocation: classpath:mybatis/mybatis-config.xml
-    configuration:
-      jdbc-type-for-null: null
-      call-setters-on-nulls: true
-      useGeneratedKeys: false
-      map-underscore-to-camel-case: true
-      cache-enabled: false
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 搜索指定包别名
+  typeAliasesPackage: com.qtech.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mybatis/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+  configuration:
+    jdbc-type-for-null: null
+    call-setters-on-nulls: true
+    useGeneratedKeys: false
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # PageHelper分页插件
 pagehelper:
@@ -185,7 +185,7 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
-  
+
 # 代码生成
 gen:
   # 作者

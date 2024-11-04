@@ -4,6 +4,7 @@ import com.qtech.common.utils.poi.ExcelUtil;
 import com.qtech.framework.aspectj.lang.annotation.Log;
 import com.qtech.framework.aspectj.lang.enums.BusinessType;
 import com.qtech.framework.web.controller.BaseController;
+import com.qtech.framework.web.domain.AjaxResult;
 import com.qtech.framework.web.domain.R;
 import com.qtech.framework.web.page.TableDataInfo;
 import com.qtech.im.qcp.domain.QcpParamsDetailVo;
@@ -49,6 +50,12 @@ public class QcpParamsController extends BaseController {
     public R<String> getMaxTime() {
         String updateDt = qcpParamsService.getMaxTime();
         return R.ok(updateDt);
+    }
+
+    @RequestMapping(value = "/checkIotStatus", method = RequestMethod.GET)
+    public AjaxResult checkIotStatus() {
+        boolean b = qcpParamsService.checkIotStatus();
+        return AjaxResult.success(null, b);
     }
 
     @Log(title = "qcp概览", businessType = BusinessType.EXPORT)
