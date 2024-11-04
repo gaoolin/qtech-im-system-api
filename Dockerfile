@@ -42,6 +42,7 @@ RUN echo 'Asia/Shanghai' >/etc/timezone
 # RUN fc-cache --forc
 
 ENV PARAMS="--server.port=8080 --spring.profiles.active=prod"
+ENV env=prod
 
 EXPOSE 8080
 
