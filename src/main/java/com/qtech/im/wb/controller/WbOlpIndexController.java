@@ -34,7 +34,6 @@ public class WbOlpIndexController extends BaseController {
     @Autowired
     IWbOlpIndexService wbOlpIndexService;
 
-
     @GetMapping(value = "/overview")
     public AjaxResult IndexWbOlpOverview() {
 

@@ -79,4 +79,40 @@
         </where>
         order by company_name asc;
     </select>
+
+    <select id="getWbOlpFactoryNames" resultMap="ImReportBaseInfoResult">
+        select distinct company_name
+        from qtech_eq_ods.ems_t_device a
+                 inner join qtech_eq_ods.ems_t_pbox_info c on
+            c.dev_id = a.device_id
+                 inner join qtech_eq_ods.ems_v_code_name b on
+            a.hierarchy_code = b.hierarchy_show_code
+                 inner join (select distinct sim_id as sim_id
+                             from qtech_eq_dwd.im_wb_olp_chk_result_detail
+                             <where>
+                                 <choose>
+                                     <when test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                                        and dt between #{params.beginTime} and #{params.endTime}
+                                     </when>
+                                     <otherwise>
+                                        and dt > date_sub(now(), interval 1 day)
+                                     </otherwise>
+                                 </choose>
+                            </where>) d on
+            c.pbox_id = d.sim_id
+    </select>
+
+    <select id="getWbOlpLatestFactoryNames"  resultMap="ImReportBaseInfoResult">
+        select distinct company_name
+        from qtech_eq_ods.ems_t_device a
+                 inner join qtech_eq_ods.ems_t_pbox_info c on
+            c.dev_id = a.device_id
+                 inner join qtech_eq_ods.ems_v_code_name b on
+            a.hierarchy_code = b.hierarchy_show_code
+                 inner join (select distinct sim_id as sim_id
+                             from qtech_eq_ads.im_eq_reverse_control_info
+                             where source = 'wb-olp') d on
+            c.pbox_id = d.sim_id
+    </select>
+
 </mapper>

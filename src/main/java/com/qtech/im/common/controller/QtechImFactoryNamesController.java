@@ -26,6 +26,24 @@ public class QtechImFactoryNamesController extends BaseController {
     @Autowired
     private IQtechImFactoryNamesService qtechImFactoryInfoService;
 
+    @GetMapping("/wb/olp")
+    public R<List<ImReportBaseInfo>> listWbOlpFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        List<ImReportBaseInfo> list = qtechImFactoryInfoService.getWbOlpFactoryNames(imReportBaseInfo);
+        if (list.isEmpty()) {
+            return R.fail("未查询到厂区信息");
+        }
+        return R.ok(list);
+    }
+
+    @GetMapping("/wb/olp/latest")
+    public R<List<ImReportBaseInfo>> listWbOlpLatestFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        List<ImReportBaseInfo> list = qtechImFactoryInfoService.getWbOlpLatestFactoryNames(imReportBaseInfo);
+        if (list.isEmpty()) {
+            return R.fail("未查询到厂区信息");
+        }
+        return R.ok(list);
+    }
+
     @GetMapping("/aa/history")
     public R<List<ImReportBaseInfo>> listHistoryFactoryNames(ImReportBaseInfo imReportBaseInfo) {
         Map<String, Object> params = imReportBaseInfo.getParams();

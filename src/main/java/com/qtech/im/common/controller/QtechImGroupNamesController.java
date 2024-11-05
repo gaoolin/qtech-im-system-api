@@ -25,6 +25,24 @@ public class QtechImGroupNamesController {
     @Autowired
     private IQtechImGroupNamesService qtechImGroupNamesService;
 
+    @GetMapping("/wb/olp")
+    public R<List<ImReportBaseInfo>> listWbOlpGroupNames(ImReportBaseInfo imReportBaseInfo) {
+        List<ImReportBaseInfo> list = qtechImGroupNamesService.getWbOlpGroupNames(imReportBaseInfo);
+        if (list.isEmpty()) {
+            return R.fail("未查询到车间信息");
+        }
+        return R.ok(list);
+    }
+
+    @GetMapping("/wb/olp/latest")
+    public R<List<ImReportBaseInfo>> listWbOlpLatestGroupNames(ImReportBaseInfo imReportBaseInfo) {
+        List<ImReportBaseInfo> list = qtechImGroupNamesService.getWbOlpLatestGroupNames(imReportBaseInfo);
+        if (list.isEmpty()) {
+            return R.fail("未查询到车间信息");
+        }
+        return R.ok(list);
+    }
+
     @GetMapping("/aa/history")
     public R<List<ImReportBaseInfo>> listHistoryGroupNames(ImReportBaseInfo imReportBaseInfo) {
         Map<String, Object> params = imReportBaseInfo.getParams();

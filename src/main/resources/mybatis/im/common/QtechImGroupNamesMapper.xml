@@ -37,7 +37,7 @@
             ) d on
                 c.pbox_id = d.sim_id) ta
         <where>
-            <if test="factoryName != null and factoryName != ''">
+            <if test="factoryName != null">
                 and company_name = #{factoryName}
             </if>
         </where>
@@ -80,7 +80,7 @@
                 ) d on
                     c.pbox_id = d.sim_id) ta
             <where>
-                <if test="factoryName != null and factoryName != ''">
+                <if test="factoryName != null">
                     and company_name = #{factoryName}
                 </if>
             </where>
@@ -109,7 +109,108 @@
             <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
                 and create_date between #{params.beginTime} and #{params.endTime}
             </if>
-            <if test="factoryName != null and factoryName != ''"> and factory_name = #{factoryName} </if>
+            <if test="factoryName != null"> and factory_name = #{factoryName} </if>
+        </where>
+        order by
+            case
+                when group_name like '%试产一%' then 11
+                when group_name like '%试产二%' then 12
+                when group_name like '%试产三%' then 13
+                when group_name like '%一%' then 1
+                when group_name like '%二%' then 2
+                when group_name like '%三%' then 3
+                when group_name like '%四%' then 4
+                when group_name like '%五%' then 5
+                when group_name like '%六%' then 6
+                when group_name like '%七%' then 7
+                when group_name like '%八%' then 8
+                when group_name like '%九%' then 9
+                when group_name like '%十%' then 10
+                else 14
+            end
+    </select>
+
+    <select id="getWbOlpGroupNames" resultMap="ImReportBaseInfoResult">
+       select
+            distinct
+            group_name
+        from
+            (
+            select
+                distinct
+            company_name,
+                group_name
+            from
+                qtech_eq_ods.ems_t_device a
+            inner join qtech_eq_ods.ems_t_pbox_info c on
+                c.dev_id = a.device_id
+            inner join qtech_eq_ods.ems_v_code_name b on
+                a.hierarchy_code = b.hierarchy_show_code
+            inner join (
+                select
+                    distinct sim_id as sim_id
+                from
+                    qtech_eq_dwd.im_wb_olp_chk_result_detail
+                <where>
+                    <choose>
+                        <when test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                            and dt between #{params.beginTime} and #{params.endTime}
+                        </when>
+                        <otherwise>
+                            and dt = date_sub(now(), interval 1 day)
+                        </otherwise>
+                    </choose>
+                </where>) d on
+                c.pbox_id = d.sim_id) ta
+        <where>
+            <if test="factoryName != null">
+                and company_name = #{factoryName}
+            </if>
+        </where>
+        order by
+            case
+                when group_name like '%试产一%' then 11
+                when group_name like '%试产二%' then 12
+                when group_name like '%试产三%' then 13
+                when group_name like '%一%' then 1
+                when group_name like '%二%' then 2
+                when group_name like '%三%' then 3
+                when group_name like '%四%' then 4
+                when group_name like '%五%' then 5
+                when group_name like '%六%' then 6
+                when group_name like '%七%' then 7
+                when group_name like '%八%' then 8
+                when group_name like '%九%' then 9
+                when group_name like '%十%' then 10
+                else 14
+            end
+    </select>
+    <select id="getWbOlpLatestGroupNames" resultType="com.qtech.im.common.domain.ImReportBaseInfo">
+       select
+            distinct
+            group_name
+        from
+            (
+            select
+                distinct
+            company_name,
+                group_name
+            from
+                qtech_eq_ods.ems_t_device a
+            inner join qtech_eq_ods.ems_t_pbox_info c on
+                c.dev_id = a.device_id
+            inner join qtech_eq_ods.ems_v_code_name b on
+                a.hierarchy_code = b.hierarchy_show_code
+            inner join (
+                select
+                    distinct sim_id as sim_id
+                from qtech_eq_ads.im_eq_reverse_control_info
+                where source = 'wb-olp') d on
+                c.pbox_id = d.sim_id) ta
+        <where>
+            <if test="factoryName != null">
+                and company_name = #{factoryName}
+            </if>
         </where>
         order by
             case

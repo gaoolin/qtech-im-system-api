@@ -16,6 +16,8 @@ public interface IQtechImGroupNamesService {
 
     public List<ImReportBaseInfo> getHistoryGroupNames(ImReportBaseInfo imReportBaseInfo);
     public List<ImReportBaseInfo> getLatestGroupNames(ImReportBaseInfo imReportBaseInfo);
-
     public List<ImReportBaseInfo> getWireGroupNames(ImReportBaseInfo imReportBaseInfo);
+    public List<ImReportBaseInfo> getWbOlpGroupNames(ImReportBaseInfo imReportBaseInfo);
+
+    public List<ImReportBaseInfo> getWbOlpLatestGroupNames(ImReportBaseInfo imReportBaseInfo);
 }

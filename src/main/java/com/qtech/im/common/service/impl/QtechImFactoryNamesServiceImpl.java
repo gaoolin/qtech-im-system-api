@@ -53,4 +53,24 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
         }
     }
+
+    @Override
+    public List<ImReportBaseInfo> getWbOlpFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        try {
+            return qtechImFactoryNamesMapper.getWbOlpFactoryNames(imReportBaseInfo);
+        } catch (Exception e) {
+            log.error("查询数据库失败" , e);
+            throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
+        }
+    }
+
+    @Override
+    public List<ImReportBaseInfo> getWbOlpLatestFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        try {
+            return qtechImFactoryNamesMapper.getWbOlpLatestFactoryNames(imReportBaseInfo);
+        } catch (Exception e) {
+            log.error("查询数据库失败" , e);
+            throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
+        }
+    }
 }
