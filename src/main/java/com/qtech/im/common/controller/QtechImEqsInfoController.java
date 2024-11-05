@@ -1,6 +1,7 @@
 package com.qtech.im.common.controller;
 
 import com.qtech.framework.web.domain.R;
+import com.qtech.im.common.domain.ImReportBaseInfo;
 import com.qtech.im.common.service.IQtechImEqsInfoService;
 import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,10 @@ public class QtechImEqsInfoController {
     @GetMapping("/aa/index")
     public R<List<ImEqsNetworkingAndRemoteInfoVo>> listEqsInfo(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
         return R.ok(qtechImEqsInfoService.listEqsInfo(imEqsNetworkingAndRemoteInfoVo));
+    }
+
+    @GetMapping("/iot/status")
+    public R<Boolean> iotStatus(ImReportBaseInfo imReportBaseInfo) {
+        return R.ok(qtechImEqsInfoService.iotStatus(imReportBaseInfo));
     }
 }

@@ -1,5 +1,6 @@
 package com.qtech.im.common.service;
 
+import com.qtech.im.common.domain.ImReportBaseInfo;
 import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
 
 import java.util.List;
@@ -14,4 +15,6 @@ import java.util.List;
 
 public interface IQtechImEqsInfoService {
     public List<ImEqsNetworkingAndRemoteInfoVo> listEqsInfo(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+
+    public Boolean iotStatus(ImReportBaseInfo imReportBaseInfo);
 }

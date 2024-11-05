@@ -24,7 +24,6 @@
         <result property="remark" column="REMARK"/>
     </resultMap>
 
-
     <sql id="selectFixtureSharedInfoVo">
         SELECT ta.ID,
                tb.M_ID,
@@ -48,7 +47,6 @@
                  LEFT JOIN IMBIZ.IM_FIXTURE_CATEGORY_INFO tc ON ta.C_ID = tc.C_ID AND ta.DEPT_ID = tc.DEPT_ID
                  LEFT JOIN IMBIZ.IM_FIXTURE_PROD_INFO td ON ta.P_ID = td.P_ID AND ta.DEPT_ID = td.DEPT_ID
     </sql>
-
 
     <select id="selectFixtureSharedInfoList" parameterType="FixtureSharedInfo" resultMap="FixtureSharedInfoResult">
         <include refid="selectFixtureSharedInfoVo"/>

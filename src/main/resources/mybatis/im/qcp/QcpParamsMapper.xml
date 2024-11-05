@@ -32,7 +32,7 @@
                                  remote_control,
                                  row_number() over(partition by device_id order by create_date desc) rank
                           from QT_MODEL_DDC.ALL_DEVICE_REMOTE
-                          where create_date > minutes_sub(now(), 30) and remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$'
+                          where create_date > minutes_sub(now(), 5) and remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$'
                           ) a
                     where rank = 1),
 
@@ -55,12 +55,12 @@
                                 on c.collector_program_id = d.id
                       left join ta e
                                 on a.device_id = e.device_id
-                 where dep_name = 'COB车间'
+                 where dep_name like '%COB%'
                    and a.devicetype in ('AA', 'WB', 'DB', 'HM')),
 
              tc as (select eqid, machine_no, is_valid, device_type, version, ask_date
                     from QT_MODEL_MES.T_PARAMETER_RESULT
-                    where ask_date > minutes_sub(now(), 15)
+                    where ask_date > minutes_sub(now(), 5)
                       and device_type in ('AA', 'WB', 'DB', 'HM')),
 
              td as (select distinct (eqid) from tc),
@@ -99,7 +99,7 @@
                  from (
                           select distinct eqid, machine_no, is_valid, device_type, version
                           from tc
-                          where ask_date > minutes_sub(now(), 8)
+                          where ask_date > minutes_sub(now(), 5)
                             and version = 'QCP标准参数空'
 --                             and version is not null
                             ) a
@@ -174,7 +174,7 @@
         from
             QT_MODEL_MES.T_PARAMETER_RESULT
         where
-            ask_date > minutes_sub(now(), 8)
+            ask_date > minutes_sub(now(), 5)
             and device_type in ('AA', 'WB', 'DB', 'HM')
             <choose>
                 <when test="label == 1">
@@ -200,7 +200,7 @@
                                     on c.collector_program_id = d.id
                           inner join ta e
                                     on a.device_m_id = e.eqid
-                 where dep_name = 'COB车间'
+                 where dep_name like '%COB%'
                    and a.devicetype in ('AA', 'WB', 'DB', 'HM'))
 
         select a.company_name,
@@ -224,7 +224,8 @@
     </select>
     <select id="checkIotStatus" resultType="java.lang.Boolean">
         select count(1) > 0 from QT_MODEL_MES.T_PARAMETER_RESULT
-        where ask_date > minutes_sub(now(), 8)
+        where ask_date > minutes_sub(now(), 5)
+            and device_type in ('AA', 'WB', 'DB', 'HM')
     </select>
 
 </mapper>

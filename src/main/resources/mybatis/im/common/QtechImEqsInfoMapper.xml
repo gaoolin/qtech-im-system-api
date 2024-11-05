@@ -19,6 +19,16 @@
         <result property="status" column="status" />
     </resultMap>
 
+    <resultMap id="ImReportBaseInfoResult" type="ImReportBaseInfo">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="factoryName" column="company_name" jdbcType="VARCHAR"/>
+        <result property="groupName" column="group_name" jdbcType="VARCHAR"/>
+        <result property="deptName" column="dept_name" jdbcType="VARCHAR"/>
+        <result property="deviceType" column="device_type" jdbcType="VARCHAR"/>
+        <result property="eqId" column="eq_id" jdbcType="VARCHAR"/>
+        <result property="mcId" column="mc_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <select id="listEqsInfo" resultMap="qtechImCommonInfoResult">
         with ta as (
             select
@@ -44,7 +54,7 @@
             where
                 dep_name like '%COB%'
                 <choose>
-                    <when test = "deviceType != null or deviceType != ''">
+                    <when test = "deviceType != and or deviceType != ''">
                         and devicetype = #{deviceType}
                     </when>
                     <otherwise>
@@ -64,9 +74,9 @@
                     QT_MODEL_MES.T_PARAMETER_RESULT
                     <where>
                         /* 近15分钟有采集数据上来的设备 */
-                        ask_date > minutes_sub(now(), 15)
+                        ask_date > minutes_sub(now(), 5)
                         <choose>
-                            <when test = "deviceType != null or deviceType != ''">
+                            <when test = "deviceType != null and deviceType != ''">
                                 and device_type = #{deviceType}
                             </when>
                             <otherwise>
@@ -105,7 +115,7 @@
                     a.device_m_id not in (select eqid from tc)
                 group by
                     <choose>
-                        <when test = "deviceType != null or deviceType != ''">
+                        <when test = "deviceType != null and deviceType != ''">
                             rollup (a.company_name, a.group_name)
                         </when>
                         <otherwise>
@@ -136,7 +146,7 @@
                     ta a
                 group by
                     <choose>
-                        <when test = "deviceType != null or deviceType != ''">
+                        <when test = "deviceType != null and deviceType != ''">
                             rollup (a.company_name, a.group_name)
                         </when>
                         <otherwise>
@@ -163,8 +173,7 @@
             </choose>
             a.ttl_eqs,
             nvl(b.offline_eqs, 0) offline_eqs
-        from
-            te a
+        from te a
         left join td b
             on a.company_name = b.company_name and a.group_name = b.group_name
             <choose>
@@ -172,5 +181,27 @@
                     and a.devicetype = b.devicetype
                 </when>
             </choose>
+    </select>
+
+    <select id="iotStatus" resultType="java.lang.Boolean">
+        select count(1) > 0 from QT_MODEL_MES.T_PARAMETER_RESULT
+        <where>
+            <choose>
+                <when test="deviceType != null and deviceType != ''">
+                    and device_type = #{deviceType}
+                </when>
+                <otherwise>
+                    and device_type in ('AA', 'WB', 'DB', 'HM')
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                    and ask_date between #{params.beginTime} and #{params.endTime}
+                </when>
+                <otherwise>
+                    and ask_date > minutes_sub(now(), 5)
+                </otherwise>
+            </choose>
+        </where>
     </select>
 </mapper>

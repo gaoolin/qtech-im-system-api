@@ -34,7 +34,7 @@
         row_number() over(partition by device_id order by create_date desc) rank
         from
         QT_MODEL_DDC.ALL_DEVICE_REMOTE
-        where create_date > minutes_sub(now(), 15) and remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$') a
+        where create_date > minutes_sub(now(), 5) and remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$') a
         where rank = 1),
 
         tb as (
@@ -86,7 +86,7 @@
                     ask_date > hours_sub(now(), 3)
                 </otherwise>
             </choose>-->
-            and ask_date > minutes_sub(now(), 15)
+            and ask_date > minutes_sub(now(), 5)
             and device_type in ('AA', 'WB', 'DB', 'HM'))
         </where>
 
@@ -198,7 +198,7 @@
                     ask_date > hours_sub(now(), 3)
                 </otherwise>
             </choose>-->
-            and ask_date > minutes_sub(now(), 15)
+            and ask_date > minutes_sub(now(), 5)
             and device_type in ('AA', 'WB', 'DB', 'HM'))
         </where>
 
@@ -264,7 +264,7 @@
                     QT_MODEL_MES.T_PARAMETER_RESULT
                     <where>
                         /* 近15分钟有采集数据上来的设备 */
-                        ask_date > minutes_sub(now(), 15)
+                        ask_date > minutes_sub(now(), 5)
                         <choose>
                             <when test = "deviceType != null and deviceType != ''">
                                 and device_type = #{deviceType}

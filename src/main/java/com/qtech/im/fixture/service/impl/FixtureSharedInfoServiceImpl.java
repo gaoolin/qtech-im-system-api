@@ -61,11 +61,11 @@ public class FixtureSharedInfoServiceImpl implements IFixtureSharedInfoService {
     static Map<String, String> uploadDataResult(HashMap<String, String> resultMap, int insert, int exist) {
         try {
             if (exist == 0) {
-                resultMap.put("flag" , "1");
-                resultMap.put("result" , "共 " + (insert + exist) + " 条数据，已导入 " + insert + "条数据。");
+                resultMap.put("flag", "1");
+                resultMap.put("result", "共 " + (insert + exist) + " 条数据，已导入 " + insert + "条数据。");
             } else {
-                resultMap.put("flag" , "0");
-                resultMap.put("result" , "共 " + (insert + exist) + " 条数据，已导入 " + insert + " 条数据，未导入 " + exist +
+                resultMap.put("flag", "0");
+                resultMap.put("result", "共 " + (insert + exist) + " 条数据，已导入 " + insert + " 条数据，未导入 " + exist +
                         " 条数据，请检查！");
             }
             return resultMap;
