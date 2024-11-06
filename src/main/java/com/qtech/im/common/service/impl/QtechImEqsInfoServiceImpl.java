@@ -42,4 +42,9 @@ public class QtechImEqsInfoServiceImpl implements IQtechImEqsInfoService {
     public Boolean iotStatus(ImReportBaseInfo imReportBaseInfo) {
         return qtechImEqsInfoMapper.iotStatus(imReportBaseInfo);
     }
+
+    @Override
+    public Boolean iotAaStatus(ImReportBaseInfo imReportBaseInfo) {
+        return qtechImEqsInfoMapper.iotAaStatus(imReportBaseInfo);
+    }
 }

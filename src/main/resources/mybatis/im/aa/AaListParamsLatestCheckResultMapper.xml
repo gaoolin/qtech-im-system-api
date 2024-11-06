@@ -62,14 +62,14 @@
                     ) ta,
         ( select * from qtech_eq_ads.im_eq_reverse_control_info
         <where>
-            <if test="simId != null">and sim_id = #{simId}</if>
+            <if test="simId != null and simId != ''">and lower(sim_id) like concat('%', lower(#{simId}), '%') </if>
             <if test="code != null">and code = #{code}</if>
             <if test="true"> and source = 'aa-list'</if>
         </where>
         ) tb
         <where>
             ta.pbox_id = tb.sim_id
-            <if test="factoryName != null">and company_name = #{factoryName}</if>
+            <if test="factoryName != null and factoryName != ''">and lower(company_name) like concat('%', lower(#{factoryName}), '%') </if>
         </where>
         ) tc
     </sql>
@@ -78,10 +78,10 @@
             resultMap="aaListParamsLatestCheckResultListResult">
         <include refid="aaListParamsLatestCheckResultSql"/>
         <where>
-            <if test="groupName != null">and group_name = #{groupName}</if>
-            <if test="eqId != null">and eq_id = #{eqId}</if>
-            <if test="mcId != null">and mc_id = #{mcId}</if>
-            <if test="prodType != null">and prod_type = #{prodType}</if>
+            <if test="groupName != null and groupName != ''">and lower(group_name) like concat('%', lower(#{groupName}), '%') </if>
+            <if test="eqId != null and eqId != ''">and lower(eq_id) like concat('%', lower(#{eqId}), '%') </if>
+            <if test="mcId != null and mcId != ''">and lower(mc_id) like concat('%', lower(#{mcId}), '%') </if>
+            <if test="prodType != null and prodType != ''">and lower(prod_type) like concat('%', lower(#{prodType}), '%') </if>
         </where>
         order by chk_dt desc
     </select>

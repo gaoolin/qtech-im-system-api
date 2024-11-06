@@ -20,4 +20,8 @@ public interface QtechImGroupNamesMapper {
     public List<ImReportBaseInfo> getWbOlpGroupNames(ImReportBaseInfo imReportBaseInfo);
 
     public List<ImReportBaseInfo> getWbOlpLatestGroupNames(ImReportBaseInfo imReportBaseInfo);
+
+    public List<ImReportBaseInfo> getEqnGroupNames(ImReportBaseInfo imReportBaseInfo);
+
+    public List<ImReportBaseInfo> getQcpGroupNames(ImReportBaseInfo imReportBaseInfo);
 }

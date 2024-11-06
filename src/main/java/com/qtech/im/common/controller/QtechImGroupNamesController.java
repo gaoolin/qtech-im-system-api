@@ -43,6 +43,24 @@ public class QtechImGroupNamesController {
         return R.ok(list);
     }
 
+    @GetMapping("/eqn")
+    public R<List<ImReportBaseInfo>> listEqnGroupNames(ImReportBaseInfo imReportBaseInfo) {
+        List<ImReportBaseInfo> list = qtechImGroupNamesService.getEqnGroupNames(imReportBaseInfo);
+        if (list.isEmpty()) {
+            return R.fail("未查询到工位信息");
+        }
+        return R.ok(list);
+    }
+
+    @GetMapping("/qcp")
+    public R<List<ImReportBaseInfo>> listQcpGroupNames(ImReportBaseInfo imReportBaseInfo) {
+        List<ImReportBaseInfo> list = qtechImGroupNamesService.getQcpGroupNames(imReportBaseInfo);
+        if (list.isEmpty()) {
+            return R.fail("未查询到工位信息");
+        }
+        return R.ok(list);
+    }
+
     @GetMapping("/aa/history")
     public R<List<ImReportBaseInfo>> listHistoryGroupNames(ImReportBaseInfo imReportBaseInfo) {
         Map<String, Object> params = imReportBaseInfo.getParams();

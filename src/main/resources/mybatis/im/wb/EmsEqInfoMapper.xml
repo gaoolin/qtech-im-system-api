@@ -47,11 +47,13 @@
     <select id="selectEmsEqInfoList" resultMap="qtechImCommonInfoResult">
         select * from (<include refid="selectEmsEqInfoListVo" />) tmp
         <where>
-            <if test="eqId != null and eqId != ''"> and eq_id = #{eqId}</if>
-            <if test="simId != null and simId != ''"> and sim_id = #{simId}</if>
-            <if test="prodType != null and prodType != ''"> and prod_type like concat('%', #{prodType}, '%')</if>
-            <if test="mcId != null and mcId != ''"> and mc_id = #{mcId}</if>
+            <if test="factoryName != null and factoryName != ''">and company_name = #{factoryName,jdbcType=VARCHAR}</if>
+            <if test="groupName != null and groupName != ''">and group_name = #{groupName,jdbcType=VARCHAR} </if>
+            <if test="eqId != null and eqId != ''"> and eq_id like concat('%', #{eqId}, '%') </if>
+            <if test="simId != null and simId != ''"> and sim_id like concat('%', #{simId}, '%') </if>
+            <if test="prodType != null and prodType != ''"> and prod_type like concat('%', #{prodType}, '%') </if>
+            <if test="mcId != null and mcId != ''"> and mc_id like concat('%', #{mcId}, '%') </if>
         </where>
-        order by sim_id
+        order by company_name asc, group_name asc, mc_id asc
     </select>
 </mapper>

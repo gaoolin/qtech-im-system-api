@@ -44,6 +44,24 @@ public class QtechImFactoryNamesController extends BaseController {
         return R.ok(list);
     }
 
+    @GetMapping("/eqn")
+    public R<List<ImReportBaseInfo>> listEqnFactoryNames() {
+        List<ImReportBaseInfo> list = qtechImFactoryInfoService.getEqnFactoryNames();
+        if (list.isEmpty()) {
+            return R.fail("未查询到厂区信息");
+        }
+        return R.ok(list);
+    }
+
+    @GetMapping("/qcp")
+    public R<List<ImReportBaseInfo>> listQcpFactoryNames() {
+        List<ImReportBaseInfo> list = qtechImFactoryInfoService.getQcpFactoryNames();
+        if (list.isEmpty()) {
+            return R.fail("未查询到厂区信息");
+        }
+        return R.ok(list);
+    }
+
     @GetMapping("/aa/history")
     public R<List<ImReportBaseInfo>> listHistoryFactoryNames(ImReportBaseInfo imReportBaseInfo) {
         Map<String, Object> params = imReportBaseInfo.getParams();

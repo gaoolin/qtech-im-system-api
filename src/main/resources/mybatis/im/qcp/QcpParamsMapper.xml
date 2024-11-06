@@ -179,7 +179,6 @@
             <choose>
                 <when test="label == 1">
                     and version = 'QCP标准参数空'
-                    and version is not null
                 </when>
             </choose>),
 
@@ -215,6 +214,9 @@
             <if test="factoryName != null and factoryName != ''"> and a.company_name = #{factoryName} </if>
             <if test="groupName != null and groupName != ''"> and a.group_name = #{groupName} </if>
             <if test="deviceType != null and deviceType != ''"> and a.devicetype = #{deviceType} </if>
+            <if test="eqId != null and eqId != ''"> and lower(a.eq_id) like concat('%', lower(#{eqId}), '%') </if>
+            <if test="mcId != null and mcId != ''"> and lower(a.mc_id) like concat('%', lower(#{mcId}), '%') </if>
+            <if test="prodType != null and prodType != ''"> and lower(a.prod_type) like concat('%', lower(#{prodType}), '%') </if>
         </where>
         order by company_name, group_name, devicetype, eq_id, mc_id
     </select>

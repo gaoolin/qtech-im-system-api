@@ -22,4 +22,8 @@ public interface IQtechImFactoryNamesService {
     public List<ImReportBaseInfo> getWbOlpFactoryNames(ImReportBaseInfo imReportBaseInfo);
 
     public List<ImReportBaseInfo> getWbOlpLatestFactoryNames(ImReportBaseInfo imReportBaseInfo);
+
+    public List<ImReportBaseInfo> getEqnFactoryNames();
+
+    public List<ImReportBaseInfo> getQcpFactoryNames();
 }

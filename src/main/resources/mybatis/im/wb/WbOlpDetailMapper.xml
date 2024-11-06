@@ -80,16 +80,25 @@
                             and code = #{code}
                         </when>
                     </choose>
-                    <if test="params.beginDate != null and params.beginDate != '' and params.endDate != null and params.endDate != ''">
-                        and dt between #{params.beginDate} and #{params.endDate}
+                    <choose>
+                        <when test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                            and dt between #{params.beginTime} and #{params.endTime}
+                        </when>
+                        <otherwise>
+                            and dt > hours_sub(now(), 24)
+                        </otherwise>
+                    </choose>
+                    <if test="simId != null">
+                        and sim_id like concat('%', #{simId}, '%')
                     </if>
                 </where>) tb
             <where>
                 ta.pbox_id = tb.sim_id
-                <if test="factoryName != null and factoryName != ''"> and company_name = #{factoryName}</if>
-                <if test="groupName != null and groupName != ''"> and group_name = #{groupName}</if>
-                <if test="eqId != null and eqId != ''"> and device_m_id = #{eqId}</if>
-                <if test="prodType != null and prodType != ''"> and mc_id like concat('%', #{prodType}, '%')</if>
+                <if test="factoryName != null"> and company_name = #{factoryName}</if>
+                <if test="groupName != null"> and group_name = #{groupName}</if>
+                <if test="eqId != null"> and lower(device_m_id) like concat('%', lower(#{eqId}), '%') </if>
+                <if test="mcId != null"> and lower(machine_no) like concat('%', lower(#{mcId}), '%') </if>
+                <if test="prodType != null"> and lower(mc_id) like concat('%', lower(#{prodType}), '%') </if>
             </where>
         ) tc
         order by

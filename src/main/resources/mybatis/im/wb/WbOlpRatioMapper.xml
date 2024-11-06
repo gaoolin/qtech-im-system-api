@@ -81,10 +81,15 @@
                     from
                         qtech_eq_dwd.im_wb_olp_chk_result_detail
                     <where>
-                        <if test="params.beginDate != null and params.beginDate != '' and params.endDate != null and params.endDate != ''">
-                            and dt between #{params.beginDate} and #{params.endDate}
-                        </if>
-                        <if test="status != null and status != ''">
+                        <choose>
+                            <when test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                                and dt between #{params.beginTime} and #{params.endTime}
+                            </when>
+                            <otherwise>
+                                and dt > hours_sub(now(), 24)
+                            </otherwise>
+                        </choose>
+                        <if test="status != null">
                             and code = #{status}
                         </if>
                     </where>) tb

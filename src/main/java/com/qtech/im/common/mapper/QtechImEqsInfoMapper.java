@@ -19,4 +19,6 @@ public interface QtechImEqsInfoMapper {
     public List<ImEqsNetworkingAndRemoteInfoVo> listEqsInfo(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
 
     public Boolean iotStatus(ImReportBaseInfo imReportBaseInfo);
+
+    public Boolean iotAaStatus(ImReportBaseInfo imReportBaseInfo);
 }

@@ -52,11 +52,6 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
     @Override
     public ImAaListParamsStdModelDetail selectOne(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail) {
         QueryWrapper<ImAaListParamsStdModelDetail> wrapper = new QueryWrapper<>(imAaListParamsStdModelDetail);
-        Map<String, Object> params = imAaListParamsStdModelDetail.getParams();
-
-        if (params != null) {
-            wrapper.between("create_time" , params.get("beginTime"), params.get("endTime"));
-        }
         return super.getOne(wrapper);
     }
 
@@ -73,7 +68,7 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
                 rowsAffected = super.save(imAaListParamsStdModelDetail);
                 aaListParamsStdModelInfoService.insertAaListParamsStdModelInfo(imAaListParamsStdModelDetail);
             } catch (Exception e) {
-                log.error("存储数据发生异常，请联系管理员！\n{}" , e.getMessage());
+                log.error("存储数据发生异常，请联系管理员！\n{}", e.getMessage());
                 throw new RuntimeException("存储数据发生异常，请联系管理员！");
             }
         } else {
@@ -86,7 +81,7 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
             try {
                 rowsAffected = updateAaListParamsStdModel(imAaListParamsStdModelDetail);
             } catch (Exception e) {
-                log.error("修改数据发生异常，请联系管理员！\n{}" , e.getMessage());
+                log.error("修改数据发生异常，请联系管理员！\n{}", e.getMessage());
                 throw new RuntimeException("修改数据发生异常，请联系管理员！");
             }
         }
@@ -110,7 +105,7 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
         try {
             b = super.update(Wrappers.<ImAaListParamsStdModelDetail>lambdaQuery(aaListParamsStdModelDetail));
         } catch (Exception e) {
-            log.error("修改数据发生异常，请联系管理员！\n{}" , e.getMessage());
+            log.error("修改数据发生异常，请联系管理员！\n{}", e.getMessage());
             throw new RuntimeException("修改数据发生异常，请联系管理员！");
         }
         return b;
@@ -124,7 +119,7 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
                 stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
                 return super.remove(Wrappers.<ImAaListParamsStdModelDetail>lambdaQuery(aaListParamsStdModelDetail));
             } catch (Exception e) {
-                log.error("删除数据发生异常，请联系管理员！\n{}" , e.getMessage());
+                log.error("删除数据发生异常，请联系管理员！\n{}", e.getMessage());
                 throw new RuntimeException("删除数据发生异常，请联系管理员！");
             }
         }
@@ -148,7 +143,7 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
         try {
             b = super.removeBatchByIds(list);
         } catch (Exception e) {
-            log.error("删除数据发生异常，请联系管理员！\n{}" , e.getMessage());
+            log.error("删除数据发生异常，请联系管理员！\n{}", e.getMessage());
             throw new RuntimeException("删除数据发生异常，请联系管理员！");
         }
         return b;
@@ -159,8 +154,8 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
     public Map<String, Object> uploadManual(List<ImAaListParamsStdModelDetail> paramsModelList) {
         Map<String, Object> result = new HashMap<>();
         if (paramsModelList == null || paramsModelList.isEmpty()) {
-            result.put("flag" , "0");
-            result.put("msg" , "Total: 0");
+            result.put("flag", "0");
+            result.put("msg", "Total: 0");
             return result;
         }
 
@@ -202,14 +197,14 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
                     failureCount++;
                 }
             } catch (Exception e) {
-                log.error("处理数据发生异常：{}" , e.getMessage());
+                log.error("处理数据发生异常：{}", e.getMessage());
                 failureCount++;
             }
         }
 
         boolean isAllSuccess = (successCount == totalCount);
 
-        result.put("flag" , isAllSuccess);
+        result.put("flag", isAllSuccess);
         StringBuilder msg = new StringBuilder("Total: " + totalCount);
         if (successCount > 0) {
             msg.append(", Success: ").append(successCount);
@@ -220,7 +215,7 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
         if (duplicateCount > 0) {
             msg.append(", Duplicate: ").append(duplicateCount);
         }
-        result.put("msg" , msg.toString());
+        result.put("msg", msg.toString());
 
         return result;
     }

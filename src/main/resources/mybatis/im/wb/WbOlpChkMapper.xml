@@ -88,10 +88,10 @@
         <where>
             <if test="vo.factoryName != null and vo.factoryName != ''">and company_name = #{vo.factoryName,jdbcType=VARCHAR}</if>
             <if test="vo.groupName != null and vo.groupName != ''">and group_name = #{vo.groupName,jdbcType=VARCHAR}</if>
-            <if test="vo.eqId != null and vo.eqId != ''">and device_m_id = #{vo.eqId,jdbcType=VARCHAR}</if>
-            <if test="vo.mcId != null and vo.mcId != ''">and machine_no = #{vo.mcId,jdbcType=VARCHAR}</if>
-            <if test="vo.prodType != null and vo.prodType != ''">and prod_type like concat('%',#{vo.prodType,jdbcType=VARCHAR},'%')</if>
-            <if test="vo.simId != null and vo.simId != ''">and pbox_id = #{vo.simId,jdbcType=VARCHAR}</if>
+            <if test="vo.eqId != null and vo.eqId != ''">and lower(device_m_id) like concat('%', lower(#{vo.eqId,jdbcType=VARCHAR}), '%') </if>
+            <if test="vo.mcId != null and vo.mcId != ''">and lower(machine_no) like concat('%', lower(#{vo.mcId,jdbcType=VARCHAR}), '%') </if>
+            <if test="vo.prodType != null and vo.prodType != ''">and lower(prod_type) like concat('%', lower(#{vo.prodType,jdbcType=VARCHAR}),'%')</if>
+            <if test="vo.simId != null and vo.simId != ''">and pbox_id like concat('%', #{vo.simId,jdbcType=VARCHAR}, '%') </if>
             <if test="vo.status != null">and code = #{vo.status,jdbcType=INTEGER}</if>
         </where>
         order by dt desc

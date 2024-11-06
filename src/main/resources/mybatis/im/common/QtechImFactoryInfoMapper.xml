@@ -115,4 +115,51 @@
             c.pbox_id = d.sim_id
     </select>
 
+    <select id="getEqnFactoryNames" resultMap="ImReportBaseInfoResult">
+        select distinct b.company_name
+        from QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
+                 left join QT_MODEL_EMS.V_CODE_NAME b on
+            a.hierarchy_code = b.hierarchy_show_code
+        where devicetype in ('AA', 'DB', 'HM', 'HM')
+    </select>
+
+    <select id="getQcpFactoryNames" resultMap="ImReportBaseInfoResult">
+        with ta as (
+        select
+            distinct eqid,
+            machine_no,
+            is_valid,
+            device_type,
+            part_spec,
+            version
+        from
+            QT_MODEL_MES.T_PARAMETER_RESULT
+        where
+            ask_date > minutes_sub(now(), 5)
+            and device_type in ('AA', 'WB', 'DB', 'HM')),
+
+        tb as (
+                 select b.company_name,
+                        b.group_name,
+                        a.devicetype,
+                        e.eqid as eq_id,
+                        a.machine_no as mc_id,
+                        e.part_spec as prod_type,
+                        e.version as description
+                 from QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
+                          left join QT_MODEL_EMS.V_CODE_NAME b
+                                    on a.hierarchy_code = b.hierarchy_show_code
+                          left join QT_MODEL_EMS.T_PBOX_INFO c
+                                    on c.dev_id = a.device_id
+                          left join QT_MODEL_EMS.T_COLLECTOR_PROGRAM d
+                                    on c.collector_program_id = d.id
+                          inner join ta e
+                                    on a.device_m_id = e.eqid
+                 where dep_name like '%COB%'
+                   and a.devicetype in ('AA', 'WB', 'DB', 'HM'))
+
+        select distinct a.company_name
+        from tb a
+    </select>
+
 </mapper>

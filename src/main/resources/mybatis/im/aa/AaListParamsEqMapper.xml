@@ -138,14 +138,16 @@
     <select id="selectAaListParamsEqList" resultMap="aaListParamsEqResult">
         select * from (<include refid="selectAaListParamsEqListVo"/>) tmp
         <where>
-            <if test="eqId != null and eqId != ''">and eq_id = #{eqId}</if>
-            <if test="mcId != null and mcId != ''">and mc_id = #{mcId}</if>
-            <if test="simId != null and simId != ''">and sim_id = #{simId}</if>
             <if test="factoryName != null and factoryName != ''">and company_name = #{factoryName}</if>
             <if test="groupName != null and groupName != ''">and group_name = #{groupName}</if>
-            <if test="prodType != null and prodType != ''">and prod_type = #{prodType}</if>
+            <if test="eqId != null and eqId != ''">and lower(eq_id) like concat('%', lower(#{eqId}),'%') </if>
+            <if test="mcId != null and mcId != ''">and lower(mc_id) like concat('%', lower(#{mcId}),'%') </if>
+            <if test="simId != null and simId != ''">and sim_id like concat('%',#{simId},'%') </if>
+            <if test="prodType != null and prodType != ''">and lower(prod_type) like concat('%', lower(#{prodType}),'%') </if>
             <if test="status != null">
-                and (status = #{status} or (#{status} = 0 and status is null))
+                -- status 为int类型
+                -- and (status = #{status} or (#{status} = 0 and status is null))
+                and status = #{status}
             </if>
         </where>
         order by update_time desc, status desc, company_name, group_name, mc_id

@@ -204,4 +204,18 @@
             </choose>
         </where>
     </select>
+
+    <select id="iotAaStatus" resultType="java.lang.Boolean">
+        select count(1) > 0 from qtech_eq_dwd.im_aa_list_parsed_detail
+        <where>
+            <choose>
+                <when test="params.beginTime != null and params.endTime != null">
+                    and received_time between #{params.beginTime} and #{params.endTime}
+                </when>
+                <otherwise>
+                    and received_time > minutes_sub(now(), 5)
+                </otherwise>
+            </choose>
+        </where>
+    </select>
 </mapper>

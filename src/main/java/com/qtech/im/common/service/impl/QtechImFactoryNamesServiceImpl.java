@@ -5,6 +5,7 @@ import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.common.domain.ImReportBaseInfo;
 import com.qtech.im.common.mapper.QtechImFactoryNamesMapper;
 import com.qtech.im.common.service.IQtechImFactoryNamesService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,28 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
     public List<ImReportBaseInfo> getWbOlpLatestFactoryNames(ImReportBaseInfo imReportBaseInfo) {
         try {
             return qtechImFactoryNamesMapper.getWbOlpLatestFactoryNames(imReportBaseInfo);
+        } catch (Exception e) {
+            log.error("查询数据库失败" , e);
+            throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
+        }
+    }
+
+    @DataSource(DataSourceType.THIRD)
+    @Override
+    public List<ImReportBaseInfo> getEqnFactoryNames() {
+        try {
+            return qtechImFactoryNamesMapper.getEqnFactoryNames();
+        } catch (Exception e) {
+            log.error("查询数据库失败" , e);
+            throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
+        }
+    }
+
+    @DataSource(DataSourceType.THIRD)
+    @Override
+    public List<ImReportBaseInfo> getQcpFactoryNames() {
+        try {
+            return qtechImFactoryNamesMapper.getQcpFactoryNames();
         } catch (Exception e) {
             log.error("查询数据库失败" , e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
