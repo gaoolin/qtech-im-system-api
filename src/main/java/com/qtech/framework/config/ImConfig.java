@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @author qtech
  */
 @Component
-@ConfigurationProperties(prefix = "qtech")
+@ConfigurationProperties(prefix = "im")
 public class ImConfig
 {
     /** 项目名称 */
