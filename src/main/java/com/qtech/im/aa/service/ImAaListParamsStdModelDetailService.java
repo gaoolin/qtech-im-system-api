@@ -15,19 +15,17 @@ import java.util.Map;
 */
 public interface ImAaListParamsStdModelDetailService extends IService<ImAaListParamsStdModelDetail> {
 
-    List<ImAaListParamsStdModelDetail> selectAaListParamsStdModelList(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail);
-
-    ImAaListParamsStdModelDetail selectOne(ImAaListParamsStdModelDetail aaListParamsStdModelDetail);
+    List<ImAaListParamsStdModelDetail> selectList(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail);
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRED)
-    boolean insertAaListParamsStdModel(ImAaListParamsStdModelDetail aaListParamsStdModelDetail);
+    boolean saveOrUpdateAaListParamsStdModel(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail);
 
     int batchInsert(List<ImAaListParamsStdModelDetail> paramsModelList);
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     boolean updateAaListParamsStdModel(ImAaListParamsStdModelDetail aaListParamsStdModelDetail);
 
-    boolean deleteAaListParamsStdModel(ImAaListParamsStdModelDetail aaListParamsStdModelDetail);
+    void deleteAaListParamsStdModel(ImAaListParamsStdModelDetail aaListParamsStdModelDetail);
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     boolean deleteAaListParamsStdModelByIds(List<Long> list);
@@ -37,4 +35,6 @@ public interface ImAaListParamsStdModelDetailService extends IService<ImAaListPa
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     Map<String, Object> uploadOnline(ImAaListParamsStdModelDetail aaListParamsStdModelDetail);
+
+    public ImAaListParamsStdModelDetail selectOne(ImAaListParamsStdModelDetail param);
 }

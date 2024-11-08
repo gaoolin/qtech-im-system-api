@@ -34,12 +34,12 @@ public class AaListParamsStdModelDetailController extends BaseController {
     @RequestMapping(value = "/list" , produces = "application/json" , method = RequestMethod.GET)
     public TableDataInfo list(ImAaListParamsStdModelDetail aaListParamsStdModelDetail) {
         startPage();
-        List<ImAaListParamsStdModelDetail> list = aaListParamsStdModelDetailService.selectAaListParamsStdModelList(aaListParamsStdModelDetail);
+        List<ImAaListParamsStdModelDetail> list = aaListParamsStdModelDetailService.selectList(aaListParamsStdModelDetail);
         return getDataTable(list);
     }
 
     @RequestMapping(value = "/{id}" , produces = "application/json" , method = RequestMethod.GET)
-    public TableDataInfo getInfoById(@PathVariable Long id) {
+    public TableDataInfo getById(@PathVariable Long id) {
         ImAaListParamsStdModelDetail param = new ImAaListParamsStdModelDetail();
         param.setId(id);
         ImAaListParamsStdModelDetail one = aaListParamsStdModelDetailService.selectOne(param);
@@ -49,7 +49,7 @@ public class AaListParamsStdModelDetailController extends BaseController {
     @RequestMapping(value = "/add" , produces = "application/json" , method = RequestMethod.POST)
     public AjaxResult add(@RequestBody ImAaListParamsStdModelDetail aaListParamsStdModelDetail) {
 
-        return toAjax(aaListParamsStdModelDetailService.insertAaListParamsStdModel(aaListParamsStdModelDetail));
+        return toAjax(aaListParamsStdModelDetailService.saveOrUpdateAaListParamsStdModel(aaListParamsStdModelDetail));
     }
 
     @RequestMapping(value = "/edit" , produces = "application/json" , method = RequestMethod.POST)
@@ -68,7 +68,7 @@ public class AaListParamsStdModelDetailController extends BaseController {
     @Log(title = "AA-List参数标准模版明细" , businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ImAaListParamsStdModelDetail aaListParamsStdModelDetail) {
-        List<ImAaListParamsStdModelDetail> list = aaListParamsStdModelDetailService.selectAaListParamsStdModelList(aaListParamsStdModelDetail);
+        List<ImAaListParamsStdModelDetail> list = aaListParamsStdModelDetailService.selectList(aaListParamsStdModelDetail);
         ExcelUtil<ImAaListParamsStdModelDetail> util = new ExcelUtil<ImAaListParamsStdModelDetail>(ImAaListParamsStdModelDetail.class);
         util.exportExcel(response, list, "AA-List参数标准模版明细");
     }
@@ -97,9 +97,13 @@ public class AaListParamsStdModelDetailController extends BaseController {
     }
 
     @PreAuthorize("@ss.hasPermi('aa:params:model:upload')")
-    @Log(title = "AA参数模版导入" , businessType = BusinessType.IMPORT)
+    @Log(title = "AA参数模版导入", businessType = BusinessType.IMPORT)
     @PostMapping("/upload/online")
     public AjaxResult uploadOnline(@RequestBody ImAaListParamsStdModelDetail aaListParamsStdModelDetail) throws Exception {
+        if (aaListParamsStdModelDetail == null) {
+            return AjaxResult.error("请求体不能为空");
+        }
+
         Map<String, Object> resultMap = aaListParamsStdModelDetailService.uploadOnline(aaListParamsStdModelDetail);
         return resultMap.get("flag").equals(true) ? AjaxResult.success(resultMap.get("msg").toString()) : AjaxResult.warn(resultMap.get("msg").toString());
     }

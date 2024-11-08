@@ -12,10 +12,13 @@
         <result column="chk_cnt" property="chkCnt" jdbcType="INTEGER"/>
         <result column="ok_cnt" property="okCnt" jdbcType="INTEGER"/>
         <result column="err_cnt" property="errCnt" jdbcType="INTEGER"/>
-        <result column="no_mod_cnt" property="noModCnt" jdbcType="INTEGER"/>
-        <result column="lack_params_cnt" property="lackParamsCnt" jdbcType="INTEGER"/>
-        <result column="overflow_cnt" property="overflowCnt" jdbcType="INTEGER"/>
-        <result column="unsuitable_cnt" property="unsuitableCnt" jdbcType="INTEGER"/>
+		<result column="no_tpl_cnt" property="noTplCnt" jdbcType="INTEGER"/>
+		<result column="lack_params_cnt" property="lackParamsCnt" jdbcType="INTEGER"/>
+		<result column="unsuitable_cnt" property="unsuitableCnt" jdbcType="INTEGER"/>
+		<result column="overflow_cnt" property="overflowCnt" jdbcType="INTEGER"/>
+		<result column="comp_err_cnt" property="compErrCnt" jdbcType="INTEGER"/>
+		<result column="offline_tpl_cnt" property="offlineTplCnt" jdbcType="INTEGER"/>
+		<result column="lack_tpl_detail_cnt" property="lackTplDetailCnt" jdbcType="INTEGER"/>
         <result column="err_ratio" property="errRatio" jdbcType="FLOAT"/>
     </resultMap>
 
@@ -107,10 +110,13 @@
 			chk_cnt,
 			ok_cnt,
 			err_cnt,
-			no_mod_cnt,
+			no_tpl_cnt,
 			lack_params_cnt,
 			unsuitable_cnt,
 			overflow_cnt,
+			comp_err_cnt,
+			offline_tpl_cnt,
+			lack_tpl_detail_cnt,
 			err_ratio
 		FROM
 			(
@@ -120,10 +126,13 @@
 					chk_cnt,
 					ok_cnt,
 					err_cnt,
-					no_mod_cnt,
+					no_tpl_cnt,
 					lack_params_cnt,
 					unsuitable_cnt,
 					overflow_cnt,
+					comp_err_cnt,
+					offline_tpl_cnt,
+					lack_tpl_detail_cnt,
 					err_cnt / chk_cnt as err_ratio
 				FROM
 					(
@@ -132,11 +141,14 @@
 							group_name,
 							count(code) as chk_cnt,
 							sum(case when code = 0 then 1 else 0 end) as ok_cnt,
-							sum(case when code != 0 then 1 else 0 end) as err_cnt,
-							sum(case when code = 4 then 0 else 1 end) as no_mod_cnt,
-							sum(case when code = 1 then 1 else 0 end) as lack_params_cnt,
-							sum(case when code = 2 then 1 else 0 end) as unsuitable_cnt,
-							sum(case when code = 3 then 1 else 0 end) as overflow_cnt
+							sum(case when code > 0 then 1 else 0 end) as err_cnt,
+							sum(case when code = 1 then 1 else 0 end) as no_tpl_cnt,
+							sum(case when code = 2 then 1 else 0 end) as lack_params_cnt,
+							sum(case when code = 3 then 1 else 0 end) as unsuitable_cnt,
+							sum(case when code = 4 then 1 else 0 end) as overflow_cnt,
+							sum(case when code = 5 then 1 else 0 end) as comp_err_cnt,
+							sum(case when code = 6 then 1 else 0 end) as offline_tpl_cnt,
+							sum(case when code = 7 then 1 else 0 end) as lack_tpl_detail_cnt
 						FROM
 							(
 								SELECT

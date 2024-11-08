@@ -20,9 +20,5 @@ public class WbOlpChkVo extends ImReportBaseInfo {
 
     @Excel(name = "状态", dictType = "comparison_result_code")
     private Integer status;
-
-    @Excel(name = "描述")
-    private String description;
-
     private Integer category;
 }

@@ -1,8 +1,8 @@
 package com.qtech.im.aa.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qtech.common.utils.DateUtils;
 import com.qtech.common.utils.StringUtils;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
@@ -12,7 +12,6 @@ import com.qtech.im.aa.service.IAaListParamsStdModelInfoService;
 import com.qtech.im.aa.service.ImAaListParamsStdModelDetailService;
 import com.qtech.im.aa.utils.ReflectionUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -35,8 +34,7 @@ import static com.qtech.im.aa.utils.Constants.REDIS_COMPARISON_MODEL_KEY_PREFIX;
 @DataSource(value = DataSourceType.FOURTH)
 @Slf4j
 @Service
-public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaListParamsStdModelDetailMapper, ImAaListParamsStdModelDetail>
-        implements ImAaListParamsStdModelDetailService {
+public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaListParamsStdModelDetailMapper, ImAaListParamsStdModelDetail> implements ImAaListParamsStdModelDetailService {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -45,47 +43,36 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
     private IAaListParamsStdModelInfoService aaListParamsStdModelInfoService;
 
     @Override
-    public List<ImAaListParamsStdModelDetail> selectAaListParamsStdModelList(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail) {
-        return baseMapper.selectList(Wrappers.<ImAaListParamsStdModelDetail>lambdaQuery(imAaListParamsStdModelDetail));
-    }
-
-    @Override
-    public ImAaListParamsStdModelDetail selectOne(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail) {
-        QueryWrapper<ImAaListParamsStdModelDetail> wrapper = new QueryWrapper<>(imAaListParamsStdModelDetail);
-        return super.getOne(wrapper);
+    public List<ImAaListParamsStdModelDetail> selectList(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail) {
+        LambdaQueryWrapper<ImAaListParamsStdModelDetail> wrapper = new LambdaQueryWrapper<>();
+        if (imAaListParamsStdModelDetail.getId() != null) {
+            wrapper.eq(ImAaListParamsStdModelDetail::getId, imAaListParamsStdModelDetail.getId());
+        }
+        if (StringUtils.isNotBlank(imAaListParamsStdModelDetail.getProdType())) {
+            wrapper.eq(ImAaListParamsStdModelDetail::getProdType, imAaListParamsStdModelDetail.getProdType());
+        }
+        return list(wrapper);
     }
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRED)
     @Override
-    public boolean insertAaListParamsStdModel(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail) {
+    public boolean saveOrUpdateAaListParamsStdModel(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail) {
         // 检查数据是否存在
-        ImAaListParamsStdModelDetail existingModelDetail = baseMapper.selectOne(Wrappers.<ImAaListParamsStdModelDetail>lambdaQuery(imAaListParamsStdModelDetail));
+        LambdaQueryWrapper<ImAaListParamsStdModelDetail> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ImAaListParamsStdModelDetail::getProdType, imAaListParamsStdModelDetail.getProdType());
+        ImAaListParamsStdModelDetail one = getOne(wrapper);
 
-        boolean rowsAffected = false;
-        if (existingModelDetail == null) {
-            // 数据不存在，执行插入操作
-            try {
-                rowsAffected = super.save(imAaListParamsStdModelDetail);
-                aaListParamsStdModelInfoService.insertAaListParamsStdModelInfo(imAaListParamsStdModelDetail);
-            } catch (Exception e) {
-                log.error("存储数据发生异常，请联系管理员！\n{}", e.getMessage());
-                throw new RuntimeException("存储数据发生异常，请联系管理员！");
-            }
-        } else {
-            // 数据存在，执行更新操作
-            // 更新前先设置更新人和更新时间
-            imAaListParamsStdModelDetail.setId(existingModelDetail.getId()); // 确保ID正确
-            String nickName = getLoginUser().getUser().getNickName();
-            imAaListParamsStdModelDetail.setUpdateBy(nickName);
-
-            try {
-                rowsAffected = updateAaListParamsStdModel(imAaListParamsStdModelDetail);
-            } catch (Exception e) {
-                log.error("修改数据发生异常，请联系管理员！\n{}", e.getMessage());
-                throw new RuntimeException("修改数据发生异常，请联系管理员！");
-            }
+        if (one != null) {
+            // 数据已存在，执行更新操作
+            stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
+            imAaListParamsStdModelDetail.setUpdateBy(getLoginUser().getUser().getNickName());
+            imAaListParamsStdModelDetail.setUpdateTime(DateUtils.getNowDate());
+            return update(imAaListParamsStdModelDetail, wrapper);
         }
-        return rowsAffected;
+
+        imAaListParamsStdModelDetail.setCreateBy(getLoginUser().getUser().getNickName());
+        imAaListParamsStdModelDetail.setCreateTime(DateUtils.getNowDate());
+        return save(imAaListParamsStdModelDetail);
     }
 
     @Override
@@ -96,14 +83,18 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     @Override
     public boolean updateAaListParamsStdModel(ImAaListParamsStdModelDetail aaListParamsStdModelDetail) {
-        List<ImAaListParamsStdModelDetail> list = super.list(Wrappers.<ImAaListParamsStdModelDetail>lambdaQuery(aaListParamsStdModelDetail));
-        if (CollectionUtils.isNotEmpty(list)) {
-            stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + list.get(0).getProdType());
-        }
+        LambdaQueryWrapper<ImAaListParamsStdModelDetail> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ImAaListParamsStdModelDetail::getProdType, aaListParamsStdModelDetail.getProdType());
+        ImAaListParamsStdModelDetail one = getOne(wrapper);
 
         boolean b = false;
         try {
-            b = super.update(Wrappers.<ImAaListParamsStdModelDetail>lambdaQuery(aaListParamsStdModelDetail));
+            if (one == null) {
+                throw new RuntimeException("修改数据发生异常，请联系管理员！");
+            } else {
+                stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
+            }
+            b = update(wrapper);
         } catch (Exception e) {
             log.error("修改数据发生异常，请联系管理员！\n{}", e.getMessage());
             throw new RuntimeException("修改数据发生异常，请联系管理员！");
@@ -112,28 +103,26 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
     }
 
     @Override
-    public boolean deleteAaListParamsStdModel(ImAaListParamsStdModelDetail aaListParamsStdModelDetail) {
+    public void deleteAaListParamsStdModel(ImAaListParamsStdModelDetail aaListParamsStdModelDetail) {
         if (aaListParamsStdModelDetail != null) {
             try {
                 String prodType = aaListParamsStdModelDetail.getProdType();
                 stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
-                return super.remove(Wrappers.<ImAaListParamsStdModelDetail>lambdaQuery(aaListParamsStdModelDetail));
+                LambdaQueryWrapper<ImAaListParamsStdModelDetail> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(ImAaListParamsStdModelDetail::getProdType, prodType);
+                remove(wrapper);
             } catch (Exception e) {
                 log.error("删除数据发生异常，请联系管理员！\n{}", e.getMessage());
                 throw new RuntimeException("删除数据发生异常，请联系管理员！");
             }
         }
-        return false;
     }
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     @Override
     public boolean deleteAaListParamsStdModelByIds(List<Long> list) {
-
         list.forEach(id -> {
-            ImAaListParamsStdModelDetail aaListParamsStdModelDetailParams = new ImAaListParamsStdModelDetail();
-            aaListParamsStdModelDetailParams.setId(id);
-            ImAaListParamsStdModelDetail res = selectOne(aaListParamsStdModelDetailParams);
+            ImAaListParamsStdModelDetail res = getById(id);
             if (res != null) {
                 stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + res.getProdType());
             }
@@ -166,32 +155,31 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
 
         for (ImAaListParamsStdModelDetail detail : paramsModelList) {
             try {
-                int exists = baseMapper.checkIfExists(detail);
+                int exists = selectList(detail).size();
                 if (exists > 0) {
                     duplicateCount++;
                     continue;
                 }
 
-                ReflectionUtils.getAllDeclaredFields(ImAaListParamsStdModelDetail.class)
-                        .forEach(field -> {
-                            field.setAccessible(true);
-                            if (field.getType().equals(String.class)) {
-                                try {
-                                    String value = (String) field.get(detail);
-                                    if (StringUtils.isBlank(value)) {
-                                        field.set(detail, null);
-                                    } else {
-                                        field.set(detail, StringUtils.trim(value));
-                                    }
-                                } catch (IllegalAccessException e) {
-                                    throw new RuntimeException(e);
-                                }
+                ReflectionUtils.getAllDeclaredFields(ImAaListParamsStdModelDetail.class).forEach(field -> {
+                    field.setAccessible(true);
+                    if (field.getType().equals(String.class)) {
+                        try {
+                            String value = (String) field.get(detail);
+                            if (StringUtils.isBlank(value)) {
+                                field.set(detail, null);
+                            } else {
+                                field.set(detail, StringUtils.trim(value));
                             }
-                        });
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
 
-                int insertCount = baseMapper.insert(detail);
+                boolean insertCount = save(detail);
                 aaListParamsStdModelInfoService.insertAaListParamsStdModelInfo(detail);
-                if (insertCount > 0) {
+                if (insertCount) {
                     successCount++;
                 } else {
                     failureCount++;
@@ -228,10 +216,20 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
     }
 
     @Override
-    public boolean save(ImAaListParamsStdModelDetail entity) {
-        return super.save(entity);
+    public ImAaListParamsStdModelDetail selectOne(ImAaListParamsStdModelDetail param) {
+        if (param != null) {
+            if (param.getId() != null) {
+                return getById(param.getId());
+            } else if (param.getProdType() != null) {
+                LambdaQueryWrapper<ImAaListParamsStdModelDetail> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(ImAaListParamsStdModelDetail::getProdType, param.getProdType());
+                return getOne(wrapper);
+            } else {
+                throw new RuntimeException("参数错误，无法识别参数！");
+            }
+        }
+        return null;
     }
-
 }
 
 

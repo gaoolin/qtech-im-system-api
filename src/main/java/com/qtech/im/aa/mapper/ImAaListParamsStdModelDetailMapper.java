@@ -10,6 +10,5 @@ import com.qtech.im.aa.domain.ImAaListParamsStdModelDetail;
  * @Entity com.qtech.aa.domain.ImAaListParamsStdModelDetail
  */
 public interface ImAaListParamsStdModelDetailMapper extends BaseMapper<ImAaListParamsStdModelDetail> {
-    public int checkIfExists(ImAaListParamsStdModelDetail detail);
 }
 
