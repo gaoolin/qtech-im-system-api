@@ -137,8 +137,8 @@ public class ImAaListParams extends BaseEntity {
     private String aa1RoiLl;
     @Excel(name = "aa1RoiLr" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa1RoiLr;
-    @Excel(name = "aa1FC" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa1FC;
+    @Excel(name = "aa1Fc" , cellType = Excel.ColumnType.STRING, prompt = "item")
+    private String aa1Fc;
     @Excel(name = "aa1F1" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
     private String aa1F1;
     @Excel(name = "aa1F2" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
@@ -180,8 +180,8 @@ public class ImAaListParams extends BaseEntity {
     private String aa2RoiLl;
     @Excel(name = "aa2RoiLr" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa2RoiLr;
-    @Excel(name = "aa2FC" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa2FC;
+    @Excel(name = "aa2Fc" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
+    private String aa2Fc;
     @Excel(name = "aa2F1" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
     private String aa2F1;
     @Excel(name = "aa2F2" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
@@ -223,8 +223,8 @@ public class ImAaListParams extends BaseEntity {
     private String aa3RoiLl;
     @Excel(name = "aa3RoiLr" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa3RoiLr;
-    @Excel(name = "aa3FC" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa3FC;
+    @Excel(name = "aa3Fc" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
+    private String aa3Fc;
     @Excel(name = "aa3F1" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
     private String aa3F1;
     @Excel(name = "aa3F2" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
@@ -257,8 +257,8 @@ public class ImAaListParams extends BaseEntity {
     private String aa3GoldenGlueThicknessMax;
 
     // mtfCheck Item 指标
-    @Excel(name = "mtfCheckFC" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String mtfCheckFC;
+    @Excel(name = "mtfCheckFc" , cellType = Excel.ColumnType.STRING, prompt = "item")
+    private String mtfCheckFc;
     @Excel(name = "mtfCheckF1" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheckF1;
     @Excel(name = "mtfCheckF2" , cellType = Excel.ColumnType.STRING, prompt = "item")
@@ -268,8 +268,8 @@ public class ImAaListParams extends BaseEntity {
     @Excel(name = "mtfCheckF4" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheckF4;
 
-    @Excel(name = "mtfCheck1FC" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String mtfCheck1FC;
+    @Excel(name = "mtfCheck1Fc" , cellType = Excel.ColumnType.STRING, prompt = "item")
+    private String mtfCheck1Fc;
     @Excel(name = "mtfCheck1F1" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck1F1;
     @Excel(name = "mtfCheck1F2" , cellType = Excel.ColumnType.STRING, prompt = "item")
@@ -279,8 +279,8 @@ public class ImAaListParams extends BaseEntity {
     @Excel(name = "mtfCheck1F4" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck1F4;
 
-    @Excel(name = "mtfCheck2FC" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String mtfCheck2FC;
+    @Excel(name = "mtfCheck2Fc" , cellType = Excel.ColumnType.STRING, prompt = "item")
+    private String mtfCheck2Fc;
     @Excel(name = "mtfCheck2F1" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck2F1;
     @Excel(name = "mtfCheck2F2" , cellType = Excel.ColumnType.STRING, prompt = "item")
@@ -290,8 +290,8 @@ public class ImAaListParams extends BaseEntity {
     @Excel(name = "mtfCheck2F4" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck2F4;
 
-    @Excel(name = "mtfCheck3FC" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String mtfCheck3FC;
+    @Excel(name = "mtfCheck3Fc" , cellType = Excel.ColumnType.STRING, prompt = "item")
+    private String mtfCheck3Fc;
     @Excel(name = "mtfCheck3F1" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck3F1;
     @Excel(name = "mtfCheck3F2" , cellType = Excel.ColumnType.STRING, prompt = "item")

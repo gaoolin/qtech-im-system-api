@@ -180,7 +180,7 @@ public class ImAaListParamsForMybatisPlus extends BaseEntityForMybatisPlus {
     private String aa2RoiLl;
     @Excel(name = "aa2RoiLr" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa2RoiLr;
-    @Excel(name = "aa2FC" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
+    @Excel(name = "aa2Fc" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
     private String aa2Fc;
     @Excel(name = "aa2F1" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
     private String aa2F1;
@@ -223,7 +223,7 @@ public class ImAaListParamsForMybatisPlus extends BaseEntityForMybatisPlus {
     private String aa3RoiLl;
     @Excel(name = "aa3RoiLr" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa3RoiLr;
-    @Excel(name = "aa3FC" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
+    @Excel(name = "aa3Fc" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
     private String aa3Fc;
     @Excel(name = "aa3F1" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
     private String aa3F1;
@@ -257,7 +257,7 @@ public class ImAaListParamsForMybatisPlus extends BaseEntityForMybatisPlus {
     private String aa3GoldenGlueThicknessMax;
 
     // mtfCheck Item 指标
-    @Excel(name = "mtfCheckFC" , cellType = Excel.ColumnType.STRING, prompt = "item")
+    @Excel(name = "mtfCheckFc" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheckFc;
     @Excel(name = "mtfCheckF1" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheckF1;
@@ -268,7 +268,7 @@ public class ImAaListParamsForMybatisPlus extends BaseEntityForMybatisPlus {
     @Excel(name = "mtfCheckF4" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheckF4;
 
-    @Excel(name = "mtfCheck1FC" , cellType = Excel.ColumnType.STRING, prompt = "item")
+    @Excel(name = "mtfCheck1Fc" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck1Fc;
     @Excel(name = "mtfCheck1F1" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck1F1;
@@ -279,7 +279,7 @@ public class ImAaListParamsForMybatisPlus extends BaseEntityForMybatisPlus {
     @Excel(name = "mtfCheck1F4" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck1F4;
 
-    @Excel(name = "mtfCheck2FC" , cellType = Excel.ColumnType.STRING, prompt = "item")
+    @Excel(name = "mtfCheck2Fc" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck2Fc;
     @Excel(name = "mtfCheck2F1" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck2F1;
@@ -290,7 +290,7 @@ public class ImAaListParamsForMybatisPlus extends BaseEntityForMybatisPlus {
     @Excel(name = "mtfCheck2F4" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck2F4;
 
-    @Excel(name = "mtfCheck3FC" , cellType = Excel.ColumnType.STRING, prompt = "item")
+    @Excel(name = "mtfCheck3Fc" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck3Fc;
     @Excel(name = "mtfCheck3F1" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String mtfCheck3F1;
