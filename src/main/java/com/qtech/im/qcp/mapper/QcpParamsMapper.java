@@ -2,6 +2,7 @@ package com.qtech.im.qcp.mapper;
 
 import com.qtech.im.qcp.domain.QcpParamsDetailVo;
 import com.qtech.im.qcp.domain.QcpParamsVo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @Repository
 public interface QcpParamsMapper {
 
-    public List<QcpParamsVo> selectQcpParamsOverviewList(QcpParamsVo qcpParams);
+    public List<QcpParamsVo> selectQcpParamsOverviewList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, QcpParamsVo qcpParams);
 
     public List<QcpParamsDetailVo> selectQcpParamsList(QcpParamsDetailVo qcpParamsDetailVo);
 

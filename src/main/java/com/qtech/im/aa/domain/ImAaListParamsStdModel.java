@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @TableName(value ="IM_AA_LIST_PARAMS_STD_MODEL")
 @Data
-public class ImAaListParamsStdModelDetail extends ImAaListParamsForMybatisPlus {
+public class ImAaListParamsStdModel extends ImAaListParamsForMybatisPlus {
     private Long id;
     private String prodType;
 

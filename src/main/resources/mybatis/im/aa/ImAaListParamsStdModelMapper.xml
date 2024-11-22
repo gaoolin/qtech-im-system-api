@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qtech.im.aa.mapper.ImAaListParamsStdModelDetailMapper">
+<mapper namespace="com.qtech.im.aa.mapper.ImAaListParamsStdModelMapper">
 
-    <resultMap id="BaseResultMap" type="ImAaListParamsStdModelDetail">
+    <resultMap id="BaseResultMap" type="ImAaListParamsStdModel">
             <result property="id" column="ID" jdbcType="DECIMAL"/>
             <result property="prodType" column="PROD_TYPE" jdbcType="VARCHAR"/>
             <result property="aa1" column="AA1" jdbcType="VARCHAR"/>

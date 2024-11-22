@@ -5,6 +5,7 @@ import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.common.domain.ImReportBaseInfo;
 import com.qtech.im.common.mapper.QtechImFactoryNamesMapper;
 import com.qtech.im.common.service.IQtechImFactoryNamesService;
+import com.qtech.im.config.TbQueryConditionConfig;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ import java.util.List;
 public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesService {
     @Autowired
     private QtechImFactoryNamesMapper qtechImFactoryNamesMapper;
+
+    @Autowired
+    private TbQueryConditionConfig tbQueryConditionConfig;
 
     @Override
     public List<ImReportBaseInfo> getHistoryFactoryNames(ImReportBaseInfo imReportBaseInfo) {
@@ -78,8 +82,11 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
     @DataSource(DataSourceType.THIRD)
     @Override
     public List<ImReportBaseInfo> getEqnFactoryNames() {
+        List<String> deptNames = tbQueryConditionConfig.getDeptNames();
+        List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
+
         try {
-            return qtechImFactoryNamesMapper.getEqnFactoryNames();
+            return qtechImFactoryNamesMapper.getEqnFactoryNames(deptNames, deviceTypes);
         } catch (Exception e) {
             log.error("查询数据库失败" , e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");

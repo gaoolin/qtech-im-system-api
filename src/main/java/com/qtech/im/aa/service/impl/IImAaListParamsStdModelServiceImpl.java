@@ -6,10 +6,10 @@ import com.qtech.common.utils.DateUtils;
 import com.qtech.common.utils.StringUtils;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
-import com.qtech.im.aa.domain.ImAaListParamsStdModelDetail;
-import com.qtech.im.aa.mapper.ImAaListParamsStdModelDetailMapper;
+import com.qtech.im.aa.domain.ImAaListParamsStdModel;
+import com.qtech.im.aa.mapper.ImAaListParamsStdModelMapper;
 import com.qtech.im.aa.service.IAaListParamsStdModelInfoService;
-import com.qtech.im.aa.service.ImAaListParamsStdModelDetailService;
+import com.qtech.im.aa.service.IImAaListParamsStdModelService;
 import com.qtech.im.aa.utils.ReflectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ import static com.qtech.im.aa.utils.Constants.REDIS_COMPARISON_MODEL_KEY_PREFIX;
 @DataSource(value = DataSourceType.FOURTH)
 @Slf4j
 @Service
-public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaListParamsStdModelDetailMapper, ImAaListParamsStdModelDetail> implements ImAaListParamsStdModelDetailService {
+public class IImAaListParamsStdModelServiceImpl extends ServiceImpl<ImAaListParamsStdModelMapper, ImAaListParamsStdModel> implements IImAaListParamsStdModelService {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -43,49 +43,54 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
     private IAaListParamsStdModelInfoService aaListParamsStdModelInfoService;
 
     @Override
-    public List<ImAaListParamsStdModelDetail> selectList(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail) {
-        LambdaQueryWrapper<ImAaListParamsStdModelDetail> wrapper = new LambdaQueryWrapper<>();
-        if (imAaListParamsStdModelDetail.getId() != null) {
-            wrapper.eq(ImAaListParamsStdModelDetail::getId, imAaListParamsStdModelDetail.getId());
+    public List<ImAaListParamsStdModel> selectList(ImAaListParamsStdModel imAaListParamsStdModel) {
+        LambdaQueryWrapper<ImAaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
+        if (imAaListParamsStdModel.getId() != null) {
+            wrapper.eq(ImAaListParamsStdModel::getId, imAaListParamsStdModel.getId());
         }
-        if (StringUtils.isNotBlank(imAaListParamsStdModelDetail.getProdType())) {
-            wrapper.eq(ImAaListParamsStdModelDetail::getProdType, imAaListParamsStdModelDetail.getProdType());
+        if (StringUtils.isNotBlank(imAaListParamsStdModel.getProdType())) {
+            wrapper.eq(ImAaListParamsStdModel::getProdType, imAaListParamsStdModel.getProdType());
         }
         return list(wrapper);
     }
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRED)
     @Override
-    public boolean saveOrUpdateAaListParamsStdModel(ImAaListParamsStdModelDetail imAaListParamsStdModelDetail) {
+    public boolean saveOrUpdateAaListParamsStdModel(ImAaListParamsStdModel imAaListParamsStdModel) {
         // 检查数据是否存在
-        LambdaQueryWrapper<ImAaListParamsStdModelDetail> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(ImAaListParamsStdModelDetail::getProdType, imAaListParamsStdModelDetail.getProdType());
-        ImAaListParamsStdModelDetail one = getOne(wrapper);
+        LambdaQueryWrapper<ImAaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ImAaListParamsStdModel::getProdType, imAaListParamsStdModel.getProdType());
+        ImAaListParamsStdModel one = getOne(wrapper);
 
         if (one != null) {
             // 数据已存在，执行更新操作
             stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
-            imAaListParamsStdModelDetail.setUpdateBy(getLoginUser().getUser().getNickName());
-            imAaListParamsStdModelDetail.setUpdateTime(DateUtils.getNowDate());
-            return update(imAaListParamsStdModelDetail, wrapper);
+            imAaListParamsStdModel.setUpdateBy(getLoginUser().getUser().getNickName());
+            imAaListParamsStdModel.setUpdateTime(DateUtils.getNowDate());
+            boolean a = update(imAaListParamsStdModel, wrapper);
+            boolean b = aaListParamsStdModelInfoService.saveOrUpdateAaListParamsStdModelInfo(imAaListParamsStdModel);
+            if (!a || !b) {
+                throw new RuntimeException("更新数据发生异常，请联系管理员！");
+            }
+            return true;
         }
 
-        imAaListParamsStdModelDetail.setCreateBy(getLoginUser().getUser().getNickName());
-        imAaListParamsStdModelDetail.setCreateTime(DateUtils.getNowDate());
-        return save(imAaListParamsStdModelDetail);
+        imAaListParamsStdModel.setCreateBy(getLoginUser().getUser().getNickName());
+        imAaListParamsStdModel.setCreateTime(DateUtils.getNowDate());
+        return save(imAaListParamsStdModel);
     }
 
     @Override
-    public int batchInsert(List<ImAaListParamsStdModelDetail> paramsModelList) {
+    public int batchInsert(List<ImAaListParamsStdModel> paramsModelList) {
         return 0;
     }
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     @Override
-    public boolean updateAaListParamsStdModel(ImAaListParamsStdModelDetail aaListParamsStdModelDetail) {
-        LambdaQueryWrapper<ImAaListParamsStdModelDetail> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(ImAaListParamsStdModelDetail::getProdType, aaListParamsStdModelDetail.getProdType());
-        ImAaListParamsStdModelDetail one = getOne(wrapper);
+    public boolean updateAaListParamsStdModel(ImAaListParamsStdModel aaListParamsStdModelDetail) {
+        LambdaQueryWrapper<ImAaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ImAaListParamsStdModel::getProdType, aaListParamsStdModelDetail.getProdType());
+        ImAaListParamsStdModel one = getOne(wrapper);
 
         boolean b = false;
         try {
@@ -103,13 +108,13 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
     }
 
     @Override
-    public void deleteAaListParamsStdModel(ImAaListParamsStdModelDetail aaListParamsStdModelDetail) {
+    public void deleteAaListParamsStdModel(ImAaListParamsStdModel aaListParamsStdModelDetail) {
         if (aaListParamsStdModelDetail != null) {
             try {
                 String prodType = aaListParamsStdModelDetail.getProdType();
                 stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
-                LambdaQueryWrapper<ImAaListParamsStdModelDetail> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(ImAaListParamsStdModelDetail::getProdType, prodType);
+                LambdaQueryWrapper<ImAaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(ImAaListParamsStdModel::getProdType, prodType);
                 remove(wrapper);
             } catch (Exception e) {
                 log.error("删除数据发生异常，请联系管理员！\n{}", e.getMessage());
@@ -122,7 +127,7 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
     @Override
     public boolean deleteAaListParamsStdModelByIds(List<Long> list) {
         list.forEach(id -> {
-            ImAaListParamsStdModelDetail res = getById(id);
+            ImAaListParamsStdModel res = getById(id);
             if (res != null) {
                 stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + res.getProdType());
             }
@@ -140,7 +145,7 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     @Override
-    public Map<String, Object> uploadManual(List<ImAaListParamsStdModelDetail> paramsModelList) {
+    public Map<String, Object> uploadManual(List<ImAaListParamsStdModel> paramsModelList) {
         Map<String, Object> result = new HashMap<>();
         if (paramsModelList == null || paramsModelList.isEmpty()) {
             result.put("flag", "0");
@@ -153,7 +158,7 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
         int failureCount = 0;
         int duplicateCount = 0;
 
-        for (ImAaListParamsStdModelDetail detail : paramsModelList) {
+        for (ImAaListParamsStdModel detail : paramsModelList) {
             try {
                 int exists = selectList(detail).size();
                 if (exists > 0) {
@@ -161,7 +166,7 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
                     continue;
                 }
 
-                ReflectionUtils.getAllDeclaredFields(ImAaListParamsStdModelDetail.class).forEach(field -> {
+                ReflectionUtils.getAllDeclaredFields(ImAaListParamsStdModel.class).forEach(field -> {
                     field.setAccessible(true);
                     if (field.getType().equals(String.class)) {
                         try {
@@ -210,19 +215,19 @@ public class ImAaListParamsStdModelDetailServiceImpl extends ServiceImpl<ImAaLis
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     @Override
-    public Map<String, Object> uploadOnline(ImAaListParamsStdModelDetail aaListParamsStdModelDetail) {
-        List<ImAaListParamsStdModelDetail> list = Collections.singletonList(aaListParamsStdModelDetail);
+    public Map<String, Object> uploadOnline(ImAaListParamsStdModel aaListParamsStdModelDetail) {
+        List<ImAaListParamsStdModel> list = Collections.singletonList(aaListParamsStdModelDetail);
         return uploadManual(list);
     }
 
     @Override
-    public ImAaListParamsStdModelDetail selectOne(ImAaListParamsStdModelDetail param) {
+    public ImAaListParamsStdModel selectOne(ImAaListParamsStdModel param) {
         if (param != null) {
             if (param.getId() != null) {
                 return getById(param.getId());
             } else if (param.getProdType() != null) {
-                LambdaQueryWrapper<ImAaListParamsStdModelDetail> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(ImAaListParamsStdModelDetail::getProdType, param.getProdType());
+                LambdaQueryWrapper<ImAaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(ImAaListParamsStdModel::getProdType, param.getProdType());
                 return getOne(wrapper);
             } else {
                 throw new RuntimeException("参数错误，无法识别参数！");

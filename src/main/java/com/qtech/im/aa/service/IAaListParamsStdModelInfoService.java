@@ -21,5 +21,7 @@ public interface IAaListParamsStdModelInfoService {
 
     public int updateAaListParamsStdModelInfo(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
 
+    public boolean saveOrUpdateAaListParamsStdModelInfo(Object entity);
+
     public int deleteAaListParamsStdModelInfoByIds(Long[] list);
 }

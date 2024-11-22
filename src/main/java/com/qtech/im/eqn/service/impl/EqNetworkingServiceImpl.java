@@ -2,6 +2,7 @@ package com.qtech.im.eqn.service.impl;
 
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
+import com.qtech.im.config.TbQueryConditionConfig;
 import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
 import com.qtech.im.eqn.mapper.EqNetworkingMapper;
 import com.qtech.im.eqn.service.IEqNetworkingService;
@@ -26,30 +27,17 @@ public class EqNetworkingServiceImpl implements IEqNetworkingService {
     @Autowired
     private EqNetworkingMapper eqNetworkingMapper;
 
+    @Autowired
+    private TbQueryConditionConfig tbQueryConditionConfig;
+
     @Override
     public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
-        try {
-            return eqNetworkingMapper.selectEqNetworkingList(imEqsNetworkingAndRemoteInfoVo);
-        } catch (Exception e) {
-            log.error("查询数据库失败", e);
-            throw new RuntimeException("查询数据库失败，请联系系统负责人!");
-        }
-    }
+        String deptName = tbQueryConditionConfig.getDeptName();
+        List<String> deptNames = tbQueryConditionConfig.getDeptNames();
+        List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
 
-    @Override
-    public List<ImEqsNetworkingAndRemoteInfoVo> getFactoryNames() {
         try {
-            return eqNetworkingMapper.getFactoryNames();
-        } catch (Exception e) {
-            log.error("查询数据库失败", e);
-            throw new RuntimeException("查询数据库失败，请联系系统负责人!");
-        }
-    }
-
-    @Override
-    public List<ImEqsNetworkingAndRemoteInfoVo> getWorkshopNames(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
-        try {
-            return eqNetworkingMapper.getWorkshopNames(imEqsNetworkingAndRemoteInfoVo);
+            return eqNetworkingMapper.selectEqNetworkingList(deptNames, deviceTypes, imEqsNetworkingAndRemoteInfoVo);
         } catch (Exception e) {
             log.error("查询数据库失败", e);
             throw new RuntimeException("查询数据库失败，请联系系统负责人!");
@@ -58,8 +46,10 @@ public class EqNetworkingServiceImpl implements IEqNetworkingService {
 
     @Override
     public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingOfflineList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
+        List<String> deptNames = tbQueryConditionConfig.getDeptNames();
+        List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         try {
-            return eqNetworkingMapper.selectEqNetworkingOfflineList(imEqsNetworkingAndRemoteInfoVo);
+            return eqNetworkingMapper.selectEqNetworkingOfflineList(deptNames, deviceTypes, imEqsNetworkingAndRemoteInfoVo);
         } catch (Exception e) {
             log.error("查询数据库失败", e);
             throw new RuntimeException("查询数据库失败，请联系系统负责人!");
@@ -68,8 +58,10 @@ public class EqNetworkingServiceImpl implements IEqNetworkingService {
 
     @Override
     public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingAgg(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
+        List<String> deptNames = tbQueryConditionConfig.getDeptNames();
+        List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         try {
-            return eqNetworkingMapper.selectEqNetworkingAgg(imEqsNetworkingAndRemoteInfoVo);
+            return eqNetworkingMapper.selectEqNetworkingAgg(deptNames, deviceTypes, imEqsNetworkingAndRemoteInfoVo);
         } catch (Exception e) {
             log.error("查询数据库失败", e);
             throw new RuntimeException("查询数据库失败，请联系系统负责人!");

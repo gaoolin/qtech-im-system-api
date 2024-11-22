@@ -1,6 +1,7 @@
 package com.qtech.im.eqn.mapper;
 
 import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,13 +16,14 @@ import java.util.List;
 @Repository
 public interface EqNetworkingMapper {
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    // public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> getFactoryNames();
+    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingOfflineList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
+                                                                              ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> getWorkshopNames(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingAgg(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
+                                                                      ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingOfflineList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
-
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingAgg(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
+                                                                       ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
 }

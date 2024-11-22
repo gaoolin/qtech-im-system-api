@@ -16,6 +16,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class ImEqsNetworkingAndRemoteInfoVo extends ImEqsNetworkingAndRemoteInfo {
-    private Integer status;
+    private Integer netStatus;
+    private Integer remoteStatus;
     private Integer label;
 }

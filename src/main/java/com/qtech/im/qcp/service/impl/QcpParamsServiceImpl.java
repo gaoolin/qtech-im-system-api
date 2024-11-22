@@ -2,6 +2,7 @@ package com.qtech.im.qcp.service.impl;
 
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
+import com.qtech.im.config.TbQueryConditionConfig;
 import com.qtech.im.qcp.domain.QcpParamsDetailVo;
 import com.qtech.im.qcp.domain.QcpParamsVo;
 import com.qtech.im.qcp.mapper.QcpParamsMapper;
@@ -28,11 +29,16 @@ public class QcpParamsServiceImpl implements IQcpParamsService {
     @Autowired
     private QcpParamsMapper qcpParamsMapper;
 
+    @Autowired
+    private TbQueryConditionConfig tbQueryConditionConfig;
+
     @Override
     public List<QcpParamsVo> selectQcpParamsOverviewList(QcpParamsVo qcpParamsVo) {
+        List<String> deptNames = tbQueryConditionConfig.getDeptNames();
+        List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         qcpParamsVo.setDt(LocalDateTime.now());
         try {
-            return qcpParamsMapper.selectQcpParamsOverviewList(qcpParamsVo);
+            return qcpParamsMapper.selectQcpParamsOverviewList(deptNames, deviceTypes, qcpParamsVo);
         } catch (Exception e) {
             log.error("查询QCP参数概览列表失败", e);
             throw new RuntimeException("查询QCP参数概览列表失败，请联系系统负责人!");

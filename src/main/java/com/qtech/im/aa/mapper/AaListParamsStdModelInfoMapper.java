@@ -18,6 +18,5 @@ public interface AaListParamsStdModelInfoMapper {
     public List<AaListParamsStdModelInfoVo> selectAaListParamsStdModelInfoList(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
     public int insertAaListParamsStdModelInfo(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
     public int updateAaListParamsStdModelInfo(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
-
     public int deleteAaListParamsStdModelInfoByIds(Long[] list);
 }

@@ -12,7 +12,7 @@
         <result property="onlineEqs" column="online_eqs" />
         <result property="offlineEqs" column="offline_eqs" />
         <result property="qcpParamsIsNull" column="qcp_is_null" />
-        <result property="remoteControlOff" column="remote_control_off" />
+        <result property="remoteStatusOff" column="remote_status_off" />
     </resultMap>
 
     <resultMap id="selectQcpParamsListResult" type="QcpParamsDetailVo">
@@ -25,120 +25,178 @@
         <result property="description" column="description" />
     </resultMap>
 
-    <select id="selectQcpParamsOverviewList" resultMap="selectQcpParamsOverviewListResult">
-        with ta as (select device_id, create_date, remote_control
-                    from (select device_id,
-                                 create_date,
-                                 remote_control,
-                                 row_number() over(partition by device_id order by create_date desc) rank
-                          from QT_MODEL_DDC.ALL_DEVICE_REMOTE
-                          where create_date > minutes_sub(now(), 5) and remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$'
-                          ) a
-                    where rank = 1),
+    <select id="selectQcpParamsOverviewList" parameterType="map" resultMap="selectQcpParamsOverviewListResult">
+        WITH _eq_net_ok_tb AS (
+            SELECT
+                device_id,
+                receive_date,
+                Remote_control
+            FROM
+                QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
+            WHERE receive_date > minutes_sub(now(), 5) AND Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$'
+        ),
 
-             tb as (
-                 select b.company_name,
-                        b.dep_name,
-                        b.group_name,
-                        a.device_m_id,
-                        a.devicename,
-                        a.devicetype,
-                        a.machine_no,
-                        c.pbox_id,
-                        e.remote_control
-                 from QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
-                      left join QT_MODEL_EMS.V_CODE_NAME b
-                                on a.hierarchy_code = b.hierarchy_show_code
-                      left join QT_MODEL_EMS.T_PBOX_INFO c
-                                on c.dev_id = a.device_id
-                      left join QT_MODEL_EMS.T_COLLECTOR_PROGRAM d
-                                on c.collector_program_id = d.id
-                      left join ta e
-                                on a.device_id = e.device_id
-                 where dep_name like '%COB%'
-                   and a.devicetype in ('AA', 'WB', 'DB', 'HM')),
+        _eq_ttl_tb AS (
+            SELECT
+                b.company_name,
+                b.dep_name,
+                b.group_name,
+                a.device_id,
+                a.device_m_id,
+                a.devicetype,
+                a.machine_no,
+                c.pbox_id
+            FROM QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
+            LEFT JOIN QT_MODEL_EMS.V_CODE_NAME b ON a.hierarchy_code = b.hierarchy_show_code
+            LEFT JOIN QT_MODEL_EMS.T_PBOX_INFO c ON a.device_id = c.dev_id
+            LEFT JOIN QT_MODEL_EMS.T_COLLECTOR_PROGRAM d ON c.collector_program_id = d.id
+            <where>
+                AND b.dep_name IN
+                <foreach item="item" index="index" collection="deptNames" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                <choose>
+                    <when test = "qcpParams.deviceType != null and qcpParams.deviceType != ''">
+                        and devicetype = #{qcpParams.deviceType}
+                    </when>
+                    <otherwise>
+                        and devicetype in
+                        <foreach item="item" index="index" collection="deviceTypes" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </otherwise>
+                </choose>
+            </where>
+        ),
 
-             tc as (select eqid, machine_no, is_valid, device_type, version, ask_date
+        _eq_ttl_net_info_tb AS (
+            SELECT
+                company_name,
+                dep_name,
+                group_name,
+                devicetype,
+                device_m_id,
+                machine_no,
+                pbox_id,
+                Remote_control,
+                net_status,
+                CASE
+                    WHEN (net_status = 1 AND ((devicetype IN ('AA', 'DB', 'HM') AND Remote_control = '2')
+                        OR (devicetype = 'WB' AND Remote_control = '5'))) THEN 2
+                    ELSE 1
+                END remote_status
+            FROM (
+                SELECT
+                    a.company_name,
+                    a.dep_name,
+                    a.group_name,
+                    a.devicetype,
+                    a.device_m_id,
+                    a.machine_no,
+                    a.pbox_id,
+                    b.Remote_control,
+                    CASE
+                        WHEN b.Remote_control IS NULL THEN 0
+                        ELSE 1
+                    END AS net_status
+                FROM _eq_ttl_tb a
+                LEFT JOIN _eq_net_ok_tb b ON a.device_id = b.device_id
+            ) a
+        ),
+
+        _eq_qcp_params_chk_tb as (
+            select eqid, machine_no, is_valid, device_type, version, ask_date
                     from QT_MODEL_MES.T_PARAMETER_RESULT
                     where ask_date > minutes_sub(now(), 5)
-                      and device_type in ('AA', 'WB', 'DB', 'HM')),
+                        and device_type in
+                        <foreach item="item" index="index" collection="deviceTypes" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+        ),
 
-             td as (select distinct (eqid) from tc),
+        _eq_offline_info_tb as (
+        select
+            company_name,
+            group_name,
+            devicetype,
+            count(1) as offline_eqs
+        from _eq_ttl_net_info_tb
+        where net_status = 0
+        group by
+            company_name,
+            group_name,
+            devicetype
+        ),
 
-             te as (
-                 select a.company_name,
-                        a.group_name,
-                        a.devicetype,
-                        count(group_name) offline_eqs
-                 from tb a
-                 where a.device_m_id not in (select eqid from td)
-                 group by a.company_name, a.group_name, a.devicetype),
+        _eq_remote_off_info_tb as (
+        select
+            company_name,
+            group_name,
+            devicetype,
+            sum(case when remote_status = 1 then 1 else 0 end) as remote_status_off
+        from _eq_ttl_net_info_tb
+        where net_status = 1
+        group by
+            company_name,
+            group_name,
+            devicetype
+        ),
 
-             tf as (
-                 select a.company_name,
-                        a.group_name,
-                        a.devicetype,
-                        sum(case
-                                when (a.devicetype in ('AA', 'DB', 'HM') and remote_control != '2') or
-                                     (a.devicetype = 'WB' and remote_control != '5') then 1
-                                else 0 end) remote_control_off
-                 from tb a
-                 where a.device_m_id in (select eqid from td)
-                 group by a.company_name, a.group_name, a.devicetype),
+        _eq_ttl_group_tb as (
+        select
+            company_name,
+            group_name,
+            devicetype,
+            count(1) as ttl_eqs
+        from _eq_ttl_net_info_tb
+        group by
+            company_name,
+            group_name,
+            devicetype
+        ),
 
-             tg as (
-                 select a.company_name,
-                        a.group_name,
-                        a.devicetype,
-                        count(group_name) ttl_eqs
-                 from tb a
-                 group by a.company_name, a.group_name, a.devicetype),
-
-             th as (
-                 select machine_no, is_valid, device_type, count(version) as qcp_is_null
-                 from (
-                          select distinct eqid, machine_no, is_valid, device_type, version
-                          from tc
-                          where ask_date > minutes_sub(now(), 5)
-                            and version = 'QCP标准参数空'
---                             and version is not null
-                            ) a
-                 group by machine_no, is_valid, device_type)
-
-
-        select a.company_name,
-               a.group_name,
-               a.devicetype,
-               a.ttl_eqs,
-               (a.ttl_eqs - a.offline_eqs - a.qcp_is_null) online_eqs,
-               a.qcp_is_null,
-               a.offline_eqs,
-               a.remote_control_off
+        _eq_qcp_params_is_null_tb as (
+        select machine_no, is_valid, device_type, count(version) as qcp_is_null
         from (
-                 select a.company_name,
-                        a.group_name,
-                        a.devicetype,
-                        a.ttl_eqs,
-                        nvl(b.offline_eqs, 0)              offline_eqs,
-                        nvl(c.qcp_is_null, 0)             qcp_is_null,
-                        nvl(d.remote_control_off, 0) remote_control_off
-                 from tg a
-                          left join te b
-                                    on a.company_name = b.company_name
-                                        and a.group_name = b.group_name
-                                        and a.devicetype = b.devicetype
-                          left join th c
-                                    on a.company_name = c.machine_no
-                                        and a.group_name = c.is_valid
-                                        and a.devicetype = c.device_type
-                          left join tf d
-                                    on a.company_name = d.company_name
-                                        and a.group_name = d.group_name
-                                        and a.devicetype = d.devicetype) a
+            select distinct eqid, machine_no, is_valid, device_type, version
+            from _eq_qcp_params_chk_tb
+            where version = 'QCP标准参数空'
+            ) a
+        group by machine_no, is_valid, device_type
+        )
+
+        select
+            a.company_name,
+            a.group_name,
+            a.devicetype,
+            a.ttl_eqs,
+            case when (a.ttl_eqs - a.offline_eqs - a.qcp_is_null) &lt; 0 then 0 else (a.ttl_eqs - a.offline_eqs - a.qcp_is_null) end as online_eqs,
+            a.qcp_is_null,
+            a.offline_eqs,
+            a.remote_status_off
+        from (
+            select
+                a.company_name,
+                a.group_name,
+                a.devicetype,
+                ttl_eqs,
+                nvl(b.offline_eqs, 0) as offline_eqs,
+                nvl(c.qcp_is_null, 0) as qcp_is_null,
+                nvl(d.remote_status_off, 0) as remote_status_off
+            from _eq_ttl_group_tb a
+            left join _eq_offline_info_tb b
+                on a.company_name = b.company_name and a.group_name = b.group_name and a.devicetype = b.devicetype
+            left join _eq_qcp_params_is_null_tb c
+                on a.company_name = c.machine_no and a.group_name = c.is_valid and a.devicetype = c.device_type
+            left join _eq_remote_off_info_tb d
+                on a.company_name = d.company_name and a.group_name = d.group_name and a.devicetype = d.devicetype
+        ) a
         order by (case a.company_name
                       when "台虹厂区" then 1
                       when "古城厂区" then 2
-                      else 3 end),
+                      when "汉浦厂区" then 3
+                      when "QT_India" then 4
+                      else 5 end),
                  (case
                       when group_name like "%COB一%" then 1
                       when group_name like "%COB二%" then 2
@@ -153,13 +211,18 @@
                       when group_name like "%试产一%" then 11
                       when group_name like "%试产二%" then 12
                       when group_name like "%试产三%" then 13
-                      else 14 end),
+                      when group_name like "%一%" then 14
+                      when group_name like "%二%" then 15
+                      when group_name like "%三%" then 16
+                      when group_name like "%修复%" then 17
+                      else 20 end),
                  (case a.devicetype
                       when "DB" then 1
                       when "WB" then 2
                       when "HM" then 3
                       when "AA" then 4
                       else 5 end)
+
     </select>
 
     <select id="selectQcpParamsList" resultMap="selectQcpParamsListResult">

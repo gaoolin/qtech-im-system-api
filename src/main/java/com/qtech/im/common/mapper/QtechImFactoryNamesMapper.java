@@ -2,6 +2,7 @@ package com.qtech.im.common.mapper;
 
 import com.qtech.im.common.domain.ImReportBaseInfo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface QtechImFactoryNamesMapper {
 
     public List<ImReportBaseInfo> getWbOlpLatestFactoryNames(ImReportBaseInfo imReportBaseInfo);
 
-    public List<ImReportBaseInfo> getEqnFactoryNames();
+    public List<ImReportBaseInfo> getEqnFactoryNames(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes);
 
     public List<ImReportBaseInfo> getQcpFactoryNames();
 }

@@ -26,7 +26,8 @@
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
         <spring-framework.version>5.3.33</spring-framework.version>
         <spring-security.version>5.7.12</spring-security.version>
-        <pagehelper.spring.boot.starter.version>1.4.7</pagehelper.spring.boot.starter.version>
+        <!--<pagehelper.spring.boot.starter.version>1.4.7</pagehelper.spring.boot.starter.version>-->
+        <pagehelper.spring.boot.starter.version>2.1.0</pagehelper.spring.boot.starter.version>
         <fastjson.version>2.0.53</fastjson.version>
         <druid.version>1.2.23</druid.version>
         <commons.io.version>2.13.0</commons.io.version>
@@ -38,6 +39,7 @@
         <oshi.version>6.6.3</oshi.version>
         <velocity.version>2.3</velocity.version>
         <oracle.version>10.2.0.4.0</oracle.version>
+        <kafka.version>3.1.2</kafka.version>
     </properties>
 
     <dependencies>
@@ -86,6 +88,27 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+        </dependency>
+
+        <!-- kafka相关依赖 -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-streams</artifactId>
+            <version>${kafka.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
         <!-- pool 对象池 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -124,6 +147,7 @@
         </dependency>
 
         <!-- pagehelper 分页插件 -->
+        <!-- 通过 PageInterceptor 自动完成了配置，不需要手动声明 -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>

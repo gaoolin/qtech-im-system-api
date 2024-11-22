@@ -2,6 +2,7 @@ package com.qtech.im.common.mapper;
 
 import com.qtech.im.common.domain.ImReportBaseInfo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public interface QtechImGroupNamesMapper {
 
     public List<ImReportBaseInfo> getWbOlpLatestGroupNames(ImReportBaseInfo imReportBaseInfo);
 
-    public List<ImReportBaseInfo> getEqnGroupNames(ImReportBaseInfo imReportBaseInfo);
+    public List<ImReportBaseInfo> getEqnGroupNames(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, ImReportBaseInfo imReportBaseInfo);
 
     public List<ImReportBaseInfo> getQcpGroupNames(ImReportBaseInfo imReportBaseInfo);
 }

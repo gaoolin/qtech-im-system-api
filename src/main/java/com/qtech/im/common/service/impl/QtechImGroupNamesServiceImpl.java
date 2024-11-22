@@ -5,6 +5,7 @@ import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.common.domain.ImReportBaseInfo;
 import com.qtech.im.common.mapper.QtechImGroupNamesMapper;
 import com.qtech.im.common.service.IQtechImGroupNamesService;
+import com.qtech.im.config.TbQueryConditionConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class QtechImGroupNamesServiceImpl implements IQtechImGroupNamesService {
 
     @Autowired
     private QtechImGroupNamesMapper qtechImGroupNamesMapper;
+
+    @Autowired
+    private TbQueryConditionConfig tbQueryConditionConfig;
 
     @Override
     public List<ImReportBaseInfo> getHistoryGroupNames(ImReportBaseInfo imReportBaseInfo) {
@@ -79,8 +83,10 @@ public class QtechImGroupNamesServiceImpl implements IQtechImGroupNamesService {
     @DataSource(DataSourceType.THIRD)
     @Override
     public List<ImReportBaseInfo> getEqnGroupNames(ImReportBaseInfo imReportBaseInfo) {
+        List<String> deptNames = tbQueryConditionConfig.getDeptNames();
+        List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         try {
-            return qtechImGroupNamesMapper.getEqnGroupNames(imReportBaseInfo);
+            return qtechImGroupNamesMapper.getEqnGroupNames(deptNames, deviceTypes, imReportBaseInfo);
         } catch (Exception e) {
             log.error("查询数据库失败" , e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");

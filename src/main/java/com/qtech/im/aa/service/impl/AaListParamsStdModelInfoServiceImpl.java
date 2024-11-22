@@ -3,10 +3,10 @@ package com.qtech.im.aa.service.impl;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.aa.domain.AaListParamsStdModelInfoVo;
-import com.qtech.im.aa.domain.ImAaListParamsStdModelDetail;
+import com.qtech.im.aa.domain.ImAaListParamsStdModel;
 import com.qtech.im.aa.mapper.AaListParamsStdModelInfoMapper;
 import com.qtech.im.aa.service.IAaListParamsStdModelInfoService;
-import com.qtech.im.aa.service.ImAaListParamsStdModelDetailService;
+import com.qtech.im.aa.service.IImAaListParamsStdModelService;
 import com.qtech.im.aa.utils.ModelDetailConvertToModelInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -38,7 +38,7 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
     private AaListParamsStdModelInfoMapper aaListParamsStdModelInfoMapper;
 
     @Autowired
-    private ImAaListParamsStdModelDetailService aaListParamsStdModelDetailService;
+    private IImAaListParamsStdModelService imAaListParamsStdModelService;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -48,7 +48,7 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
         try {
             return aaListParamsStdModelInfoMapper.selectAaListParamsStdModelInfoList(aaListParamsStdModelInfoVo);
         } catch (Exception e) {
-            log.error("selectAaListParamsStdModelInfoList:" , e);
+            log.error("selectAaListParamsStdModelInfoList:", e);
             throw new RuntimeException("查询数据库发生异常，请联系管理员。");
         }
     }
@@ -59,7 +59,7 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
         if (CollectionUtils.isNotEmpty(list)) {
             int size = list.size();
             if (size > 1) {
-                throw new TooManyResultsException(String.format("Expected one result (or null) to be returned by selectOne(), but found: %s" , size));
+                throw new TooManyResultsException(String.format("Expected one result (or null) to be returned by selectOne(), but found: %s", size));
             }
             return list.get(0);
         }
@@ -73,8 +73,8 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
             if (entity.getClass().equals(AaListParamsStdModelInfoVo.class)) {
                 AaListParamsStdModelInfoVo modelInfo = (AaListParamsStdModelInfoVo) entity;
                 result = aaListParamsStdModelInfoMapper.insertAaListParamsStdModelInfo(modelInfo);
-            } else if (entity.getClass().equals(ImAaListParamsStdModelDetail.class)) {
-                ImAaListParamsStdModelDetail modelDetail = (ImAaListParamsStdModelDetail) entity;
+            } else if (entity.getClass().equals(ImAaListParamsStdModel.class)) {
+                ImAaListParamsStdModel modelDetail = (ImAaListParamsStdModel) entity;
                 AaListParamsStdModelInfoVo param = ModelDetailConvertToModelInfo.doConvert(modelDetail);
                 if (param != null) {
                     param.setCreateBy(modelDetail.getCreateBy());
@@ -82,7 +82,7 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
                     try {
                         result = aaListParamsStdModelInfoMapper.insertAaListParamsStdModelInfo(param);
                     } catch (Exception e) {
-                        log.error("insertAaListParamsStdModelInfoByUpload:" , e);
+                        log.error("insertAaListParamsStdModelInfo:", e);
                         throw new RuntimeException("保存到数据库发生异常，请联系管理员！");
                     }
                 } else {
@@ -93,7 +93,7 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
             }
             return result;
         } catch (Exception e) {
-            log.error("insertAaListParamsStdModelInfo:" , e);
+            log.error("insertAaListParamsStdModelInfo:", e);
             throw new RuntimeException("保存到数据库发生异常，请联系管理员！");
         }
     }
@@ -107,10 +107,55 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
             stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
             return aaListParamsStdModelInfoMapper.updateAaListParamsStdModelInfo(aaListParamsStdModelInfoVo);
         } catch (Exception e) {
-            log.error("updateAaListParamsStdModelInfo:" , e);
+            log.error("updateAaListParamsStdModelInfo:", e);
             throw new RuntimeException("修改数据发生异常，请联系管理员。");
         }
     }
+
+    @Override
+    @Transactional
+    public boolean saveOrUpdateAaListParamsStdModelInfo(Object entity) {
+        AaListParamsStdModelInfoVo modelInfo = null;
+
+        try {
+            if (entity instanceof AaListParamsStdModelInfoVo) {
+                modelInfo = (AaListParamsStdModelInfoVo) entity;
+            } else if (entity instanceof ImAaListParamsStdModel) {
+                ImAaListParamsStdModel modelDetail = (ImAaListParamsStdModel) entity;
+                modelInfo = ModelDetailConvertToModelInfo.doConvert(modelDetail);
+            }
+
+            if (modelInfo != null) {
+                return saveOrUpdateModelInfo(modelInfo);
+            }
+        } catch (Exception e) {
+            // 记录日志或进行其他异常处理
+            log.error("saveOrUpdateAaListParamsStdModelInfo:", e);
+        }
+        return false;
+    }
+
+    @Transactional
+    public boolean saveOrUpdateModelInfo(AaListParamsStdModelInfoVo modelInfo) {
+        try {
+            List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoMapper.selectAaListParamsStdModelInfoList(modelInfo);
+            if (CollectionUtils.isNotEmpty(list)) {
+                int size = list.size();
+                if (size > 1) {
+                    throw new TooManyResultsException(String.format("Expected one result (or null) to be returned by selectOne(), but found: %s", size));
+                } else {
+                    return updateAaListParamsStdModelInfo(modelInfo) > 0;
+                }
+            } else {
+                return insertAaListParamsStdModelInfo(modelInfo) > 0;
+            }
+        } catch (Exception e) {
+            // 记录日志或进行其他异常处理
+            log.error("saveOrUpdateModelInfo:", e);
+        }
+        return false;
+    }
+
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     @Override
@@ -122,16 +167,16 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
                 AaListParamsStdModelInfoVo result = selectOneAaListParamsStdModelInfo(param);
                 if (result != null) {
                     String prodType = result.getProdType();
-                    ImAaListParamsStdModelDetail paramDetail = new ImAaListParamsStdModelDetail();
+                    ImAaListParamsStdModel paramDetail = new ImAaListParamsStdModel();
                     paramDetail.setProdType(prodType);
-                    aaListParamsStdModelDetailService.deleteAaListParamsStdModel(paramDetail);
+                    imAaListParamsStdModelService.deleteAaListParamsStdModel(paramDetail);
                     stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
                     stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
                 }
             }
             return aaListParamsStdModelInfoMapper.deleteAaListParamsStdModelInfoByIds(list);
         } catch (Exception e) {
-            log.error("deleteAaListParamsStdModelInfoByIds:" , e);
+            log.error("deleteAaListParamsStdModelInfoByIds:", e);
             throw new RuntimeException("删除数据发生异常，请联系管理员。");
         }
     }

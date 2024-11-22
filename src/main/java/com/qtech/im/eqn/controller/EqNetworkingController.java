@@ -35,21 +35,10 @@ public class EqNetworkingController extends BaseController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public TableDataInfo list(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
+        System.out.println(imEqsNetworkingAndRemoteInfoVo);
         startPage();
         List<ImEqsNetworkingAndRemoteInfoVo> list = eqNetworkingService.selectEqNetworkingList(imEqsNetworkingAndRemoteInfoVo);
         return getDataTable(list);
-    }
-
-    @RequestMapping(value = "factoryNames")
-    public R<List<ImEqsNetworkingAndRemoteInfoVo>> getFactoryNames() {
-        List<ImEqsNetworkingAndRemoteInfoVo> list = eqNetworkingService.getFactoryNames();
-        return R.ok(list);
-    }
-
-    @RequestMapping(value = "workShopNames")
-    public R<List<ImEqsNetworkingAndRemoteInfoVo>> getWorkshopNames(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
-        List<ImEqsNetworkingAndRemoteInfoVo> list = eqNetworkingService.getWorkshopNames(imEqsNetworkingAndRemoteInfoVo);
-        return R.ok(list);
     }
 
     @RequestMapping(value = "offlineEqs", method = RequestMethod.GET)
@@ -77,6 +66,7 @@ public class EqNetworkingController extends BaseController {
 
     @RequestMapping(value = "/agg", method = RequestMethod.GET)
     public TableDataInfo selectEqNetworkingAgg(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
+        System.out.println(imEqsNetworkingAndRemoteInfoVo);
         List<ImEqsNetworkingAndRemoteInfoVo> list = eqNetworkingService.selectEqNetworkingAgg(imEqsNetworkingAndRemoteInfoVo);
         return getDataTable(list);
     }

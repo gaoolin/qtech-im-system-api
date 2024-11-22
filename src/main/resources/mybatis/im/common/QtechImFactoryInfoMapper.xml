@@ -28,9 +28,14 @@
             from
                 qtech_eq_dwd.im_aa_list_chk_result_detail
             <where>
-                <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
-                    and chk_dt between #{params.beginTime} and #{params.endTime}
-                </if>
+                <choose>
+                    <when test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                        and chk_dt between #{params.beginTime} and #{params.endTime}
+                    </when>
+                    <otherwise>
+                        and chk_dt > date_sub(now(), interval 1 day)
+                    </otherwise>
+                </choose>
             </where>
         ) d on
             c.pbox_id = d.sim_id
@@ -77,7 +82,14 @@
                 and create_date between #{params.beginTime} and #{params.endTime}
             </if>
         </where>
-        order by company_name asc;
+        order by
+            case
+                when company_name like '%台虹%' then 1
+                when company_name like '%古城%' then 2
+                when company_name like '%汉浦%' then 3
+                when company_name like '%India%' then 4
+                else 5
+            end
     </select>
 
     <select id="getWbOlpFactoryNames" resultMap="ImReportBaseInfoResult">
@@ -100,6 +112,14 @@
                                  </choose>
                             </where>) d on
             c.pbox_id = d.sim_id
+        order by
+            case
+                when company_name like '%台虹%' then 1
+                when company_name like '%古城%' then 2
+                when company_name like '%汉浦%' then 3
+                when company_name like '%India%' then 4
+                else 5
+            end
     </select>
 
     <select id="getWbOlpLatestFactoryNames"  resultMap="ImReportBaseInfoResult">
@@ -113,14 +133,44 @@
                              from qtech_eq_ads.im_eq_reverse_control_info
                              where source = 'wb-olp') d on
             c.pbox_id = d.sim_id
+        order by
+            case
+                when company_name like '%台虹%' then 1
+                when company_name like '%古城%' then 2
+                when company_name like '%汉浦%' then 3
+                when company_name like '%India%' then 4
+                else 5
+            end
     </select>
 
-    <select id="getEqnFactoryNames" resultMap="ImReportBaseInfoResult">
+    <select id="getEqnFactoryNames" parameterType="map" resultMap="ImReportBaseInfoResult">
         select distinct b.company_name
         from QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
                  left join QT_MODEL_EMS.V_CODE_NAME b on
             a.hierarchy_code = b.hierarchy_show_code
-        where devicetype in ('AA', 'DB', 'HM', 'HM')
+        <where>
+            <if test="deptNames != null and deptNames.size() > 0">
+                and dep_name in
+                <foreach item="item" index="index" collection="deptNames" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="deviceTypes != null and deviceTypes.size() > 0">
+                and devicetype in
+                <foreach item="item" index="index" collection="deviceTypes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            and company_name is not null
+        </where>
+        order by
+            case
+                when company_name like '%台虹%' then 1
+                when company_name like '%古城%' then 2
+                when company_name like '%汉浦%' then 3
+                when company_name like '%India%' then 4
+                else 5
+            end
     </select>
 
     <select id="getQcpFactoryNames" resultMap="ImReportBaseInfoResult">
@@ -136,7 +186,8 @@
             QT_MODEL_MES.T_PARAMETER_RESULT
         where
             ask_date > minutes_sub(now(), 5)
-            and device_type in ('AA', 'WB', 'DB', 'HM')),
+            and device_type in ('AA', 'WB', 'DB', 'HM')
+        ),
 
         tb as (
                  select b.company_name,
@@ -156,10 +207,19 @@
                           inner join ta e
                                     on a.device_m_id = e.eqid
                  where dep_name like '%COB%'
-                   and a.devicetype in ('AA', 'WB', 'DB', 'HM'))
-
+                    and a.devicetype in ('AA', 'WB', 'DB', 'HM')
+                 )
         select distinct a.company_name
         from tb a
+        where a.company_name is not null
+        order by
+            case
+                when a.company_name like '%台虹%' then 1
+                when a.company_name like '%古城%' then 2
+                when a.company_name like '%汉浦%' then 3
+                when a.company_name like '%India%' then 4
+                else 5
+            end
     </select>
 
 </mapper>
