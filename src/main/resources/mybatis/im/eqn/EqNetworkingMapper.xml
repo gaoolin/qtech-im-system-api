@@ -19,59 +19,6 @@
         <result property="remoteStatus" column="remote_status" />
     </resultMap>
 
-    <select id="selectEqNetworkingOfflineListBak" resultMap="qtechImCommonInfoResult">
-        with ta as (
-        select
-            b.company_name,
-            b.dep_name,
-            b.group_name,
-            a.device_id,
-            a.device_m_id,
-            a.devicetype,
-            a.machine_no,
-            c.pbox_id
-        from QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
-            left join QT_MODEL_EMS.V_CODE_NAME b
-                on a.hierarchy_code = b.hierarchy_show_code
-            left join QT_MODEL_EMS.T_PBOX_INFO c
-                on c.dev_id = a.device_id
-            left join QT_MODEL_EMS.T_COLLECTOR_PROGRAM d
-                on c.collector_program_id = d.id
-        where dep_name like '%COB%'
-            and a.devicetype in ('AA', 'WB', 'DB', 'HM')
-        ),
-
-        tb as (
-        select
-                device_id,
-                receive_date,
-                Remote_control
-            from
-                QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            where receive_date > minutes_sub(now(), 5) and Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$'),
-
-        tc as (
-            select company_name, dep_name, group_name, a.device_id, device_m_id, devicetype, machine_no, pbox_id from tb a inner join ta b on a.device_id = b.device_id
-        )
-
-        select
-            company_name,
-            dep_name,
-            group_name,
-            device_m_id,
-            devicetype,
-            machine_no,
-            pbox_id
-        from ta a
-        <where>
-            a.device_m_id not in (select device_m_id from tc)
-            <if test="factoryName != null and factoryName != ''">and company_name = #{factoryName}</if>
-            <if test="groupName != null and groupName != ''">and group_name = #{groupName}</if>
-            <if test="deviceType != null and deviceType != ''">and devicetype = #{deviceType}</if>
-        </where>
-        order by company_name, dep_name, group_name, device_m_id
-    </select>
-
     <select id="selectEqNetworkingOfflineList" parameterType="map" resultMap="qtechImCommonInfoResult">
         WITH _eq_net_ok_tb AS (
             SELECT
@@ -80,7 +27,7 @@
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5) AND Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$'
+            WHERE receive_date > minutes_sub(now(), 5)
         ),
 
         _eq_ttl_tb AS (
@@ -128,9 +75,9 @@
                 Remote_control,
                 net_status,
                 CASE
-                    WHEN (net_status = 1 AND ((devicetype IN ('AA', 'DB', 'HM') AND Remote_control = '2')
-                        OR (devicetype = 'WB' AND Remote_control = '5'))) THEN 2
-                    ELSE 1
+                    WHEN (Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$' AND net_status = 1 AND ((devicetype IN ('AA', 'DB', 'HM') AND Remote_control = '2')
+                        OR (devicetype = 'WB' AND Remote_control = '5'))) THEN 1
+                    ELSE 0
                 END remote_status
             FROM (
                 SELECT
@@ -169,148 +116,33 @@
             <if test="imEqsNetworkingAndRemoteInfoVo.groupName != null and imEqsNetworkingAndRemoteInfoVo.groupName != ''"> and group_name = #{imEqsNetworkingAndRemoteInfoVo.groupName}</if>
             <if test="imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''"> and devicetype = #{imEqsNetworkingAndRemoteInfoVo.deviceType}</if>
         </where>
-    </select>
-
-    <select id="selectEqNetworkingAggBak" resultMap="qtechImCommonInfoResult">
-        with ta as (
-            select
-                b.company_name,
-                b.dep_name,
-                b.group_name,
-                a.device_m_id,
-                a.devicename,
-                a.devicetype,
-                a.machine_no,
-                c.pbox_id
-            from
-                QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
-            left join QT_MODEL_EMS.V_CODE_NAME b
-                on
-                a.hierarchy_code = b.hierarchy_show_code
-            left join QT_MODEL_EMS.T_PBOX_INFO c
-                on
-                c.dev_id = a.device_id
-            left join QT_MODEL_EMS.T_COLLECTOR_PROGRAM d
-                on
-                c.collector_program_id = d.id
-            where
-                dep_name like '%COB%'
-                <choose>
-                    <when test = "deviceType != null and deviceType != ''">
-                        and devicetype = #{deviceType}
-                    </when>
-                    <otherwise>
-                        and devicetype in ('AA', 'WB', 'DB', 'HM')
-                    </otherwise>
-                </choose>),
-
-            tb as (
-            select
-                device_id,
-                receive_date,
-                Remote_control
-            from
-                    QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            where receive_date > minutes_sub(now(), 5) and Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$'),
-
-            tc as (
-                select company_name, dep_name, group_name, a.device_id, device_m_id, devicetype, machine_no, pbox_id from tb a inner join ta b on a.device_id = b.device_id
-            ),
-
-            td as (
-                select
-                    case
-                        when a.company_name is null then '总计'
-                        else a.company_name
-                    end as company_name,
-                    case
-                        when a.group_name is null then '小计'
-                        else a.group_name
-                    end as group_name,
-                    <choose>
-                        <when test = "deviceType == null or deviceType == ''">
-                            case
-                                when a.devicetype is null then '小计'
-                                else a.devicetype
-                            end as devicetype,
-                        </when>
-                    </choose>
-                    count(1) offline_eqs
-                from
-                    ta a
-                where
-                    a.device_m_id not in (select device_m_id from tc)
-                group by
-                    <choose>
-                        <when test = "deviceType != null and deviceType != ''">
-                            rollup (a.company_name, a.group_name)
-                        </when>
-                        <otherwise>
-                            rollup (a.company_name, a.group_name, a.devicetype)
-                        </otherwise>
-                    </choose>),
-
-            te as (
-                select
-                    case
-                        when a.company_name is null then '总计'
-                        else a.company_name
-                    end as company_name,
-                    case
-                        when a.group_name is null then '小计'
-                        else a.group_name
-                    end as group_name,
-                    <choose>
-                        <when test = "deviceType == null or deviceType == ''">
-                            case
-                                when a.devicetype is null then '小计'
-                                else a.devicetype
-                            end as devicetype,
-                    </when>
-                    </choose>
-                    count(1) ttl_eqs
-                from
-                    ta a
-                group by
-                    <choose>
-                        <when test = "deviceType != null and deviceType != ''">
-                            rollup (a.company_name, a.group_name)
-                        </when>
-                        <otherwise>
-                            rollup (a.company_name, a.group_name, a.devicetype)
-                        </otherwise>
-                    </choose>)
-
-        select
-            case
-                when a.company_name is null then '总计'
-                else a.company_name
-            end as company_name,
-            case
-                when a.group_name is null then '小计'
-                else a.group_name
-            end as group_name,
-            <choose>
-                <when test = "deviceType == null or deviceType == ''">
-                    case
-                        when a.devicetype is null then '小计'
-                        else a.devicetype
-                    end as devicetype,
-                </when>
-            </choose>
-            a.ttl_eqs,
-            nvl(b.offline_eqs, 0) offline_eqs
-        from
-            te a
-        left join td b
-            on a.company_name = b.company_name and a.group_name = b.group_name
-            <choose>
-                <when test = "deviceType == null or deviceType == ''">
-                    and a.devicetype = b.devicetype
-                </when>
-            </choose>
-        order by
-            a.company_name, a.group_name, a.devicetype
+        ORDER BY
+            (case company_name
+                  when "台虹厂区" then 1
+                  when "古城厂区" then 2
+                  when "汉浦厂区" then 3
+                  when "QT_India" then 4
+                  else 5 end),
+            (case
+                  when group_name like "%COB一%" then 1
+                  when group_name like "%COB二%" then 2
+                  when group_name like "%COB三%" then 3
+                  when group_name like "%COB四%" then 4
+                  when group_name like "%COB五%" then 5
+                  when group_name like "%COB六%" then 6
+                  when group_name like "%COB七%" then 7
+                  when group_name like "%COB八%" then 8
+                  when group_name like "%COB九%" then 9
+                  when group_name like "%COB十%" then 10
+                  when group_name like "%试产一%" then 11
+                  when group_name like "%试产二%" then 12
+                  when group_name like "%试产三%" then 13
+                  when group_name like "%一%" then 14
+                  when group_name like "%二%" then 15
+                  when group_name like "%三%" then 16
+                  when group_name like "%修复%" then 17
+                  else 20 end),
+            devicetype
     </select>
 
     <select id="selectEqNetworkingAgg" parameterType="map" resultMap="qtechImCommonInfoResult">
@@ -321,7 +153,7 @@
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5) AND Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$'
+            WHERE receive_date > minutes_sub(now(), 5)
         ),
 
         _eq_ttl_tb AS (
@@ -369,9 +201,9 @@
                 Remote_control,
                 net_status,
                 CASE
-                    WHEN (net_status = 1 AND ((devicetype IN ('AA', 'DB', 'HM') AND Remote_control = '2')
-                        OR (devicetype = 'WB' AND Remote_control = '5'))) THEN 2
-                    ELSE 1
+                    WHEN (Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$' AND net_status = 1 AND ((devicetype IN ('AA', 'DB', 'HM') AND Remote_control = '2')
+                        OR (devicetype = 'WB' AND Remote_control = '5'))) THEN 1
+                    ELSE 0
                 END remote_status
             FROM (
                 SELECT
@@ -486,7 +318,31 @@
                 </when>
             </choose>
         order by
-            a.company_name, a.group_name
+            (case company_name
+                  when "台虹厂区" then 1
+                  when "古城厂区" then 2
+                  when "汉浦厂区" then 3
+                  when "QT_India" then 4
+                  else 5 end),
+            (case
+                  when group_name like "%COB一%" then 1
+                  when group_name like "%COB二%" then 2
+                  when group_name like "%COB三%" then 3
+                  when group_name like "%COB四%" then 4
+                  when group_name like "%COB五%" then 5
+                  when group_name like "%COB六%" then 6
+                  when group_name like "%COB七%" then 7
+                  when group_name like "%COB八%" then 8
+                  when group_name like "%COB九%" then 9
+                  when group_name like "%COB十%" then 10
+                  when group_name like "%试产一%" then 11
+                  when group_name like "%试产二%" then 12
+                  when group_name like "%试产三%" then 13
+                  when group_name like "%一%" then 14
+                  when group_name like "%二%" then 15
+                  when group_name like "%三%" then 16
+                  when group_name like "%修复%" then 17
+                  else 20 end)
             <choose>
                 <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
                     , a.devicetype
@@ -502,7 +358,7 @@
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5) AND Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$'
+            WHERE receive_date > minutes_sub(now(), 5)
         ),
 
         _eq_ttl_tb AS (
@@ -541,9 +397,9 @@
                 Remote_control,
                 net_status,
                 CASE
-                    WHEN (net_status = 1 AND ((devicetype IN ('AA', 'DB', 'HM') AND Remote_control = '2')
-                        OR (devicetype = 'WB' AND Remote_control = '5'))) THEN 2
-                    ELSE 1
+                    WHEN (Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$' AND net_status = 1 AND ((devicetype IN ('AA', 'DB', 'HM') AND Remote_control = '2')
+                        OR (devicetype = 'WB' AND Remote_control = '5'))) THEN 1
+                    ELSE 0
                 END remote_status
             FROM (
                 SELECT
@@ -604,11 +460,31 @@
             </if>
         </where>
         ORDER BY
-            CASE company_name
-              WHEN "台虹厂区" THEN 1
-              WHEN "古城厂区" THEN 2
-              ELSE 3
-            END,
-            group_name, machine_no -- 添加一个明确的排序字段
+            (case company_name
+                  when "台虹厂区" then 1
+                  when "古城厂区" then 2
+                  when "汉浦厂区" then 3
+                  when "QT_India" then 4
+                  else 5 end),
+            (case
+                  when group_name like "%COB一%" then 1
+                  when group_name like "%COB二%" then 2
+                  when group_name like "%COB三%" then 3
+                  when group_name like "%COB四%" then 4
+                  when group_name like "%COB五%" then 5
+                  when group_name like "%COB六%" then 6
+                  when group_name like "%COB七%" then 7
+                  when group_name like "%COB八%" then 8
+                  when group_name like "%COB九%" then 9
+                  when group_name like "%COB十%" then 10
+                  when group_name like "%试产一%" then 11
+                  when group_name like "%试产二%" then 12
+                  when group_name like "%试产三%" then 13
+                  when group_name like "%一%" then 14
+                  when group_name like "%二%" then 15
+                  when group_name like "%三%" then 16
+                  when group_name like "%修复%" then 17
+                  else 20 end),
+            machine_no -- 添加一个明确的排序字段
     </select>
 </mapper>

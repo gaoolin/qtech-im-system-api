@@ -24,5 +24,5 @@ public class ImEqsNetworkingAndRemoteInfo extends ImReportBaseInfo {
     private int offlineEqs;
     /** int 默认值 0 */
     @Excel(name = "远程状态码")
-    private int remoteCode;
+    private Integer remoteCode;
 }

@@ -25,5 +25,7 @@ public interface EqNetworkingMapper {
                                                                       ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
 
     public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
-                                                                       ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+                                                                       ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo,
+                                                                       @Param("sortFactoryNameCaseStatement") String sortFactoryNameCaseStatement,
+                                                                       @Param("sortGroupNameCaseStatement") String sortGroupNameCaseStatement);
 }

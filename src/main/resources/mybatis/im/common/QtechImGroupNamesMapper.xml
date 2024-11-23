@@ -46,23 +46,7 @@
                 and company_name = #{factoryName}
             </if>
         </where>
-        order by
-            case
-                when group_name like '%试产一%' then 11
-                when group_name like '%试产二%' then 12
-                when group_name like '%试产三%' then 13
-                when group_name like '%一%' then 1
-                when group_name like '%二%' then 2
-                when group_name like '%三%' then 3
-                when group_name like '%四%' then 4
-                when group_name like '%五%' then 5
-                when group_name like '%六%' then 6
-                when group_name like '%七%' then 7
-                when group_name like '%八%' then 8
-                when group_name like '%九%' then 9
-                when group_name like '%十%' then 10
-                else 14
-            end
+        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
     </select>
 
     <select id="getLatestGroupNames" resultMap="ImReportBaseInfoResult">
@@ -89,23 +73,7 @@
                     and company_name = #{factoryName}
                 </if>
             </where>
-            order by
-                case
-                    when group_name like '%试产一%' then 11
-                    when group_name like '%试产二%' then 12
-                    when group_name like '%试产三%' then 13
-                    when group_name like '%一%' then 1
-                    when group_name like '%二%' then 2
-                    when group_name like '%三%' then 3
-                    when group_name like '%四%' then 4
-                    when group_name like '%五%' then 5
-                    when group_name like '%六%' then 6
-                    when group_name like '%七%' then 7
-                    when group_name like '%八%' then 8
-                    when group_name like '%九%' then 9
-                    when group_name like '%十%' then 10
-                    else 14
-                end
+            order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
     </select>
 
     <select id="getWireGroupNames" resultMap="ImReportBaseInfoResult">
@@ -116,23 +84,7 @@
             </if>
             <if test="factoryName != null"> and factory_name = #{factoryName} </if>
         </where>
-        order by
-            case
-                when group_name like '%试产一%' then 11
-                when group_name like '%试产二%' then 12
-                when group_name like '%试产三%' then 13
-                when group_name like '%一%' then 1
-                when group_name like '%二%' then 2
-                when group_name like '%三%' then 3
-                when group_name like '%四%' then 4
-                when group_name like '%五%' then 5
-                when group_name like '%六%' then 6
-                when group_name like '%七%' then 7
-                when group_name like '%八%' then 8
-                when group_name like '%九%' then 9
-                when group_name like '%十%' then 10
-                else 14
-            end
+        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
     </select>
 
     <select id="getWbOlpGroupNames" resultMap="ImReportBaseInfoResult">
@@ -172,23 +124,7 @@
                 and company_name = #{factoryName}
             </if>
         </where>
-        order by
-            case
-                when group_name like '%试产一%' then 11
-                when group_name like '%试产二%' then 12
-                when group_name like '%试产三%' then 13
-                when group_name like '%一%' then 1
-                when group_name like '%二%' then 2
-                when group_name like '%三%' then 3
-                when group_name like '%四%' then 4
-                when group_name like '%五%' then 5
-                when group_name like '%六%' then 6
-                when group_name like '%七%' then 7
-                when group_name like '%八%' then 8
-                when group_name like '%九%' then 9
-                when group_name like '%十%' then 10
-                else 14
-            end
+        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
     </select>
 
     <select id="getWbOlpLatestGroupNames" resultMap="ImReportBaseInfoResult">
@@ -218,23 +154,7 @@
                 and company_name = #{factoryName}
             </if>
         </where>
-        order by
-            case
-                when group_name like '%试产一%' then 11
-                when group_name like '%试产二%' then 12
-                when group_name like '%试产三%' then 13
-                when group_name like '%一%' then 1
-                when group_name like '%二%' then 2
-                when group_name like '%三%' then 3
-                when group_name like '%四%' then 4
-                when group_name like '%五%' then 5
-                when group_name like '%六%' then 6
-                when group_name like '%七%' then 7
-                when group_name like '%八%' then 8
-                when group_name like '%九%' then 9
-                when group_name like '%十%' then 10
-                else 14
-            end
+        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
     </select>
 
     <select id="getEqnGroupNames" parameterType="map" resultMap="ImReportBaseInfoResult">
@@ -261,23 +181,7 @@
                 and company_name = #{imReportBaseInfo.factoryName}
             </if>
         </where>
-        order by
-            case
-                when group_name like '%试产一%' then 11
-                when group_name like '%试产二%' then 12
-                when group_name like '%试产三%' then 13
-                when group_name like '%一%' then 1
-                when group_name like '%二%' then 2
-                when group_name like '%三%' then 3
-                when group_name like '%四%' then 4
-                when group_name like'%五%' then 5
-                when group_name like '%六%' then 6
-                when group_name like '%七%' then 7
-                when group_name like '%八%' then 8
-                when group_name like '%九%' then 9
-                when group_name like '%十%' then 10
-                else 14
-            end
+        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
     </select>
 
     <select id="getQcpGroupNames" resultMap="ImReportBaseInfoResult">
@@ -324,22 +228,6 @@
                 and a.company_name = #{factoryName}
             </if>
         </where>
-        order by
-            case
-                when group_name like '%试产一%' then 11
-                when group_name like '%试产二%' then 12
-                when group_name like '%试产三%' then 13
-                when group_name like '%一%' then 1
-                when group_name like '%二%' then 2
-                when group_name like '%三%' then 3
-                when group_name like '%四%' then 4
-                when group_name like '%五%' then 5
-                when group_name like '%六%' then 6
-                when group_name like '%七%' then 7
-                when group_name like '%八%' then 8
-                when group_name like '%九%' then 9
-                when group_name like '%十%' then 10
-                else 14
-            end
+        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
     </select>
 </mapper>

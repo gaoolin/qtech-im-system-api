@@ -2,6 +2,7 @@ package com.qtech.im.config;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,12 +15,20 @@ import java.util.List;
  * desc   :
  */
 
+@ConfigurationProperties(prefix = "tbs")
 @Configuration
-@ConfigurationProperties(prefix = "eqs")
 @Getter
 @Setter
 public class TbQueryConditionConfig {
     private String deptName;
     private List<String> deptNames;
     private List<String> deviceTypes;
+
+    private String sortFactoryNameCaseStatement;
+
+    private String sortGroupNameCaseStatement;
+
+    private String sortDeviceTypeCaseStatement;
 }
+
+

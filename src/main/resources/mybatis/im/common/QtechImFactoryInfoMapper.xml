@@ -39,13 +39,7 @@
             </where>
         ) d on
             c.pbox_id = d.sim_id
-        order by
-            case
-                when company_name like '%台虹%' then 1
-                when company_name like '%古城%' then 2
-                when company_name like '%India%' then 3
-                else 4
-            end
+        order by #{sortFactoryNameCaseStatement}
     </select>
 
     <select id="getLatestFactoryNames" resultMap="ImReportBaseInfoResult">
@@ -65,13 +59,7 @@
             where source = 'aa-list'
         ) d on
             c.pbox_id = d.sim_id
-        order by
-            case
-                when company_name like '%台虹%' then 1
-                when company_name like '%古城%' then 2
-                when company_name like '%India%' then 3
-                else 4
-            end
+        order by #{sortFactoryNameCaseStatement}
     </select>
 
     <select id="getWireFactoryNames" resultMap="ImReportBaseInfoResult">
@@ -82,14 +70,7 @@
                 and create_date between #{params.beginTime} and #{params.endTime}
             </if>
         </where>
-        order by
-            case
-                when company_name like '%台虹%' then 1
-                when company_name like '%古城%' then 2
-                when company_name like '%汉浦%' then 3
-                when company_name like '%India%' then 4
-                else 5
-            end
+        order by #{sortFactoryNameCaseStatement}
     </select>
 
     <select id="getWbOlpFactoryNames" resultMap="ImReportBaseInfoResult">
@@ -112,14 +93,7 @@
                                  </choose>
                             </where>) d on
             c.pbox_id = d.sim_id
-        order by
-            case
-                when company_name like '%台虹%' then 1
-                when company_name like '%古城%' then 2
-                when company_name like '%汉浦%' then 3
-                when company_name like '%India%' then 4
-                else 5
-            end
+        order by #{sortFactoryNameCaseStatement}
     </select>
 
     <select id="getWbOlpLatestFactoryNames"  resultMap="ImReportBaseInfoResult">
@@ -133,14 +107,7 @@
                              from qtech_eq_ads.im_eq_reverse_control_info
                              where source = 'wb-olp') d on
             c.pbox_id = d.sim_id
-        order by
-            case
-                when company_name like '%台虹%' then 1
-                when company_name like '%古城%' then 2
-                when company_name like '%汉浦%' then 3
-                when company_name like '%India%' then 4
-                else 5
-            end
+        order by #{sortFactoryNameCaseStatement}
     </select>
 
     <select id="getEqnFactoryNames" parameterType="map" resultMap="ImReportBaseInfoResult">
@@ -163,14 +130,7 @@
             </if>
             and company_name is not null
         </where>
-        order by
-            case
-                when company_name like '%台虹%' then 1
-                when company_name like '%古城%' then 2
-                when company_name like '%汉浦%' then 3
-                when company_name like '%India%' then 4
-                else 5
-            end
+        order by #{sortFactoryNameCaseStatement}
     </select>
 
     <select id="getQcpFactoryNames" resultMap="ImReportBaseInfoResult">
@@ -212,14 +172,7 @@
         select distinct a.company_name
         from tb a
         where a.company_name is not null
-        order by
-            case
-                when a.company_name like '%台虹%' then 1
-                when a.company_name like '%古城%' then 2
-                when a.company_name like '%汉浦%' then 3
-                when a.company_name like '%India%' then 4
-                else 5
-            end
+        order by #{sortFactoryNameCaseStatement}
     </select>
 
 </mapper>

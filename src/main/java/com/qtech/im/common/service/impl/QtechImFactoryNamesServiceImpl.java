@@ -32,8 +32,9 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
 
     @Override
     public List<ImReportBaseInfo> getHistoryFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        String sortFactoryNameCaseStatement = tbQueryConditionConfig.getSortFactoryNameCaseStatement();
         try {
-            return qtechImFactoryNamesMapper.getHistoryFactoryNames(imReportBaseInfo);
+            return qtechImFactoryNamesMapper.getHistoryFactoryNames(imReportBaseInfo, sortFactoryNameCaseStatement);
         } catch (Exception e) {
             throw new RuntimeException("查询数据库失败，请联系系统负责人!");
         }
@@ -41,8 +42,9 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
 
     @Override
     public List<ImReportBaseInfo> getLatestFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        String sortFactoryNameCaseStatement = tbQueryConditionConfig.getSortFactoryNameCaseStatement();
         try {
-            return qtechImFactoryNamesMapper.getLatestFactoryNames(imReportBaseInfo);
+            return qtechImFactoryNamesMapper.getLatestFactoryNames(imReportBaseInfo, sortFactoryNameCaseStatement);
         } catch (Exception e) {
             log.error("查询数据库失败" , e);
             throw new RuntimeException("查询数据库失败，请联系系统负责人!");
@@ -51,8 +53,9 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
 
     @Override
     public List<ImReportBaseInfo> getWireFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        String sortFactoryNameCaseStatement = tbQueryConditionConfig.getSortFactoryNameCaseStatement();
         try {
-            return qtechImFactoryNamesMapper.getWireFactoryNames(imReportBaseInfo);
+            return qtechImFactoryNamesMapper.getWireFactoryNames(imReportBaseInfo, sortFactoryNameCaseStatement);
         } catch (Exception e) {
             log.error("查询数据库失败" , e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
@@ -61,8 +64,9 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
 
     @Override
     public List<ImReportBaseInfo> getWbOlpFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        String sortFactoryNameCaseStatement = tbQueryConditionConfig.getSortFactoryNameCaseStatement();
         try {
-            return qtechImFactoryNamesMapper.getWbOlpFactoryNames(imReportBaseInfo);
+            return qtechImFactoryNamesMapper.getWbOlpFactoryNames(imReportBaseInfo, sortFactoryNameCaseStatement);
         } catch (Exception e) {
             log.error("查询数据库失败" , e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
@@ -71,8 +75,9 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
 
     @Override
     public List<ImReportBaseInfo> getWbOlpLatestFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        String sortFactoryNameCaseStatement = tbQueryConditionConfig.getSortFactoryNameCaseStatement();
         try {
-            return qtechImFactoryNamesMapper.getWbOlpLatestFactoryNames(imReportBaseInfo);
+            return qtechImFactoryNamesMapper.getWbOlpLatestFactoryNames(imReportBaseInfo, sortFactoryNameCaseStatement);
         } catch (Exception e) {
             log.error("查询数据库失败" , e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
@@ -84,9 +89,10 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
     public List<ImReportBaseInfo> getEqnFactoryNames() {
         List<String> deptNames = tbQueryConditionConfig.getDeptNames();
         List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
+        String sortFactoryNameCaseStatement = tbQueryConditionConfig.getSortFactoryNameCaseStatement();
 
         try {
-            return qtechImFactoryNamesMapper.getEqnFactoryNames(deptNames, deviceTypes);
+            return qtechImFactoryNamesMapper.getEqnFactoryNames(deptNames, deviceTypes, sortFactoryNameCaseStatement);
         } catch (Exception e) {
             log.error("查询数据库失败" , e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");

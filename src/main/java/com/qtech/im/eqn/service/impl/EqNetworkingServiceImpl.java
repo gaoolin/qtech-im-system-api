@@ -35,9 +35,11 @@ public class EqNetworkingServiceImpl implements IEqNetworkingService {
         String deptName = tbQueryConditionConfig.getDeptName();
         List<String> deptNames = tbQueryConditionConfig.getDeptNames();
         List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
+        String sortFactoryNameCaseStatement = tbQueryConditionConfig.getSortFactoryNameCaseStatement();
+        String sortGroupNameCaseStatement = tbQueryConditionConfig.getSortGroupNameCaseStatement();
 
         try {
-            return eqNetworkingMapper.selectEqNetworkingList(deptNames, deviceTypes, imEqsNetworkingAndRemoteInfoVo);
+            return eqNetworkingMapper.selectEqNetworkingList(deptNames, deviceTypes, imEqsNetworkingAndRemoteInfoVo, sortFactoryNameCaseStatement, sortGroupNameCaseStatement);
         } catch (Exception e) {
             log.error("查询数据库失败", e);
             throw new RuntimeException("查询数据库失败，请联系系统负责人!");

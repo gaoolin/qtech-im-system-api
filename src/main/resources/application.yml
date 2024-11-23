@@ -53,7 +53,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles:
-    active: dev
+    active: prod
   # 文件上传
   servlet:
     multipart:
@@ -155,7 +155,7 @@ gen:
   tablePrefix: sys_
 
 
-eqs:
+tbs:
   deptName: COB
   deptNames:
     - COB
@@ -166,3 +166,6 @@ eqs:
     - WB
     - HM
     - AA
+  sortFactoryNameCaseStatement: "(case company_name when '台虹厂区' then 1 when '古城厂区' then 2 when '汉浦厂区' then 3 when 'QT_India' then 4 else 5 end)"
+  sortGroupNameCaseStatement: "(case when group_name like '%COB一%' then 1 when group_name like '%COB二%' then 2 when group_name like '%COB三%' then 3 when group_name like '%COB四%' then 4 when group_name like '%COB五%' then 5 when group_name like '%COB六%' then 6 when group_name like '%COB七%' then 7 when group_name like '%COB八%' then 8 when group_name like '%COB九%' then 9 when group_name like '%COB十%' then 10 when group_name like '%试产一%' then 11 when group_name like '%试产二%' then 12 when group_name like '%试产三%' then 13 when group_name like '%一%' then 14 when group_name like '%二%' then 15 when group_name like '%三%' then 16 when group_name like '%修复%' then 17 else 20 end)"
+  sortDeviceTypeCaseStatement: "(case device_type when 'DB' then 1 when 'WB' then 2 when 'HM' then 3 when 'AA' then 4 else 5 end)"
