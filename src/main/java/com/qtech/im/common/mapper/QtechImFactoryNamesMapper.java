@@ -15,17 +15,17 @@ import java.util.List;
 
 @Mapper
 public interface QtechImFactoryNamesMapper {
-    public List<ImReportBaseInfo> getHistoryFactoryNames(ImReportBaseInfo imReportBaseInfo, @Param("sortFactoryNameCaseStatement") String sortFactoryNameCaseStatement);
+    public List<ImReportBaseInfo> getHistoryFactoryNames(ImReportBaseInfo imReportBaseInfo);
 
-    public List<ImReportBaseInfo> getLatestFactoryNames(ImReportBaseInfo imReportBaseInfo, @Param("sortFactoryNameCaseStatement") String sortFactoryNameCaseStatement);
+    public List<ImReportBaseInfo> getLatestFactoryNames(ImReportBaseInfo imReportBaseInfo);
 
-    public List<ImReportBaseInfo> getWireFactoryNames(ImReportBaseInfo imReportBaseInfo, @Param("sortFactoryNameCaseStatement") String sortFactoryNameCaseStatement);
+    public List<ImReportBaseInfo> getWireFactoryNames(ImReportBaseInfo imReportBaseInfo);
 
-    public List<ImReportBaseInfo> getWbOlpFactoryNames(ImReportBaseInfo imReportBaseInfo, @Param("sortFactoryNameCaseStatement") String sortFactoryNameCaseStatement);
+    public List<ImReportBaseInfo> getWbOlpFactoryNames(ImReportBaseInfo imReportBaseInfo);
 
-    public List<ImReportBaseInfo> getWbOlpLatestFactoryNames(ImReportBaseInfo imReportBaseInfo, @Param("sortFactoryNameCaseStatement") String sortFactoryNameCaseStatement);
+    public List<ImReportBaseInfo> getWbOlpLatestFactoryNames(ImReportBaseInfo imReportBaseInfo);
 
-    public List<ImReportBaseInfo> getEqnFactoryNames(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, @Param("sortFactoryNameCaseStatement") String sortFactoryNameCaseStatement);
+    public List<ImReportBaseInfo> getEqnFactoryNames(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes);
 
     public List<ImReportBaseInfo> getQcpFactoryNames();
 }

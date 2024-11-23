@@ -23,12 +23,6 @@ public class TbQueryConditionConfig {
     private String deptName;
     private List<String> deptNames;
     private List<String> deviceTypes;
-
-    private String sortFactoryNameCaseStatement;
-
-    private String sortGroupNameCaseStatement;
-
-    private String sortDeviceTypeCaseStatement;
 }
 
 

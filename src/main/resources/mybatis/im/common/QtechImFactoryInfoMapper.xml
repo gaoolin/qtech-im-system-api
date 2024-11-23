@@ -39,7 +39,7 @@
             </where>
         ) d on
             c.pbox_id = d.sim_id
-        order by #{sortFactoryNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />
     </select>
 
     <select id="getLatestFactoryNames" resultMap="ImReportBaseInfoResult">
@@ -59,7 +59,7 @@
             where source = 'aa-list'
         ) d on
             c.pbox_id = d.sim_id
-        order by #{sortFactoryNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />
     </select>
 
     <select id="getWireFactoryNames" resultMap="ImReportBaseInfoResult">
@@ -70,7 +70,7 @@
                 and create_date between #{params.beginTime} and #{params.endTime}
             </if>
         </where>
-        order by #{sortFactoryNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />
     </select>
 
     <select id="getWbOlpFactoryNames" resultMap="ImReportBaseInfoResult">
@@ -93,7 +93,7 @@
                                  </choose>
                             </where>) d on
             c.pbox_id = d.sim_id
-        order by #{sortFactoryNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />
     </select>
 
     <select id="getWbOlpLatestFactoryNames"  resultMap="ImReportBaseInfoResult">
@@ -107,7 +107,7 @@
                              from qtech_eq_ads.im_eq_reverse_control_info
                              where source = 'wb-olp') d on
             c.pbox_id = d.sim_id
-        order by #{sortFactoryNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />
     </select>
 
     <select id="getEqnFactoryNames" parameterType="map" resultMap="ImReportBaseInfoResult">
@@ -130,7 +130,7 @@
             </if>
             and company_name is not null
         </where>
-        order by #{sortFactoryNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />
     </select>
 
     <select id="getQcpFactoryNames" resultMap="ImReportBaseInfoResult">
@@ -172,7 +172,7 @@
         select distinct a.company_name
         from tb a
         where a.company_name is not null
-        order by #{sortFactoryNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />
     </select>
 
 </mapper>

@@ -1,0 +1,50 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.common.mapper.CommonSqlMapper">
+
+    <!-- 1. 公司排序规则 -->
+    <sql id="companyOrder">
+        (CASE company_name
+            WHEN "古城厂区" THEN 1
+            WHEN "台虹厂区" THEN 2
+            WHEN "汉浦厂区" THEN 3
+            WHEN "QT_India" THEN 4
+            ELSE 5
+        END)
+    </sql>
+
+    <!-- 2. 车间排序规则 -->
+    <sql id="groupOrder">
+        (CASE
+            WHEN group_name LIKE "%COB一%" THEN 1
+            WHEN group_name LIKE "%COB二%" THEN 2
+            WHEN group_name LIKE "%COB三%" THEN 3
+            WHEN group_name LIKE "%COB四%" THEN 4
+            WHEN group_name LIKE "%COB五%" THEN 5
+            WHEN group_name LIKE "%COB六%" THEN 6
+            WHEN group_name LIKE "%COB七%" THEN 7
+            WHEN group_name LIKE "%COB八%" THEN 8
+            WHEN group_name LIKE "%COB九%" THEN 9
+            WHEN group_name LIKE "%COB十%" THEN 10
+            WHEN group_name LIKE "%试产一%" THEN 11
+            WHEN group_name LIKE "%试产二%" THEN 12
+            WHEN group_name LIKE "%试产三%" THEN 13
+            WHEN group_name LIKE "%一%" THEN 14
+            WHEN group_name LIKE "%二%" THEN 15
+            WHEN group_name LIKE "%三%" THEN 16
+            WHEN group_name LIKE "%修复%" THEN 17
+            ELSE 20
+        END)
+    </sql>
+
+    <!-- 3. 设备类型排序规则 -->
+    <sql id="deviceTypeOrder">
+        (CASE device_type
+            WHEN "DB" THEN 1
+            WHEN "WB" THEN 2
+            WHEN "HM" THEN 3
+            WHEN "AA" THEN 4
+            ELSE 5
+        END)
+    </sql>
+
+</mapper>

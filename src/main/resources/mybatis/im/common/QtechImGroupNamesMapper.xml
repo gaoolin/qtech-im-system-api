@@ -46,7 +46,7 @@
                 and company_name = #{factoryName}
             </if>
         </where>
-        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />
     </select>
 
     <select id="getLatestGroupNames" resultMap="ImReportBaseInfoResult">
@@ -73,7 +73,7 @@
                     and company_name = #{factoryName}
                 </if>
             </where>
-            order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
+            order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />
     </select>
 
     <select id="getWireGroupNames" resultMap="ImReportBaseInfoResult">
@@ -84,7 +84,7 @@
             </if>
             <if test="factoryName != null"> and factory_name = #{factoryName} </if>
         </where>
-        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />
     </select>
 
     <select id="getWbOlpGroupNames" resultMap="ImReportBaseInfoResult">
@@ -124,7 +124,7 @@
                 and company_name = #{factoryName}
             </if>
         </where>
-        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />
     </select>
 
     <select id="getWbOlpLatestGroupNames" resultMap="ImReportBaseInfoResult">
@@ -154,7 +154,7 @@
                 and company_name = #{factoryName}
             </if>
         </where>
-        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />
     </select>
 
     <select id="getEqnGroupNames" parameterType="map" resultMap="ImReportBaseInfoResult">
@@ -181,7 +181,7 @@
                 and company_name = #{imReportBaseInfo.factoryName}
             </if>
         </where>
-        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />
     </select>
 
     <select id="getQcpGroupNames" resultMap="ImReportBaseInfoResult">
@@ -228,6 +228,6 @@
                 and a.company_name = #{factoryName}
             </if>
         </where>
-        order by ${@com.qtech.im.config.TbQueryConditionConfig@sortGroupNameCaseStatement}
+        order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />
     </select>
 </mapper>

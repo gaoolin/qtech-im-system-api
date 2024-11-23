@@ -40,6 +40,7 @@ public class ImReportBaseInfo extends BaseEntity {
     private String simId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "时间")
     private LocalDateTime dt;
     /** 默认值 null */
     @Excel(name = "代码")

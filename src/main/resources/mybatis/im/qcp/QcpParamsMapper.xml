@@ -7,7 +7,7 @@
     <resultMap id="selectQcpParamsOverviewListResult" type="QcpParamsVo">
         <result property="factoryName" column="company_name" />
         <result property="groupName" column="group_name" />
-        <result property="deviceType" column="devicetype" />
+        <result property="deviceType" column="device_type" />
         <result property="ttlEqs" column="ttl_eqs" />
         <result property="onlineEqs" column="online_eqs" />
         <result property="offlineEqs" column="offline_eqs" />
@@ -18,7 +18,7 @@
     <resultMap id="selectQcpParamsListResult" type="QcpParamsDetailVo">
         <result property="factoryName" column="company_name" />
         <result property="groupName" column="group_name" />
-        <result property="deviceType" column="devicetype" />
+        <result property="deviceType" column="device_type" />
         <result property="eqId" column="eq_id" />
         <result property="mcId" column="mc_id" />
         <result property="prodType" column="prod_type" />
@@ -29,11 +29,10 @@
         WITH _eq_net_ok_tb AS (
             SELECT
                 device_id,
-                receive_date,
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5)
+            WHERE receive_date > minutes_sub(now(), 5) AND status = '1'
         ),
 
         _eq_ttl_tb AS (
@@ -45,11 +44,13 @@
                 a.device_m_id,
                 a.devicetype,
                 a.machine_no,
-                c.pbox_id
+                c.pbox_id,
+                e.receive_date
             FROM QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
             LEFT JOIN QT_MODEL_EMS.V_CODE_NAME b ON a.hierarchy_code = b.hierarchy_show_code
             LEFT JOIN QT_MODEL_EMS.T_PBOX_INFO c ON a.device_id = c.dev_id
             LEFT JOIN QT_MODEL_EMS.T_COLLECTOR_PROGRAM d ON c.collector_program_id = d.id
+            LEFT JOIN QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL e ON a.device_id = e.device_id
             <where>
                 AND b.dep_name IN
                 <foreach item="item" index="index" collection="deptNames" open="(" separator="," close=")">
@@ -78,6 +79,7 @@
                 device_m_id,
                 machine_no,
                 pbox_id,
+                receive_date,
                 Remote_control,
                 net_status,
                 CASE
@@ -94,6 +96,7 @@
                     a.device_m_id,
                     a.machine_no,
                     a.pbox_id,
+                    a.receive_date,
                     b.Remote_control,
                     CASE
                         WHEN b.Remote_control IS NULL THEN 0
@@ -168,7 +171,7 @@
         select
             a.company_name,
             a.group_name,
-            a.devicetype,
+            a.devicetype as device_type,
             a.ttl_eqs,
             case when (a.ttl_eqs - a.offline_eqs - a.qcp_is_null) &lt; 0 then 0 else (a.ttl_eqs - a.offline_eqs - a.qcp_is_null) end as online_eqs,
             a.qcp_is_null,
@@ -191,37 +194,10 @@
             left join _eq_remote_off_info_tb d
                 on a.company_name = d.company_name and a.group_name = d.group_name and a.devicetype = d.devicetype
         ) a
-        order by (case a.company_name
-                      when "台虹厂区" then 1
-                      when "古城厂区" then 2
-                      when "汉浦厂区" then 3
-                      when "QT_India" then 4
-                      else 5 end),
-                 (case
-                      when group_name like "%COB一%" then 1
-                      when group_name like "%COB二%" then 2
-                      when group_name like "%COB三%" then 3
-                      when group_name like "%COB四%" then 4
-                      when group_name like "%COB五%" then 5
-                      when group_name like "%COB六%" then 6
-                      when group_name like "%COB七%" then 7
-                      when group_name like "%COB八%" then 8
-                      when group_name like "%COB九%" then 9
-                      when group_name like "%COB十%" then 10
-                      when group_name like "%试产一%" then 11
-                      when group_name like "%试产二%" then 12
-                      when group_name like "%试产三%" then 13
-                      when group_name like "%一%" then 14
-                      when group_name like "%二%" then 15
-                      when group_name like "%三%" then 16
-                      when group_name like "%修复%" then 17
-                      else 20 end),
-                 (case a.devicetype
-                      when "DB" then 1
-                      when "WB" then 2
-                      when "HM" then 3
-                      when "AA" then 4
-                      else 5 end)
+        order by
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" />
 
     </select>
 
@@ -267,7 +243,7 @@
 
         select a.company_name,
                a.group_name,
-               a.devicetype,
+               a.devicetype as device_type,
                a.eq_id,
                a.mc_id,
                a.prod_type,
@@ -281,7 +257,11 @@
             <if test="mcId != null and mcId != ''"> and lower(a.mc_id) like concat('%', lower(#{mcId}), '%') </if>
             <if test="prodType != null and prodType != ''"> and lower(a.prod_type) like concat('%', lower(#{prodType}), '%') </if>
         </where>
-        order by company_name, group_name, devicetype, eq_id, mc_id
+        order by
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" />,
+            mc_id
     </select>
 
     <select id="getMaxTime" resultType="java.lang.String">

@@ -7,7 +7,7 @@
         <result property="factoryName" column="company_name" />
         <result property="deptName" column="dep_name" />
         <result property="groupName" column="group_name" />
-        <result property="deviceType" column="devicetype" />
+        <result property="deviceType" column="device_type" />
         <result property="eqId" column="device_m_id" />
         <result property="mcId" column="machine_no" />
         <result property="simId" column="pbox_id" />
@@ -17,17 +17,17 @@
         <result property="netStatus" column="net_status" />
         <result property="remoteCode" column="Remote_control" />
         <result property="remoteStatus" column="remote_status" />
+        <result property="dt" column="receive_date" />
     </resultMap>
 
     <select id="selectEqNetworkingOfflineList" parameterType="map" resultMap="qtechImCommonInfoResult">
         WITH _eq_net_ok_tb AS (
             SELECT
                 device_id,
-                receive_date,
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5)
+            WHERE receive_date > minutes_sub(now(), 5) AND status = '1'
         ),
 
         _eq_ttl_tb AS (
@@ -39,11 +39,13 @@
                 a.device_m_id,
                 a.devicetype,
                 a.machine_no,
-                c.pbox_id
+                c.pbox_id,
+                e.recieve_date
             FROM QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
             LEFT JOIN QT_MODEL_EMS.V_CODE_NAME b ON a.hierarchy_code = b.hierarchy_show_code
             LEFT JOIN QT_MODEL_EMS.T_PBOX_INFO c ON a.device_id = c.dev_id
             LEFT JOIN QT_MODEL_EMS.T_COLLECTOR_PROGRAM d ON c.collector_program_id = d.id
+            LEFT JOIN QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL e ON a.device_id = e.device_id
             <where>
                 AND b.dep_name IN
                 <foreach item="item" index="index" collection="deptNames" open="(" separator="," close=")">
@@ -72,6 +74,7 @@
                 device_m_id,
                 machine_no,
                 pbox_id,
+                receive_date,
                 Remote_control,
                 net_status,
                 CASE
@@ -88,6 +91,7 @@
                     a.device_m_id,
                     a.machine_no,
                     a.pbox_id,
+                    a.receive_date,
                     b.Remote_control,
                     CASE
                         WHEN b.Remote_control IS NULL THEN 0
@@ -102,10 +106,11 @@
             company_name,
             dep_name,
             group_name,
-            devicetype,
+            devicetype as device_type,
             device_m_id,
             machine_no,
             pbox_id,
+            recieve_date,
             Remote_control,
             net_status,
             remote_status
@@ -117,43 +122,19 @@
             <if test="imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''"> and devicetype = #{imEqsNetworkingAndRemoteInfoVo.deviceType}</if>
         </where>
         ORDER BY
-            (case company_name
-                  when "台虹厂区" then 1
-                  when "古城厂区" then 2
-                  when "汉浦厂区" then 3
-                  when "QT_India" then 4
-                  else 5 end),
-            (case
-                  when group_name like "%COB一%" then 1
-                  when group_name like "%COB二%" then 2
-                  when group_name like "%COB三%" then 3
-                  when group_name like "%COB四%" then 4
-                  when group_name like "%COB五%" then 5
-                  when group_name like "%COB六%" then 6
-                  when group_name like "%COB七%" then 7
-                  when group_name like "%COB八%" then 8
-                  when group_name like "%COB九%" then 9
-                  when group_name like "%COB十%" then 10
-                  when group_name like "%试产一%" then 11
-                  when group_name like "%试产二%" then 12
-                  when group_name like "%试产三%" then 13
-                  when group_name like "%一%" then 14
-                  when group_name like "%二%" then 15
-                  when group_name like "%三%" then 16
-                  when group_name like "%修复%" then 17
-                  else 20 end),
-            devicetype
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" />
     </select>
 
     <select id="selectEqNetworkingAgg" parameterType="map" resultMap="qtechImCommonInfoResult">
         WITH _eq_net_ok_tb AS (
             SELECT
                 device_id,
-                receive_date,
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5)
+            WHERE receive_date > minutes_sub(now(), 5) AND status = '1'
         ),
 
         _eq_ttl_tb AS (
@@ -165,11 +146,13 @@
                 a.device_m_id,
                 a.devicetype,
                 a.machine_no,
-                c.pbox_id
+                c.pbox_id,
+                e.receive_date
             FROM QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
             LEFT JOIN QT_MODEL_EMS.V_CODE_NAME b ON a.hierarchy_code = b.hierarchy_show_code
             LEFT JOIN QT_MODEL_EMS.T_PBOX_INFO c ON a.device_id = c.dev_id
             LEFT JOIN QT_MODEL_EMS.T_COLLECTOR_PROGRAM d ON c.collector_program_id = d.id
+            LEFT JOIN QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL e ON a.device_id = e.device_id
             <where>
                 AND b.dep_name IN
                 <foreach item="item" index="index" collection="deptNames" open="(" separator="," close=")">
@@ -198,6 +181,7 @@
                 device_m_id,
                 machine_no,
                 pbox_id,
+                receive_date,
                 Remote_control,
                 net_status,
                 CASE
@@ -214,6 +198,7 @@
                     a.device_m_id,
                     a.machine_no,
                     a.pbox_id,
+                    a.receive_date,
                     b.Remote_control,
                     CASE
                         WHEN b.Remote_control IS NULL THEN 0
@@ -318,34 +303,11 @@
                 </when>
             </choose>
         order by
-            (case company_name
-                  when "台虹厂区" then 1
-                  when "古城厂区" then 2
-                  when "汉浦厂区" then 3
-                  when "QT_India" then 4
-                  else 5 end),
-            (case
-                  when group_name like "%COB一%" then 1
-                  when group_name like "%COB二%" then 2
-                  when group_name like "%COB三%" then 3
-                  when group_name like "%COB四%" then 4
-                  when group_name like "%COB五%" then 5
-                  when group_name like "%COB六%" then 6
-                  when group_name like "%COB七%" then 7
-                  when group_name like "%COB八%" then 8
-                  when group_name like "%COB九%" then 9
-                  when group_name like "%COB十%" then 10
-                  when group_name like "%试产一%" then 11
-                  when group_name like "%试产二%" then 12
-                  when group_name like "%试产三%" then 13
-                  when group_name like "%一%" then 14
-                  when group_name like "%二%" then 15
-                  when group_name like "%三%" then 16
-                  when group_name like "%修复%" then 17
-                  else 20 end)
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />
             <choose>
                 <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
-                    , a.devicetype
+                    , <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" />
                 </when>
             </choose>
     </select>
@@ -354,11 +316,10 @@
         WITH _eq_net_ok_tb AS (
             SELECT
                 device_id,
-                receive_date,
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5)
+            WHERE receive_date > minutes_sub(now(), 5) AND status = '1'
         ),
 
         _eq_ttl_tb AS (
@@ -370,11 +331,13 @@
                 a.device_m_id,
                 a.devicetype,
                 a.machine_no,
-                c.pbox_id
+                c.pbox_id,
+                e.receive_date
             FROM QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
             LEFT JOIN QT_MODEL_EMS.V_CODE_NAME b ON a.hierarchy_code = b.hierarchy_show_code
             LEFT JOIN QT_MODEL_EMS.T_PBOX_INFO c ON a.device_id = c.dev_id
             LEFT JOIN QT_MODEL_EMS.T_COLLECTOR_PROGRAM d ON c.collector_program_id = d.id
+            LEFT JOIN QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL e ON a.device_id = e.device_id
             WHERE b.dep_name IN
                 <foreach item="item" index="index" collection="deptNames" open="(" separator="," close=")">
                     #{item}
@@ -394,6 +357,7 @@
                 device_m_id,
                 machine_no,
                 pbox_id,
+                receive_date,
                 Remote_control,
                 net_status,
                 CASE
@@ -410,6 +374,7 @@
                     a.device_m_id,
                     a.machine_no,
                     a.pbox_id,
+                    a.receive_date,
                     b.Remote_control,
                     CASE
                         WHEN b.Remote_control IS NULL THEN 0
@@ -424,10 +389,11 @@
             company_name,
             dep_name,
             group_name,
-            devicetype,
+            devicetype as device_type,
             device_m_id,
             machine_no,
             pbox_id,
+            receive_date,
             Remote_control,
             net_status,
             remote_status
@@ -460,31 +426,8 @@
             </if>
         </where>
         ORDER BY
-            (case company_name
-                  when "台虹厂区" then 1
-                  when "古城厂区" then 2
-                  when "汉浦厂区" then 3
-                  when "QT_India" then 4
-                  else 5 end),
-            (case
-                  when group_name like "%COB一%" then 1
-                  when group_name like "%COB二%" then 2
-                  when group_name like "%COB三%" then 3
-                  when group_name like "%COB四%" then 4
-                  when group_name like "%COB五%" then 5
-                  when group_name like "%COB六%" then 6
-                  when group_name like "%COB七%" then 7
-                  when group_name like "%COB八%" then 8
-                  when group_name like "%COB九%" then 9
-                  when group_name like "%COB十%" then 10
-                  when group_name like "%试产一%" then 11
-                  when group_name like "%试产二%" then 12
-                  when group_name like "%试产三%" then 13
-                  when group_name like "%一%" then 14
-                  when group_name like "%二%" then 15
-                  when group_name like "%三%" then 16
-                  when group_name like "%修复%" then 17
-                  else 20 end),
-            machine_no -- 添加一个明确的排序字段
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" /> -- 添加一个明确的排序字段
     </select>
 </mapper>
