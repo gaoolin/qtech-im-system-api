@@ -197,7 +197,7 @@
             QT_MODEL_MES.T_PARAMETER_RESULT
         where
             ask_date > minutes_sub(now(), 5)
-            and devicetype in ('AA', 'WB', 'DB', 'HM')
+            and device_type in ('AA', 'WB', 'DB', 'HM')
         ),
 
         tb as (

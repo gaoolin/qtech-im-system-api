@@ -41,6 +41,7 @@ public class QcpParamsController extends BaseController {
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public TableDataInfo listQcpParams(QcpParamsDetailVo qcpParamsDetailVo) {
+        System.out.println(qcpParamsDetailVo);
         startPage();
         List<QcpParamsDetailVo> qcpParamsDetailVos = qcpParamsService.selectQcpParamsList(qcpParamsDetailVo);
         return getDataTable(qcpParamsDetailVos);

@@ -216,7 +216,7 @@
             ask_date > minutes_sub(now(), 5)
             and device_type in ('AA', 'WB', 'DB', 'HM')
             <choose>
-                <when test="label == 1">
+                <when test="label == 0">
                     and version = 'QCP标准参数空'
                 </when>
             </choose>),
