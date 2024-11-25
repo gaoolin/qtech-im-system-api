@@ -42,11 +42,6 @@ public class AaListParamsStdModelInfoController extends BaseController {
         return getDataTable(list);
     }
 
-    @RequestMapping(value = "/add" , produces = "application/json" , method = RequestMethod.POST)
-    public AjaxResult add(@RequestBody AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
-        return toAjax(aaListParamsStdModelInfoService.insertAaListParamsStdModelInfo(aaListParamsStdModelInfoVo));
-    }
-
     @RequestMapping(value = "/edit" , produces = "application/json" , method = RequestMethod.POST)
     public AjaxResult edit(@RequestBody AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
         aaListParamsStdModelInfoVo.setUpdateBy(sysUserService.selectUserByUserName(SecurityUtils.getUsername()).getNickName());

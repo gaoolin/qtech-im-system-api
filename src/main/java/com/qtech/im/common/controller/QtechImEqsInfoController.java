@@ -31,7 +31,7 @@ public class QtechImEqsInfoController {
 
     @GetMapping("/iot/status")
     public R<Boolean> iotQcpStatus(ImReportBaseInfo imReportBaseInfo) {
-        return R.ok(qtechImEqsInfoService.iotStatus(imReportBaseInfo));
+        return R.ok(qtechImEqsInfoService.iotQcpStatus(imReportBaseInfo));
     }
 
     @GetMapping("/iot/aa/status")

@@ -19,9 +19,9 @@ public interface QcpParamsMapper {
 
     public List<QcpParamsVo> selectQcpParamsOverviewList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, QcpParamsVo qcpParams);
 
-    public List<QcpParamsDetailVo> selectQcpParamsList(QcpParamsDetailVo qcpParamsDetailVo);
+    public List<QcpParamsDetailVo> selectQcpParamsList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, QcpParamsDetailVo qcpParamsDetailVo);
 
     public String getMaxTime();
 
-    public boolean checkIotStatus();
+    public boolean checkIotStatus(@Param("deviceTypes") List<String> deviceTypes);
 }

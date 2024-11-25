@@ -144,9 +144,15 @@
             version
         from
             QT_MODEL_MES.T_PARAMETER_RESULT
-        where
-            ask_date > minutes_sub(now(), 5)
-            and device_type in ('AA', 'WB', 'DB', 'HM')
+        <where>
+            and ask_date > minutes_sub(now(), 5)
+            <if test="deviceTypes != null and deviceTypes.size() > 0">
+                and device_type in
+                <foreach item="item" index="index" collection="deviceTypes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
         ),
 
         tb as (
@@ -166,9 +172,22 @@
                                     on c.collector_program_id = d.id
                           inner join ta e
                                     on a.device_m_id = e.eqid
-                 where dep_name like '%COB%'
-                    and a.devicetype in ('AA', 'WB', 'DB', 'HM')
+                 <where>
+                    <if test="deptNames != null and deptNames.size() > 0">
+                        and dep_name in
+                        <foreach item="item" index="index" collection="deptNames" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="deviceTypes != null and deviceTypes.size() > 0">
+                        and a.devicetype in
+                        <foreach item="item" index="index" collection="deviceTypes" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                 </where>
                  )
+
         select distinct a.company_name
         from tb a
         where a.company_name is not null

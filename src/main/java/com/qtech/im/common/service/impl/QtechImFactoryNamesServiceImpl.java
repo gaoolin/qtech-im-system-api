@@ -6,7 +6,6 @@ import com.qtech.im.common.domain.ImReportBaseInfo;
 import com.qtech.im.common.mapper.QtechImFactoryNamesMapper;
 import com.qtech.im.common.service.IQtechImFactoryNamesService;
 import com.qtech.im.config.TbQueryConditionConfig;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +43,7 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
         try {
             return qtechImFactoryNamesMapper.getLatestFactoryNames(imReportBaseInfo);
         } catch (Exception e) {
-            log.error("查询数据库失败" , e);
+            log.error("查询数据库失败", e);
             throw new RuntimeException("查询数据库失败，请联系系统负责人!");
         }
     }
@@ -54,7 +53,7 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
         try {
             return qtechImFactoryNamesMapper.getWireFactoryNames(imReportBaseInfo);
         } catch (Exception e) {
-            log.error("查询数据库失败" , e);
+            log.error("查询数据库失败", e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
         }
     }
@@ -64,7 +63,7 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
         try {
             return qtechImFactoryNamesMapper.getWbOlpFactoryNames(imReportBaseInfo);
         } catch (Exception e) {
-            log.error("查询数据库失败" , e);
+            log.error("查询数据库失败", e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
         }
     }
@@ -74,7 +73,7 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
         try {
             return qtechImFactoryNamesMapper.getWbOlpLatestFactoryNames(imReportBaseInfo);
         } catch (Exception e) {
-            log.error("查询数据库失败" , e);
+            log.error("查询数据库失败", e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
         }
     }
@@ -88,7 +87,7 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
         try {
             return qtechImFactoryNamesMapper.getEqnFactoryNames(deptNames, deviceTypes);
         } catch (Exception e) {
-            log.error("查询数据库失败" , e);
+            log.error("查询数据库失败", e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
         }
     }
@@ -96,10 +95,12 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
     @DataSource(DataSourceType.THIRD)
     @Override
     public List<ImReportBaseInfo> getQcpFactoryNames() {
+        List<String> deptNames = tbQueryConditionConfig.getDeptNames();
+        List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         try {
-            return qtechImFactoryNamesMapper.getQcpFactoryNames();
+            return qtechImFactoryNamesMapper.getQcpFactoryNames(deptNames, deviceTypes);
         } catch (Exception e) {
-            log.error("查询数据库失败" , e);
+            log.error("查询数据库失败", e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
         }
     }

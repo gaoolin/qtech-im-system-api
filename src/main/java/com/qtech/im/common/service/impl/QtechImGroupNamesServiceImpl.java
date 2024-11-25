@@ -96,8 +96,10 @@ public class QtechImGroupNamesServiceImpl implements IQtechImGroupNamesService {
     @DataSource(DataSourceType.THIRD)
     @Override
     public List<ImReportBaseInfo> getQcpGroupNames(ImReportBaseInfo imReportBaseInfo) {
+        List<String> deptNames = tbQueryConditionConfig.getDeptNames();
+        List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         try {
-            return qtechImGroupNamesMapper.getQcpGroupNames(imReportBaseInfo);
+            return qtechImGroupNamesMapper.getQcpGroupNames(deptNames, deviceTypes, imReportBaseInfo);
         } catch (Exception e) {
             log.error("查询数据库失败" , e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");

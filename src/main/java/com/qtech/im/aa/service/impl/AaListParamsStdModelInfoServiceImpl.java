@@ -1,5 +1,6 @@
 package com.qtech.im.aa.service.impl;
 
+import com.qtech.common.utils.StringUtils;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.aa.domain.AaListParamsStdModelInfoVo;
@@ -116,16 +117,34 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
     @Transactional
     public boolean saveOrUpdateAaListParamsStdModelInfo(Object entity) {
         AaListParamsStdModelInfoVo modelInfo = null;
+        ImAaListParamsStdModel modelDetail = null;
 
         try {
             if (entity instanceof AaListParamsStdModelInfoVo) {
                 modelInfo = (AaListParamsStdModelInfoVo) entity;
             } else if (entity instanceof ImAaListParamsStdModel) {
-                ImAaListParamsStdModel modelDetail = (ImAaListParamsStdModel) entity;
+                modelDetail = (ImAaListParamsStdModel) entity;
                 modelInfo = ModelDetailConvertToModelInfo.doConvert(modelDetail);
             }
 
             if (modelInfo != null) {
+
+                assert modelDetail != null;
+                if (StringUtils.isNotEmpty(modelDetail.getCreateBy())) {
+                    modelInfo.setCreateBy(modelDetail.getCreateBy());
+                }
+
+                if (modelDetail.getCreateTime() != null) {
+                    modelInfo.setCreateTime(modelDetail.getCreateTime());
+                }
+
+                if (StringUtils.isNotBlank(modelDetail.getUpdateBy())) {
+                    modelInfo.setUpdateBy(modelDetail.getUpdateBy());
+                }
+
+                if (modelDetail.getUpdateTime() != null) {
+                    modelInfo.setUpdateTime(modelDetail.getUpdateTime());
+                }
                 return saveOrUpdateModelInfo(modelInfo);
             }
         } catch (Exception e) {
@@ -138,7 +157,10 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
     @Transactional
     public boolean saveOrUpdateModelInfo(AaListParamsStdModelInfoVo modelInfo) {
         try {
-            List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoMapper.selectAaListParamsStdModelInfoList(modelInfo);
+            AaListParamsStdModelInfoVo param = new AaListParamsStdModelInfoVo();
+            param.setProdType(modelInfo.getProdType());
+
+            List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoMapper.selectAaListParamsStdModelInfoList(param);
             if (CollectionUtils.isNotEmpty(list)) {
                 int size = list.size();
                 if (size > 1) {

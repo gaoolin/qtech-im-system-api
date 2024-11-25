@@ -34,7 +34,7 @@ import static com.qtech.im.aa.utils.Constants.REDIS_COMPARISON_MODEL_KEY_PREFIX;
 @DataSource(value = DataSourceType.FOURTH)
 @Slf4j
 @Service
-public class IImAaListParamsStdModelServiceImpl extends ServiceImpl<ImAaListParamsStdModelMapper, ImAaListParamsStdModel> implements IImAaListParamsStdModelService {
+public class ImAaListParamsStdModelServiceImpl extends ServiceImpl<ImAaListParamsStdModelMapper, ImAaListParamsStdModel> implements IImAaListParamsStdModelService {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -75,9 +75,15 @@ public class IImAaListParamsStdModelServiceImpl extends ServiceImpl<ImAaListPara
             return true;
         }
 
+        // 数据不存在，执行插入操作
         imAaListParamsStdModel.setCreateBy(getLoginUser().getUser().getNickName());
         imAaListParamsStdModel.setCreateTime(DateUtils.getNowDate());
-        return save(imAaListParamsStdModel);
+        boolean a = save(imAaListParamsStdModel);
+        boolean b = aaListParamsStdModelInfoService.saveOrUpdateAaListParamsStdModelInfo(imAaListParamsStdModel);
+        if (!a || !b) {
+            throw new RuntimeException("插入数据发生异常，请联系管理员！");
+        }
+        return true;
     }
 
     @Override

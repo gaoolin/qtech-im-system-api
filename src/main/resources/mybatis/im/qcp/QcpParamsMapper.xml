@@ -32,7 +32,7 @@
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5) AND status = '1'
+            WHERE receive_date > minutes_sub(now(), 5)
         ),
 
         _eq_ttl_tb AS (
@@ -52,19 +52,23 @@
             LEFT JOIN QT_MODEL_EMS.T_COLLECTOR_PROGRAM d ON c.collector_program_id = d.id
             LEFT JOIN QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL e ON a.device_id = e.device_id
             <where>
-                AND b.dep_name IN
-                <foreach item="item" index="index" collection="deptNames" open="(" separator="," close=")">
-                    #{item}
-                </foreach>
+                <if test="deptNames != null and deptNames.size() > 0">
+                    and b.dep_name in
+                    <foreach item="item" index="index" collection="deptNames" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
                 <choose>
                     <when test = "qcpParams.deviceType != null and qcpParams.deviceType != ''">
                         and devicetype = #{qcpParams.deviceType}
                     </when>
                     <otherwise>
-                        and devicetype in
-                        <foreach item="item" index="index" collection="deviceTypes" open="(" separator="," close=")">
-                            #{item}
-                        </foreach>
+                        <if test="deviceTypes != null and deviceTypes.size() > 0">
+                            and a.devicetype in
+                            <foreach item="item" index="index" collection="deviceTypes" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                        </if>
                     </otherwise>
                 </choose>
             </where>
@@ -212,34 +216,54 @@
             version
         from
             QT_MODEL_MES.T_PARAMETER_RESULT
-        where
-            ask_date > minutes_sub(now(), 5)
-            and device_type in ('AA', 'WB', 'DB', 'HM')
+        <where>
+            and ask_date > minutes_sub(now(), 5)
+            <if test="deviceTypes != null and deviceTypes.size() > 0">
+                and device_type in
+                <foreach item="item" index="index" collection="deviceTypes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
             <choose>
-                <when test="label == 0">
+                <when test="qcpParamsDetailVo.label == 0">
                     and version = 'QCP标准参数空'
                 </when>
-            </choose>),
+            </choose>
+        </where>
+        ),
 
         tb as (
-                 select b.company_name,
-                        b.group_name,
-                        a.devicetype,
-                        e.eqid as eq_id,
-                        a.machine_no as mc_id,
-                        e.part_spec as prod_type,
-                        e.version as description
-                 from QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
-                          left join QT_MODEL_EMS.V_CODE_NAME b
-                                    on a.hierarchy_code = b.hierarchy_show_code
-                          left join QT_MODEL_EMS.T_PBOX_INFO c
-                                    on c.dev_id = a.device_id
-                          left join QT_MODEL_EMS.T_COLLECTOR_PROGRAM d
-                                    on c.collector_program_id = d.id
-                          inner join ta e
-                                    on a.device_m_id = e.eqid
-                 where dep_name like '%COB%'
-                   and a.devicetype in ('AA', 'WB', 'DB', 'HM'))
+             select b.company_name,
+                    b.group_name,
+                    a.devicetype,
+                    e.eqid as eq_id,
+                    a.machine_no as mc_id,
+                    e.part_spec as prod_type,
+                    e.version as description
+             from QT_MODEL_EMS.T_DEVICE_CALCGD1JH1U82GWWIONK a
+                      left join QT_MODEL_EMS.V_CODE_NAME b
+                                on a.hierarchy_code = b.hierarchy_show_code
+                      left join QT_MODEL_EMS.T_PBOX_INFO c
+                                on c.dev_id = a.device_id
+                      left join QT_MODEL_EMS.T_COLLECTOR_PROGRAM d
+                                on c.collector_program_id = d.id
+                      inner join ta e
+                                on a.device_m_id = e.eqid
+             <where>
+                <if test="deptNames != null and deptNames.size() > 0">
+                    and dep_name in
+                    <foreach item="item" index="index" collection="deptNames" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="deviceTypes != null and deviceTypes.size() > 0">
+                    and a.devicetype in
+                    <foreach item="item" index="index" collection="deviceTypes" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+             </where>
+        )
 
         select a.company_name,
                a.group_name,
@@ -250,12 +274,12 @@
                a.description
         from tb a
         <where>
-            <if test="factoryName != null and factoryName != ''"> and a.company_name = #{factoryName} </if>
-            <if test="groupName != null and groupName != ''"> and a.group_name = #{groupName} </if>
-            <if test="deviceType != null and deviceType != ''"> and a.devicetype = #{deviceType} </if>
-            <if test="eqId != null and eqId != ''"> and lower(a.eq_id) like concat('%', lower(#{eqId}), '%') </if>
-            <if test="mcId != null and mcId != ''"> and lower(a.mc_id) like concat('%', lower(#{mcId}), '%') </if>
-            <if test="prodType != null and prodType != ''"> and lower(a.prod_type) like concat('%', lower(#{prodType}), '%') </if>
+            <if test="qcpParamsDetailVo.factoryName != null and qcpParamsDetailVo.factoryName != ''"> and a.company_name = #{qcpParamsDetailVo.factoryName} </if>
+            <if test="qcpParamsDetailVo.groupName != null and qcpParamsDetailVo.groupName != ''"> and a.group_name = #{qcpParamsDetailVo.groupName} </if>
+            <if test="qcpParamsDetailVo.deviceType != null and qcpParamsDetailVo.deviceType != ''"> and a.devicetype = #{qcpParamsDetailVo.deviceType} </if>
+            <if test="qcpParamsDetailVo.eqId != null and qcpParamsDetailVo.eqId != ''"> and lower(a.eq_id) like concat('%', lower(#{qcpParamsDetailVo.eqId}), '%') </if>
+            <if test="qcpParamsDetailVo.mcId != null and qcpParamsDetailVo.mcId != ''"> and lower(a.mc_id) like concat('%', lower(#{qcpParamsDetailVo.mcId}), '%') </if>
+            <if test="qcpParamsDetailVo.prodType != null and qcpParamsDetailVo.prodType != ''"> and lower(a.prod_type) like concat('%', lower(#{qcpParamsDetailVo.prodType}), '%') </if>
         </where>
         order by
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
@@ -269,8 +293,15 @@
     </select>
     <select id="checkIotStatus" resultType="java.lang.Boolean">
         select count(1) > 0 from QT_MODEL_MES.T_PARAMETER_RESULT
-        where ask_date > minutes_sub(now(), 5)
-            and device_type in ('AA', 'WB', 'DB', 'HM')
+        <where>
+            and ask_date > minutes_sub(now(), 5)
+            <if test="deviceTypes != null and deviceTypes.size() > 0">
+                and device_type in
+                <foreach item="item" index="index" collection="deviceTypes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
     </select>
 
 </mapper>

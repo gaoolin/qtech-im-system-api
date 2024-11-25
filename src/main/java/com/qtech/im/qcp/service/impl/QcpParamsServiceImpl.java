@@ -47,9 +47,11 @@ public class QcpParamsServiceImpl implements IQcpParamsService {
 
     @Override
     public List<QcpParamsDetailVo> selectQcpParamsList(QcpParamsDetailVo qcpParamsDetailVo) {
+        List<String> deptNames = tbQueryConditionConfig.getDeptNames();
+        List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         try {
             // FIXME: 2024/01/19 09:04:06 当长时间没有采集的数据上来时，应当给前端一个异常提示，抛出一个异常，与Qcp相关的亦复如是
-            return qcpParamsMapper.selectQcpParamsList(qcpParamsDetailVo);
+            return qcpParamsMapper.selectQcpParamsList(deptNames, deviceTypes, qcpParamsDetailVo);
         } catch (Exception e) {
             log.error("查询QCP参数列表失败", e);
             throw new RuntimeException("查询QCP参数列表失败，请联系系统负责人!");
@@ -68,6 +70,7 @@ public class QcpParamsServiceImpl implements IQcpParamsService {
 
     @Override
     public boolean checkIotStatus() {
-        return qcpParamsMapper.checkIotStatus();
+        List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
+        return qcpParamsMapper.checkIotStatus(deviceTypes);
     }
 }

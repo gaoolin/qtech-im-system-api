@@ -27,5 +27,5 @@ public interface QtechImFactoryNamesMapper {
 
     public List<ImReportBaseInfo> getEqnFactoryNames(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes);
 
-    public List<ImReportBaseInfo> getQcpFactoryNames();
+    public List<ImReportBaseInfo> getQcpFactoryNames(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes);
 }
