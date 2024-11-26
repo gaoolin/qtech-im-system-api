@@ -242,8 +242,8 @@
         select distinct group_name
         from tb a
         <where>
-            <if test="factoryName != null">
-                and a.company_name = #{factoryName}
+            <if test="imReportBaseInfo.factoryName != null">
+                and a.company_name = #{imReportBaseInfo.factoryName}
             </if>
         </where>
         order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />

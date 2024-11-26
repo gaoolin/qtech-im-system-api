@@ -224,11 +224,17 @@
                     #{item}
                 </foreach>
             </if>
-            <choose>
-                <when test="qcpParamsDetailVo.label == 0">
-                    and version = 'QCP标准参数空'
-                </when>
-            </choose>
+            <if test="qcpParamsDetailVo.label == 0">
+                and version = 'QCP标准参数空'
+            </if>
+            <if test="qcpParamsDetailVo.statusCode != null">
+                and version =
+                case
+                    when #{qcpParamsDetailVo.statusCode} = 1 then 'QCP标准参数空'
+                    when #{qcpParamsDetailVo.statusCode} = 2 then 'PASS'
+                    when #{qcpParamsDetailVo.statusCode} = 3 then 'FAIL'
+                end
+            </if>
         </where>
         ),
 
