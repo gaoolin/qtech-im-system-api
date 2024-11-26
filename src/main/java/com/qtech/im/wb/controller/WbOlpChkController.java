@@ -5,7 +5,7 @@ import com.qtech.framework.aspectj.lang.annotation.Log;
 import com.qtech.framework.aspectj.lang.enums.BusinessType;
 import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
+import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
 import com.qtech.im.wb.service.IEmsEqInfoService;
 import com.qtech.im.wb.service.IWbOlpChkService;
 import com.qtech.im.wb.vo.WbOlpChkVo;
@@ -37,7 +37,7 @@ public class WbOlpChkController extends BaseController {
 
     @GetMapping("/list/eqInfo")
     public TableDataInfo listEqInfo(WbOlpChkVo wbOlpChkVo) {
-        ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo = new ImEqsNetworkingAndRemoteInfoVo();
+        ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo = new ImEqsAndNetCntVo();
         imEqsNetworkingAndRemoteInfoVo.setFactoryName(wbOlpChkVo.getFactoryName());
         imEqsNetworkingAndRemoteInfoVo.setGroupName(wbOlpChkVo.getGroupName());
         imEqsNetworkingAndRemoteInfoVo.setEqId(wbOlpChkVo.getEqId());
@@ -47,7 +47,7 @@ public class WbOlpChkController extends BaseController {
 
         // 通过ThreadLocal传递参数
         startPage();
-        List<ImEqsNetworkingAndRemoteInfoVo> qtechImCommonInfos = emsEqInfoService.selectEmsEqInfoList(imEqsNetworkingAndRemoteInfoVo);
+        List<ImEqsAndNetCntVo> qtechImCommonInfos = emsEqInfoService.selectEmsEqInfoList(imEqsNetworkingAndRemoteInfoVo);
 
         return getDataTable(qtechImCommonInfos);
     }
@@ -62,9 +62,9 @@ public class WbOlpChkController extends BaseController {
 
     @Log(title = "设备信息", businessType = BusinessType.EXPORT)
     @PostMapping("/emsInfo/export")
-    public void exportEmsInfo(HttpServletResponse response, ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
-        List<ImEqsNetworkingAndRemoteInfoVo> list = emsEqInfoService.selectEmsEqInfoList(imEqsNetworkingAndRemoteInfoVo);
-        ExcelUtil<ImEqsNetworkingAndRemoteInfoVo> util = new ExcelUtil<ImEqsNetworkingAndRemoteInfoVo>(ImEqsNetworkingAndRemoteInfoVo.class);
+    public void exportEmsInfo(HttpServletResponse response, ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
+        List<ImEqsAndNetCntVo> list = emsEqInfoService.selectEmsEqInfoList(imEqsNetworkingAndRemoteInfoVo);
+        ExcelUtil<ImEqsAndNetCntVo> util = new ExcelUtil<ImEqsAndNetCntVo>(ImEqsAndNetCntVo.class);
         util.exportExcel(response, list, "设备信息");
     }
 

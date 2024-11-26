@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.wb.mapper.WbOlpStdModelInfoMapper">
     <resultMap type="WbOlpStdModInfo" id="WbOlpStdModInfoResult">
-        <result property="sid" column="sid" />
-        <result property="mcId" column="mc_id" />
-        <result property="lineCount" column="line_count" />
-        <result property="status" column="status" />
-        <result property="provider" column="provider" />
-        <result property="factory" column="factory" />
-        <result property="remark" column="remark" />
-        <result property="createBy" column="create_by" />
-        <result property="createTime" column="create_time" />
-        <result property="updateBy" column="update_by" />
-        <result property="updateTime" column="update_time" />
-    </resultMap>
-
-    <resultMap id="WbOlpTrendingVoResult" type="WbOlpTrendingVo">
-        <result property="date" column="dt"/>
-        <result property="code" column="code"/>
-        <result property="cnt"  column="cnt"/>
+        <result property="sid" column="sid"/>
+        <result property="mcId" column="mc_id"/>
+        <result property="lineCount" column="line_count"/>
+        <result property="status" column="status"/>
+        <result property="provider" column="provider"/>
+        <result property="factory" column="factory"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -82,7 +76,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteWbOlpStdModInfoBySid">
-        delete from IMBIZ.WB_OLP_STD_MODEL_INFO where sid = #{sid}
+        delete
+        from IMBIZ.WB_OLP_STD_MODEL_INFO
+        where sid = #{sid}
     </delete>
 
     <delete id="deleteWbOlpStdModInfoBySids">
@@ -93,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="selectWbOlpStdModInfoBySid" parameterType="java.lang.Long" resultMap="WbOlpStdModInfoResult">
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         WHERE SID = #{sid}
     </select>
 
@@ -107,25 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             CASE
                 WHEN UPDATE_TIME IS NULL THEN CREATE_TIME
                 ELSE GREATEST(CREATE_TIME, UPDATE_TIME)
-        END DESC
+            END DESC
     </select>
 
-    <select id="getModelAvgCnt" resultType="java.lang.Long">
-        select round(avg(line_count)) from IMBIZ.WB_OLP_STD_MODEL_INFO where status = 1
-    </select>
-
-    <select id="getModelsTtlCnt" resultType="java.lang.Long">
-        select count(1) as modelsTtlCnt from IMBIZ.WB_OLP_STD_MODEL_INFO where status = 1
-    </select>
-
-    <select id="getWbOlpTrending" resultMap="WbOlpTrendingVoResult">
-        select
-            to_date(`dt`) 'dt',
-            code,
-            count(1) cnt
-        from qtech_eq_dwd.im_wb_olp_chk_result_detail
-        where `dt` >= days_sub(to_date(now()), 30)
-        group by to_date(`dt`), code
-        order by 1 asc, 2 asc
-    </select>
 </mapper>

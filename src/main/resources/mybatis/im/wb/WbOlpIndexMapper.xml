@@ -3,75 +3,32 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.wb.mapper.WbOlpIndexMapper">
-    <resultMap id="wbOlpIndexResult" type="com.qtech.im.wb.vo.WbOlpChkVo">
-        <result property="factoryName" column="company_name"/>
-        <result property="groupName" column="group_name"/>
-        <result property="eqId" column="eq_id"/>
-        <result property="mcId" column="mc_id"/>
-        <result property="prodType" column="prod_type"/>
+
+    <resultMap id="WbOlpTrendingVoResult" type="WbOlpTrendingVo">
         <result property="dt" column="dt"/>
-        <result property="status" column="code"/>
-        <result property="description" column="description"/>
+        <result property="statusCode" column="code"/>
+        <result property="amount" column="cnt"/>
     </resultMap>
 
-    <select id="selectFactoryNameList" resultMap="wbOlpIndexResult">
-        select distinct company_name
-        from qtech_eq_ods.ems_t_device a
-                 inner join qtech_eq_ods.ems_t_pbox_info c on
-            c.dev_id = a.device_id
-                 inner join qtech_eq_ods.ems_v_code_name b on
-            a.hierarchy_code = b.hierarchy_show_code
-                 inner join (select distinct sim_id as sim_id
-                             from qtech_eq_dwd.im_wb_olp_chk_result_detail
-                             where dt > date_sub(now(), interval 1 day)) d on
-            c.pbox_id = d.sim_id
+    <select id="getModelAvgCnt" resultType="java.lang.Long">
+        select round(avg(line_count))
+        from IMBIZ.WB_OLP_STD_MODEL_INFO
+        where status = 1
     </select>
 
-    <select id="selectWorkShopNameList" resultMap="wbOlpIndexResult">
-        select
-            distinct
-            group_name
-        from
-            (
-            select
-                distinct
-            company_name,
-                group_name
-            from
-                qtech_eq_ods.ems_t_device a
-            inner join qtech_eq_ods.ems_t_pbox_info c on
-                c.dev_id = a.device_id
-            inner join qtech_eq_ods.ems_v_code_name b on
-                a.hierarchy_code = b.hierarchy_show_code
-            inner join (
-                select
-                    distinct sim_id as sim_id
-                from
-                    qtech_eq_dwd.im_wb_olp_chk_result_detail
-                where
-                    dt > date_sub(now(), interval 1 day)) d on
-                c.pbox_id = d.sim_id) ta
-        <where>
-            <if test="factoryName != null and factoryName != ''">
-                and company_name = #{factoryName}
-            </if>
-        </where>
-        order by
-            case
-                when group_name like '%试产一%' then 11
-                when group_name like '%试产二%' then 12
-                when group_name like '%试产三%' then 13
-                when group_name like '%一%' then 1
-                when group_name like '%二%' then 2
-                when group_name like '%三%' then 3
-                when group_name like '%四%' then 4
-                when group_name like '%五%' then 5
-                when group_name like '%六%' then 6
-                when group_name like '%七%' then 7
-                when group_name like '%八%' then 8
-                when group_name like '%九%' then 9
-                when group_name like '%十%' then 10
-                else 14
-            end
+    <select id="getModelsTtlCnt" resultType="java.lang.Long">
+        select count(1) as modelsTtlCnt
+        from IMBIZ.WB_OLP_STD_MODEL_INFO
+        where status = 1
     </select>
+
+    <select id="getWbOlpTrending" resultMap="WbOlpTrendingVoResult">
+        select to_date(`dt`) 'dt', code,
+               count(1) cnt
+        from qtech_eq_dwd.im_wb_olp_chk_result_detail
+        where `dt` >= days_sub(to_date(now()), 30)
+        group by to_date(`dt`), code
+        order by 1 asc, 2 asc
+    </select>
+
 </mapper>

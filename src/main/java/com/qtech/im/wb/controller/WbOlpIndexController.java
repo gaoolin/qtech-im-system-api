@@ -29,9 +29,6 @@ import java.util.List;
 public class WbOlpIndexController extends BaseController {
 
     @Autowired
-    IWbOlpStdModelInfoService wbOlpStdModelInfoService;
-
-    @Autowired
     IWbOlpIndexService wbOlpIndexService;
 
     @GetMapping(value = "/overview")
@@ -39,8 +36,8 @@ public class WbOlpIndexController extends BaseController {
 
         WbOlpIndexVo wbOlpIndexVo = new WbOlpIndexVo();
 
-        Long modelsTtlCnt = wbOlpStdModelInfoService.getModelsTtlCnt();
-        Long modelAvgCnt = wbOlpStdModelInfoService.getModelAvgCnt();
+        Long modelsTtlCnt = wbOlpIndexService.getModelsTtlCnt();
+        Long modelAvgCnt = wbOlpIndexService.getModelAvgCnt();
 
         wbOlpIndexVo.setWbOlpStdModelsTtlCnt(modelsTtlCnt);
         wbOlpIndexVo.setWbOlpStdModelAvgCnt(modelAvgCnt);
@@ -50,20 +47,8 @@ public class WbOlpIndexController extends BaseController {
 
     @GetMapping(value = "/trending")
     public TableDataInfo IndexWbOlpTrending() {
-        List<WbOlpTrendingVo> wbOlpTrending = wbOlpStdModelInfoService.getWbOlpTrending();
+        List<WbOlpTrendingVo> wbOlpTrending = wbOlpIndexService.getWbOlpTrending();
         return getDataTable(wbOlpTrending);
     }
 
-
-    @RequestMapping(value = "/factoryNames", method = RequestMethod.GET)
-    public R<List<WbOlpChkVo>> getFactoryNames() {
-        List<WbOlpChkVo> list = wbOlpIndexService.selectFactoryNameList();
-        return R.ok(list);
-    }
-
-    @RequestMapping(value = "/workShopNames", method = RequestMethod.GET)
-    public R getGroupNames(WbOlpChkVo wbOlpChkVo) {
-        List<WbOlpChkVo> list = wbOlpIndexService.selectWorkShopNameList(wbOlpChkVo);
-        return R.ok(list);
-    }
 }

@@ -1,7 +1,7 @@
 package com.qtech.im.qcp.domain;
 
 import com.qtech.framework.aspectj.lang.annotation.Excel;
-import com.qtech.im.common.domain.ImEqsNetworkingAndRemoteInfo;
+import com.qtech.im.common.domain.ImEqsAndNetCnt;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -16,7 +16,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class QcpParamsVo extends ImEqsNetworkingAndRemoteInfo {
+public class QcpParamsVo extends ImEqsAndNetCnt {
     @Excel(name = "qcp参数为空")
     private int qcpParamsIsNull;
     @Excel(name = "远程未开启")

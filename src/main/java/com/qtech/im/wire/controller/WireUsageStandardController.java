@@ -68,15 +68,13 @@ public class WireUsageStandardController extends BaseController {
     @Log(title = "金线标准用量信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ImWireUsageStandard imWireUsageStandard) {
-        imWireUsageStandard.setCreateBy(SecurityUtils.getUsername());
+        imWireUsageStandard.setCreateBy(getLoginUser().getUser().getNickName());
         imWireUsageStandard.setCreateTime(DateUtils.getNowDate());
 
-        ImWireUsageStandard p = new ImWireUsageStandard();
-        p.setMcId(imWireUsageStandard.getMcId());
-        List<ImWireUsageStandard> isExist = wireUsageStandardService.selectWireUsageStandardList(p);
+        ImWireUsageStandard one = wireUsageStandardService.selectWireUsageStandardByProdType(imWireUsageStandard.getProdType());
 
-        if (!isExist.isEmpty()) {
-            return AjaxResult.warn("机型【" + imWireUsageStandard.getMcId() + "】金线标准用量已存在！");
+        if (one != null) {
+            return AjaxResult.warn("机型【" + imWireUsageStandard.getProdType() + "】金线标准用量已存在！");
         }
 
         int code = wireUsageStandardService.insertWireUsageStandard(imWireUsageStandard);

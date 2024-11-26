@@ -1,5 +1,13 @@
 package com.qtech.im.wb.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.qtech.im.common.domain.ImReportBaseInfo;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import java.time.LocalDateTime;
+
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -7,45 +15,10 @@ package com.qtech.im.wb.domain;
  * desc   :
  */
 
-
-public class WbOlpTrendingVo {
-
-    private String date;
-
-    private Integer code;
-
-    private Integer cnt;
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public Integer getCnt() {
-        return cnt;
-    }
-
-    public void setCnt(Integer cnt) {
-        this.cnt = cnt;
-    }
-
-    @Override
-    public String toString() {
-        return "WbOlpTrendingVo{" +
-                "date='" + date + '\'' +
-                ", code=" + code +
-                ", cnt=" + cnt +
-                '}';
-    }
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class WbOlpTrendingVo extends ImReportBaseInfo {
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime dt;
 }

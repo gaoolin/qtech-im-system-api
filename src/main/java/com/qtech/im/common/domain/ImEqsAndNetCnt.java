@@ -15,7 +15,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ImEqsNetworkingAndRemoteInfo extends ImReportBaseInfo {
+public class ImEqsAndNetCnt extends ImReportBaseInfo {
     @Excel(name = "总设备数")
     private int ttlEqs;
     @Excel(name = "联网设备数")

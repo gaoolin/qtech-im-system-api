@@ -1,7 +1,7 @@
 package com.qtech.im.aa.domain;
 
 import com.qtech.framework.aspectj.lang.annotation.Excel;
-import com.qtech.im.common.domain.ImEqsNetworkingAndRemoteInfo;
+import com.qtech.im.common.domain.ImEqsAndNetCnt;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -16,7 +16,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class AaListParamsIndexVo extends ImEqsNetworkingAndRemoteInfo {
+public class AaListParamsIndexVo extends ImEqsAndNetCnt {
     @Excel(name = "点检总数")
     private int chkCnt;
     @Excel(name = "点检通过数")

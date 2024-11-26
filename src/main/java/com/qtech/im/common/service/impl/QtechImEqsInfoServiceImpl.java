@@ -6,7 +6,7 @@ import com.qtech.im.common.domain.ImReportBaseInfo;
 import com.qtech.im.common.mapper.QtechImEqsInfoMapper;
 import com.qtech.im.common.service.IQtechImEqsInfoService;
 import com.qtech.im.config.TbQueryConditionConfig;
-import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
+import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class QtechImEqsInfoServiceImpl implements IQtechImEqsInfoService {
     private TbQueryConditionConfig tbQueryConditionConfig;
 
     @Override
-    public List<ImEqsNetworkingAndRemoteInfoVo> listEqsInfo(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
+    public List<ImEqsAndNetCntVo> listEqsInfo(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
         List<String> deptNames = tbQueryConditionConfig.getDeptNames();
         List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         try {

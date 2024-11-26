@@ -1,6 +1,6 @@
 package com.qtech.im.eqn.service;
 
-import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
+import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
 
 import java.util.List;
 
@@ -14,9 +14,9 @@ import java.util.List;
 
 public interface IEqNetworkingService {
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsAndNetCntVo> selectEqNetworkingList(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingOfflineList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsAndNetCntVo> selectEqNetworkingOfflineList(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingAgg(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsAndNetCntVo> selectEqNetworkingAgg(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
 }

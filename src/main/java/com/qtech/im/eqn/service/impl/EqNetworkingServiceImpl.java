@@ -3,7 +3,7 @@ package com.qtech.im.eqn.service.impl;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.config.TbQueryConditionConfig;
-import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
+import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
 import com.qtech.im.eqn.mapper.EqNetworkingMapper;
 import com.qtech.im.eqn.service.IEqNetworkingService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class EqNetworkingServiceImpl implements IEqNetworkingService {
     private TbQueryConditionConfig tbQueryConditionConfig;
 
     @Override
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
+    public List<ImEqsAndNetCntVo> selectEqNetworkingList(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
         String deptName = tbQueryConditionConfig.getDeptName();
         List<String> deptNames = tbQueryConditionConfig.getDeptNames();
         List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
@@ -45,7 +45,7 @@ public class EqNetworkingServiceImpl implements IEqNetworkingService {
     }
 
     @Override
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingOfflineList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
+    public List<ImEqsAndNetCntVo> selectEqNetworkingOfflineList(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
         List<String> deptNames = tbQueryConditionConfig.getDeptNames();
         List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         try {
@@ -57,7 +57,7 @@ public class EqNetworkingServiceImpl implements IEqNetworkingService {
     }
 
     @Override
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingAgg(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
+    public List<ImEqsAndNetCntVo> selectEqNetworkingAgg(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
         List<String> deptNames = tbQueryConditionConfig.getDeptNames();
         List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         try {

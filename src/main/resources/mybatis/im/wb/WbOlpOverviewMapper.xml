@@ -6,14 +6,10 @@
     <resultMap id="wbOlpOverviewResult" type="WbOlpOverview">
         <result property="factoryName" column="company_name"/>
         <result property="groupName" column="group_name"/>
-        <result property="ttlEqs" column="ttl_eqs"/>
-        <result property="onlineEqs" column=""/>
-        <result property="offlineEqs" column=""/>
         <result property="computeCnt" column="compute_cnt"/>
         <result property="okCnt" column="ok_cnt"/>
         <result property="errCnt" column="err_cnt"/>
         <result property="offsetCnt" column="offset_cnt"/>
-        <result property="npCnt" column=""/>
         <result property="lackCnt" column="lack_cnt"/>
         <result property="npCnt" column="np_cnt"/>
         <result property="overCnt" column="over_cnt"/>

@@ -2,7 +2,7 @@ package com.qtech.im.wb.service.impl;
 
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
-import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
+import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
 import com.qtech.im.wb.mapper.EmsEqInfoMapper;
 import com.qtech.im.wb.service.IEmsEqInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class EmsEqInfoServiceImpl implements IEmsEqInfoService {
     EmsEqInfoMapper emsEqInfoMapper;
 
     @Override
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEmsEqInfoList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo) {
+    public List<ImEqsAndNetCntVo> selectEmsEqInfoList(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
         try {
             return emsEqInfoMapper.selectEmsEqInfoList(imEqsNetworkingAndRemoteInfoVo);
         } catch (Exception e) {

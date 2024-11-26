@@ -52,9 +52,4 @@ public class ImWireUsage extends ImReportBaseInfo {
      */
     @Excel(name = "占比")
     private Double percents;
-
-    /**
-     * 状态
-     */
-    private Integer status;
 }

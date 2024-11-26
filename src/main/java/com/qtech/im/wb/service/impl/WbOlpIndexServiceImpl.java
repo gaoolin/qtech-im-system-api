@@ -2,9 +2,9 @@ package com.qtech.im.wb.service.impl;
 
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
+import com.qtech.im.wb.domain.WbOlpTrendingVo;
 import com.qtech.im.wb.mapper.WbOlpIndexMapper;
 import com.qtech.im.wb.service.IWbOlpIndexService;
-import com.qtech.im.wb.vo.WbOlpChkVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,23 +24,37 @@ public class WbOlpIndexServiceImpl implements IWbOlpIndexService {
 
     @Autowired
     private WbOlpIndexMapper wbOlpIndexMapper;
+
+
+    @DataSource(DataSourceType.FOURTH)
     @Override
-    public List<WbOlpChkVo> selectFactoryNameList() {
+    public Long getModelAvgCnt() {
         try {
-            return wbOlpIndexMapper.selectFactoryNameList();
+            return wbOlpIndexMapper.getModelAvgCnt();
         } catch (Exception e) {
-            log.error("查询wbOlpOverviewList异常", e);
-            throw new RuntimeException("查询数据库失败，请联系系统负责人!");
+            log.error("getModelAvgCnt error", e);
+            throw new RuntimeException("查询智慧打线图平均线数，请联系系统负责人!");
+        }
+    }
+
+    @DataSource(DataSourceType.FOURTH)
+    @Override
+    public Long getModelsTtlCnt() {
+        try {
+            return wbOlpIndexMapper.getModelsTtlCnt();
+        } catch (Exception e) {
+            log.error("getModelsTtlCnt error", e);
+            throw new RuntimeException("查询智慧打线图比对总数，请联系系统负责人!");
         }
     }
 
     @Override
-    public List<WbOlpChkVo> selectWorkShopNameList(WbOlpChkVo wbOlpChkVo) {
+    public List<WbOlpTrendingVo> getWbOlpTrending() {
         try {
-            return wbOlpIndexMapper.selectWorkShopNameList(wbOlpChkVo);
+            return wbOlpIndexMapper.getWbOlpTrending();
         } catch (Exception e) {
-            log.error("查询wbOlpOverviewList异常", e);
-            throw new RuntimeException("查询数据库失败，请联系系统负责人!");
+            log.error("getWbOlpTrending error", e);
+            throw new RuntimeException("查询智慧打线图趋势图，请联系系统负责人!");
         }
     }
 }

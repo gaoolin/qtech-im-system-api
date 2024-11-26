@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.common.mapper.QtechImEqsInfoMapper">
 
-    <resultMap id="qtechImCommonInfoResult" type="ImEqsNetworkingAndRemoteInfoVo">
+    <resultMap id="qtechImCommonInfoResult" type="ImEqsAndNetCntVo">
         <result property="factoryName" column="company_name" />
         <result property="deptName" column="dep_name" />
         <result property="groupName" column="group_name" />

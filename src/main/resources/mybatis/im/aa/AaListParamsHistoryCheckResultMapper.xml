@@ -12,7 +12,7 @@
         <result property="prodType" column="prod_type" />
         <result property="simId" column="sim_id" />
         <result property="dt" column="chk_dt" />
-        <result property="code" column="code" />
+        <result property="statusCode" column="code" />
         <result property="description" column="description" />
     </resultMap>
 
@@ -72,7 +72,7 @@
                 </otherwise>
             </choose>
             <if test="simId != null">and sim_id like concat('%', #{simId}, '%') </if>
-            <if test="code != null">and code = #{code}</if>
+            <if test="statusCode != null">and code = #{statusCode}</if>
         </where>
         ) tb
         <where>

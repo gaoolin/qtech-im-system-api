@@ -1,5 +1,6 @@
 package com.qtech.im.wb.mapper;
 
+import com.qtech.im.wb.domain.WbOlpTrendingVo;
 import com.qtech.im.wb.vo.WbOlpChkVo;
 import org.springframework.stereotype.Repository;
 
@@ -14,8 +15,10 @@ import java.util.List;
 
 @Repository
 public interface WbOlpIndexMapper {
-    public List<WbOlpChkVo> selectFactoryNameList();
 
-    public List<WbOlpChkVo> selectWorkShopNameList(WbOlpChkVo wbOlpChkVo);
+    List<WbOlpTrendingVo> getWbOlpTrending();
 
+    Long getModelAvgCnt();
+
+    Long getModelsTtlCnt();
 }

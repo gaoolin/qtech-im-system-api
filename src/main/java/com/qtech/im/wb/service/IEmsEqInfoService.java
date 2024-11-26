@@ -1,6 +1,6 @@
 package com.qtech.im.wb.service;
 
-import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
+import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ import java.util.List;
 
 public interface IEmsEqInfoService {
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEmsEqInfoList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsAndNetCntVo> selectEmsEqInfoList(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
 }

@@ -1,6 +1,6 @@
 package com.qtech.im.wb.service;
 
-import com.qtech.im.wb.vo.WbOlpChkVo;
+import com.qtech.im.wb.domain.WbOlpTrendingVo;
 
 import java.util.List;
 
@@ -14,7 +14,9 @@ import java.util.List;
 
 public interface IWbOlpIndexService {
 
-    public List<WbOlpChkVo> selectFactoryNameList();
+    public List<WbOlpTrendingVo> getWbOlpTrending();
 
-    public List<WbOlpChkVo> selectWorkShopNameList(WbOlpChkVo wbOlpChkVo);
+    public Long getModelsTtlCnt();
+
+    public Long getModelAvgCnt();
 }

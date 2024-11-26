@@ -1,9 +1,7 @@
 package com.qtech.im.common.service;
 
-import com.qtech.framework.aspectj.lang.annotation.DataSource;
-import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.common.domain.ImReportBaseInfo;
-import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
+import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
 
 import java.util.List;
 
@@ -16,7 +14,7 @@ import java.util.List;
 
 
 public interface IQtechImEqsInfoService {
-    public List<ImEqsNetworkingAndRemoteInfoVo> listEqsInfo(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsAndNetCntVo> listEqsInfo(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
 
     Boolean iotQcpStatus(ImReportBaseInfo imReportBaseInfo);
 

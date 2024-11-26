@@ -10,7 +10,7 @@
         <result property="mcId" column="mc_id" />
         <result property="prodType" column="prod_type" />
         <result property="dt" column="dt" />
-        <result property="code" column="code" />
+        <result property="statusCode" column="code" />
         <result property="description" column="description" />
     </resultMap>
 
@@ -73,11 +73,11 @@
                         <when test="flag == 'ok'">
                             and code = 0
                         </when>
-                        <when test="code == 5">
+                        <when test="statusCode == 5">
                             and (code = 2 or code = 4)
                         </when>
-                        <when test="code != null">
-                            and code = #{code}
+                        <when test="statusCode != null">
+                            and code = #{statusCode}
                         </when>
                     </choose>
                     <choose>

@@ -1,6 +1,6 @@
 package com.qtech.im.eqn.domain;
 
-import com.qtech.im.common.domain.ImEqsNetworkingAndRemoteInfo;
+import com.qtech.im.common.domain.ImEqsAndNetCnt;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class DeviceData extends ImEqsNetworkingAndRemoteInfo {
+public class DeviceData extends ImEqsAndNetCnt {
     private String receiveDate;
     private String deviceId;
     private String deviceType;

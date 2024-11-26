@@ -43,8 +43,10 @@ public class ImReportBaseInfo extends BaseEntity {
     @Excel(name = "时间")
     private LocalDateTime dt;
     /** 默认值 null */
-    @Excel(name = "代码")
+    @Excel(name = "状态码")
     private Integer statusCode;
+    @Excel(name = "数量")
+    private Integer amount;
     @Excel(name = "描述")
     private String description;
 }

@@ -1,6 +1,6 @@
 package com.qtech.im.eqn.mapper;
 
-import com.qtech.im.eqn.domain.ImEqsNetworkingAndRemoteInfoVo;
+import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -16,14 +16,14 @@ import java.util.List;
 @Repository
 public interface EqNetworkingMapper {
 
-    // public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingList(ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    // public List<ImEqsAndNetCntVo> selectEqNetworkingList(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingOfflineList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
-                                                                              ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsAndNetCntVo> selectEqNetworkingOfflineList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
+                                                                ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingAgg(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
-                                                                      ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsAndNetCntVo> selectEqNetworkingAgg(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
+                                                        ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
 
-    public List<ImEqsNetworkingAndRemoteInfoVo> selectEqNetworkingList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
-                                                                       ImEqsNetworkingAndRemoteInfoVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsAndNetCntVo> selectEqNetworkingList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
+                                                         ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
 }

@@ -13,7 +13,7 @@
         <result property="prodType" column="mc_id"/>
         <result property="simId" column="sim_id"/>
         <result property="dt" column="create_date"/>
-        <result property="code" column="code"/>
+        <result property="statusCode" column="code"/>
         <result property="description" column="description"/>
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
@@ -26,7 +26,7 @@
         <result property="bomWireUsage" column="bom_wire_usage"/>
         <result property="yield" column="yield"/>
         <result property="percents" column="percents"/>
-        <result property="status" column="status"/>
+        <result property="statusCode" column="status"/>
         <result column="flag" property="flag"/>
     </resultMap>
 
@@ -39,8 +39,7 @@
                create_by,
                create_time,
                update_by,
-               update_time,
-               standby
+               update_time
         from qtech_biz_2.ads_wirebond_standard_usage
     </sql>
 
@@ -70,7 +69,6 @@
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-            <if test="standby != null">standby,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="prodType != null">trim(#{prodType}),</if>
@@ -82,7 +80,6 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">trim(#{updateBy}),</if>
             <if test="updateTime != null">#{updateTime},</if>
-            <if test="standby != null">trim(#{standby}),</if>
         </trim>
     </insert>
 
@@ -97,7 +94,6 @@
             <if test="createTime != null">create_time = trim(#{createTime}),</if>
             <if test="updateBy != null">update_by = trim(#{updateBy}),</if>
             <if test="updateTime != null">update_time = trim(#{updateTime}),</if>
-            <if test="standby != null">standby = trim(#{standby}),</if>
         </trim>
         where mc_id = #{prodType}
     </update>

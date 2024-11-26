@@ -11,7 +11,7 @@
         <result property="prodType" column="prod_type"/>
         <result property="simId" column="sim_id"/>
         <result property="dt" column="chk_dt"/>
-        <result property="code" column="code"/>
+        <result property="statusCode" column="code"/>
         <result property="description" column="description"/>
     </resultMap>
 
@@ -63,7 +63,7 @@
         ( select * from qtech_eq_ads.im_eq_reverse_control_info
         <where>
             <if test="simId != null and simId != ''">and lower(sim_id) like concat('%', lower(#{simId}), '%') </if>
-            <if test="code != null">and code = #{code}</if>
+            <if test="statusCode != null">and code = #{statusCode}</if>
             <if test="true"> and source = 'aa-list'</if>
         </where>
         ) tb

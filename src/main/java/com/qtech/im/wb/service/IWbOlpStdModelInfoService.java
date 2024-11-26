@@ -21,7 +21,4 @@ public interface IWbOlpStdModelInfoService {
     public int updateWbOlpStdModInfo(WbOlpStdModInfo wbOlpStdModInfo);
     public int deleteWbOlpStdModInfoBySid(Long sid);
     public int deleteWbOlpStdModInfoBySids(Long[] sids);
-    public long getModelAvgCnt();
-    public long getModelsTtlCnt();
-    public List<WbOlpTrendingVo> getWbOlpTrending();
 }

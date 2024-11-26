@@ -86,35 +86,4 @@ public class WbOlpStdModelInfoServiceImpl implements IWbOlpStdModelInfoService {
             throw new RuntimeException("批量删除智慧打线图失败，请联系系统负责人!");
         }
     }
-
-    @Override
-    public long getModelAvgCnt() {
-        try {
-            return wbOlpStdModelInfoMapper.getModelAvgCnt();
-        } catch (Exception e) {
-            log.error("getModelAvgCnt error", e);
-            throw new RuntimeException("查询智慧打线图平均线数，请联系系统负责人!");
-        }
-    }
-
-    @Override
-    public long getModelsTtlCnt() {
-        try {
-            return wbOlpStdModelInfoMapper.getModelsTtlCnt();
-        } catch (Exception e) {
-            log.error("getModelsTtlCnt error", e);
-            throw new RuntimeException("查询智慧打线图比对总数，请联系系统负责人!");
-        }
-    }
-
-    @DataSource(DataSourceType.SECOND)
-    @Override
-    public List<WbOlpTrendingVo> getWbOlpTrending() {
-        try {
-            return wbOlpStdModelInfoMapper.getWbOlpTrending();
-        } catch (Exception e) {
-            log.error("getWbOlpTrending error", e);
-            throw new RuntimeException("查询智慧打线图趋势图，请联系系统负责人!");
-        }
-    }
 }
