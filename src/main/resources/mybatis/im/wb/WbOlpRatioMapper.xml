@@ -89,8 +89,8 @@
                                 and dt > hours_sub(now(), 24)
                             </otherwise>
                         </choose>
-                        <if test="status != null">
-                            and code = #{status}
+                        <if test="statusCode != null">
+                            and code = #{statusCode}
                         </if>
                     </where>) tb
                 where

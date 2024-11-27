@@ -45,8 +45,10 @@ public class ImReportBaseInfo extends BaseEntity {
     /** 默认值 null */
     @Excel(name = "状态码")
     private Integer statusCode;
+    @Excel(name = "状态")
+    private String status;
     @Excel(name = "数量")
-    private Integer amount;
+    private Long amount;
     @Excel(name = "描述")
     private String description;
 }

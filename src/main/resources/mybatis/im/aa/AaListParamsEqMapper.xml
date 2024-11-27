@@ -11,7 +11,7 @@
         <result property="mcId" column="mc_id"/>
         <result property="prodType" column="prod_type"/>
         <result property="simId" column="sim_id"/>
-        <result property="status" column="status"/>
+        <result property="statusCode" column="status"/>
         <result property="source" column="source"/>
         <result property="opCnt" column="op_cnt"/>
         <result property="remark" column="remark"/>
@@ -97,7 +97,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="simId != null">sim_id,</if>
             source,
-            <if test="status != null">status,</if>
+            <if test="statusCode != null">status,</if>
             <if test="opCnt != null">op_cnt,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -106,7 +106,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="simId != null">#{simId},</if>
             'aa-list',
-            <if test="status != null">#{status},</if>
+            <if test="statusCode != null">#{statusCode},</if>
             <if test="opCnt != null">#{opCnt},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -117,7 +117,7 @@
     <update id="editAaListParamsIgnoreEq">
         update qtech_eq_ads.im_eq_reverse_ignore_info
         <trim prefix="set" prefixOverrides=",">
-            <if test="status != null">status = #{status},</if>
+            <if test="statusCode != null">status = #{statusCode},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="remark != null">remark = #{remark},</if>
@@ -144,10 +144,10 @@
             <if test="mcId != null and mcId != ''">and lower(mc_id) like concat('%', lower(#{mcId}),'%') </if>
             <if test="simId != null and simId != ''">and sim_id like concat('%',#{simId},'%') </if>
             <if test="prodType != null and prodType != ''">and lower(prod_type) like concat('%', lower(#{prodType}),'%') </if>
-            <if test="status != null">
+            <if test="statusCode != null">
                 -- status 为int类型
                 -- and (status = #{status} or (#{status} = 0 and status is null))
-                and status = #{status}
+                and status = #{statusCode}
             </if>
         </where>
         order by update_time desc, status desc, company_name, group_name, mc_id

@@ -25,7 +25,7 @@ import java.util.Date;
 @ToString(callSuper = true)
 public class AaListParamsEqVo extends ImReportBaseInfo {
     @Excel(name = "状态", dictType = "aa_list_params_ignore_status", defaultValue = "受控")
-    private Integer status;
+    private Integer statusCode;
     private String source;
     @Excel(name = "操作次数")
     private Integer opCnt;

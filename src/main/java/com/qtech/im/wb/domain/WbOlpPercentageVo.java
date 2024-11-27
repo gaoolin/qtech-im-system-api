@@ -30,7 +30,7 @@ public class WbOlpPercentageVo extends ImReportBaseInfo {
     private float errRatio;
 
     @Excel(name = "状态", dictType = "comparison_result_code")
-    private Integer status;
+    private Integer statusCode;
 
     private String flag;
 }

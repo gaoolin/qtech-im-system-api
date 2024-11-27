@@ -14,7 +14,7 @@
         <result property="prodType" column="prod_type"/>
         <result property="simId" column="sim_id"/>
         <result property="dt" column="create_date"/>
-        <result property="code" column="code"/>
+        <result property="statusCode" column="statusCode"/>
         <result property="description" column="description"/>
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
@@ -27,8 +27,6 @@
         <result property="bomWireUsage" column="bom_wire_usage"/>
         <result property="yield" column="yield"/>
         <result property="percents" column="percents"/>
-        <result property="status" column="status"/>
-
     </resultMap>
     <select id="selectEqLevelWireUsageList" resultMap="BaseResult">
         select
@@ -49,7 +47,7 @@
                     1,
                     0
                 )
-            ) as status,
+            ) as statusCode,
             yield
         from
             (
@@ -63,7 +61,7 @@
                     wire_width,
                     percents,
                     if(percents is null, 2,
-                    if(percents > 0, 1, 0)) as status,
+                    if(percents > 0, 1, 0)) as statusCode,
                     yield
                 from
                     (
@@ -112,7 +110,7 @@
                     <if test="factoryName != null  and factoryName != ''">and factory_name = #{factoryName}</if>
                     <if test="groupName != null  and groupName != ''">and workshop = #{groupName}</if>
                     <if test="eqId != null and eqId != ''">and device_m_id = #{eqId}</if>
-                    <if test="status !=null">and status = #{status}</if>
+                    <if test="statusCode !=null">and statusCode = #{statusCode}</if>
                     <if test="wireWidth != null">and wire_width = #{wireWidth}</if>
                 </where>
                 order by prod_type, workshop
@@ -128,7 +126,7 @@
             wire_width,
             tf.qty as bom_wire_usage,
             percents,
-            if(percents is null, 2, if(percents > 0, 1, 0)) as status,
+            if(percents is null, 2, if(percents > 0, 1, 0)) as statusCode,
             yield
         from
             (
@@ -140,7 +138,7 @@
                     standard_wire_usage,
                     wire_width,
                     percents,
-                    if(percents is null, 2, if(percents > 0, 1, 0)) as status,
+                    if(percents is null, 2, if(percents > 0, 1, 0)) as statusCode,
                     yield
                 from
                     (
@@ -199,8 +197,8 @@
                     <if test = "wireWidth != null">
                         and wire_width = #{wireWidth}
                     </if>
-                    <if test = "status !=null">
-                        and status = #{status}
+                    <if test = "statusCode !=null">
+                        and statusCode = #{statusCode}
                     </if>
                 </where>
         order by
@@ -216,7 +214,7 @@
             wire_width,
             tf.qty AS bom_wire_usage,
             percents,
-            IF(percents IS NULL, 2, IF(percents > 0, 1, 0)) AS status,
+            IF(percents IS NULL, 2, IF(percents > 0, 1, 0)) AS statusCode,
             yield
         FROM
             (SELECT
@@ -226,7 +224,7 @@
                     standard_wire_usage,
                     wire_width,
                     percents,
-                    IF(percents IS NULL,2,IF(percents > 0, 1, 0)) AS status,
+                    IF(percents IS NULL,2,IF(percents > 0, 1, 0)) AS statusCode,
                     yield
                 FROM
                     (SELECT
@@ -265,7 +263,7 @@
                                     left join qtech_biz_2.ads_aa_bom_info tf on te.prod_type = tf.part_spec
         <where>
             <if test="wireWidth != null ">and wire_width = #{wireWidth}</if>
-            <if test="status != null">and status = #{status}</if>
+            <if test="statusCode != null">and statusCode = #{statusCode}</if>
         </where>
         order by yield desc
     </select>

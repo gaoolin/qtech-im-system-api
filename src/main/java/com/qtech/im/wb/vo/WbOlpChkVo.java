@@ -19,6 +19,6 @@ import lombok.ToString;
 public class WbOlpChkVo extends ImReportBaseInfo {
 
     @Excel(name = "状态", dictType = "comparison_result_code")
-    private Integer status;
+    private Integer statusCode;
     private Integer category;
 }

@@ -84,7 +84,7 @@ public class AaListParamsEqServiceImpl implements IAaListParamsEqService {
     @Override
     public int editAaListParamsIgnoreEq(AaListParamsEqVo aaListParamsEqVo) {
         try {
-            Integer status = aaListParamsEqVo.getStatus();
+            Integer status = aaListParamsEqVo.getStatusCode();
             if (status == null) {
                 throw new RuntimeException("status is null, can not be updated");
             } else if (status == 1) {
