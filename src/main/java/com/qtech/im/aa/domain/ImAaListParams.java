@@ -137,22 +137,7 @@ public class ImAaListParams extends BaseEntity {
     private String aa1RoiLl;
     @Excel(name = "aa1RoiLr" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa1RoiLr;
-    @Excel(name = "aa1Fc" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa1Fc;
-    @Excel(name = "aa1F1" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa1F1;
-    @Excel(name = "aa1F2" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa1F2;
-    @Excel(name = "aa1F3" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa1F3;
-    @Excel(name = "aa1F4" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa1F4;
-    @Excel(name = "aa1MtfOffAxisCheck1" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa1MtfOffAxisCheck1;
-    @Excel(name = "aa1MtfOffAxisCheck2" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa1MtfOffAxisCheck2;
-    @Excel(name = "aa1MtfOffAxisCheck3" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa1MtfOffAxisCheck3;
+
     @Excel(name = "aa1Target" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa1Target;
     @Excel(name = "aa1CcToCornerLimit" , cellType = Excel.ColumnType.STRING, prompt = "item")
@@ -180,22 +165,7 @@ public class ImAaListParams extends BaseEntity {
     private String aa2RoiLl;
     @Excel(name = "aa2RoiLr" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa2RoiLr;
-    @Excel(name = "aa2Fc" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa2Fc;
-    @Excel(name = "aa2F1" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa2F1;
-    @Excel(name = "aa2F2" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa2F2;
-    @Excel(name = "aa2F3" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa2F3;
-    @Excel(name = "aa2F4" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa2F4;
-    @Excel(name = "aa2MtfOffAxisCheck1" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa2MtfOffAxisCheck1;
-    @Excel(name = "aa2MtfOffAxisCheck2" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa2MtfOffAxisCheck2;
-    @Excel(name = "aa2MtfOffAxisCheck3" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa2MtfOffAxisCheck3;
+
     @Excel(name = "aa2Target" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa2Target;
     @Excel(name = "aa2CcToCornerLimit" , cellType = Excel.ColumnType.STRING, prompt = "item")
@@ -223,22 +193,7 @@ public class ImAaListParams extends BaseEntity {
     private String aa3RoiLl;
     @Excel(name = "aa3RoiLr" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa3RoiLr;
-    @Excel(name = "aa3Fc" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa3Fc;
-    @Excel(name = "aa3F1" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa3F1;
-    @Excel(name = "aa3F2" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa3F2;
-    @Excel(name = "aa3F3" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa3F3;
-    @Excel(name = "aa3F4" , cellType = Excel.ColumnType.STRING, prompt = "AA中挂mtfCheck命令")
-    private String aa3F4;
-    @Excel(name = "aa3MtfOffAxisCheck1" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa3MtfOffAxisCheck1;
-    @Excel(name = "aa3MtfOffAxisCheck2" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa3MtfOffAxisCheck2;
-    @Excel(name = "aa3MtfOffAxisCheck3" , cellType = Excel.ColumnType.STRING, prompt = "item")
-    private String aa3MtfOffAxisCheck3;
+
     @Excel(name = "aa3Target" , cellType = Excel.ColumnType.STRING, prompt = "item")
     private String aa3Target;
     @Excel(name = "aa3CcToCornerLimit" , cellType = Excel.ColumnType.STRING, prompt = "item")
