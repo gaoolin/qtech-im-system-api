@@ -16,7 +16,9 @@ import java.util.List;
 public interface IQtechImEqsInfoService {
     public List<ImEqsAndNetCntVo> listEqsInfo(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
 
-    Boolean iotQcpStatus(ImReportBaseInfo imReportBaseInfo);
+    public Boolean iotQcpStatus(ImReportBaseInfo imReportBaseInfo);
 
     public Boolean iotAaStatus(ImReportBaseInfo imReportBaseInfo);
+
+    public Boolean iotStatus(ImReportBaseInfo imReportBaseInfo);
 }

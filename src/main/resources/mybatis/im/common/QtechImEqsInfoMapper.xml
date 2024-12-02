@@ -230,4 +230,8 @@
             </choose>
         </where>
     </select>
+
+    <select id="iotStatus" resultType="java.lang.Boolean">
+        select count(1) > 0 from QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL where receive_date > minutes_sub(now(), 5)
+    </select>
 </mapper>

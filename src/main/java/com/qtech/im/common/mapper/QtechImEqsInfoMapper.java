@@ -23,4 +23,5 @@ public interface QtechImEqsInfoMapper {
 
     public Boolean iotAaStatus(ImReportBaseInfo imReportBaseInfo);
 
+    public Boolean iotStatus(ImReportBaseInfo imReportBaseInfo);
 }
