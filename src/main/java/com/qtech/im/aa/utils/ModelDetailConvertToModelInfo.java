@@ -1,15 +1,15 @@
 package com.qtech.im.aa.utils;
 
 import com.qtech.common.utils.StringUtils;
+import com.qtech.im.aa.domain.AaListParamsStdModel;
 import com.qtech.im.aa.domain.AaListParamsStdModelInfoVo;
-import com.qtech.im.aa.domain.ImAaListParamsStdModel;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.qtech.im.aa.utils.Constants.PROPERTIES_TO_COMPARE;
-import static com.qtech.im.aa.utils.Constants.PROPERTIES_TO_COMPUTE;
+import static com.qtech.share.aa.constant.ComparisonConstants.PROPERTIES_TO_COMPARE;
+import static com.qtech.share.aa.constant.ComparisonConstants.PROPERTIES_TO_COMPUTE;
 
 /**
  * author :  gaozhilin
@@ -21,7 +21,7 @@ import static com.qtech.im.aa.utils.Constants.PROPERTIES_TO_COMPUTE;
 @Slf4j
 public class ModelDetailConvertToModelInfo {
 
-    public static AaListParamsStdModelInfoVo doConvert(ImAaListParamsStdModel aaListParamsStdModelDetail) {
+    public static AaListParamsStdModelInfoVo doConvert(AaListParamsStdModel aaListParamsStdModelDetail) {
         AtomicInteger listParamsCnt = new AtomicInteger();
         AtomicInteger itemParamsCnt = new AtomicInteger();
         if (aaListParamsStdModelDetail == null) {
@@ -57,9 +57,9 @@ public class ModelDetailConvertToModelInfo {
         return param;
     }
 
-    private static void listItemParamsCnt(ImAaListParamsStdModel aaListParamsStdModelDetail, AtomicInteger paramsCnt, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    private static void listItemParamsCnt(AaListParamsStdModel aaListParamsStdModelDetail, AtomicInteger paramsCnt, String fieldName) throws NoSuchFieldException, IllegalAccessException {
 
-        Field baseField = ReflectionUtils.getAllDeclaredFields(ImAaListParamsStdModel.class).stream()
+        Field baseField = ReflectionUtils.getAllDeclaredFields(AaListParamsStdModel.class).stream()
                 .filter(f -> f.getName().equals(fieldName))
                 .findFirst().orElseThrow(() -> new NoSuchFieldException(String.format("注意AaListParamsStdModelDetail类的属性是否缺失，或者PROPERTIES_TO_COMPARE集合中的元素有冗余。Field ‘%s’ not found", fieldName)));
 

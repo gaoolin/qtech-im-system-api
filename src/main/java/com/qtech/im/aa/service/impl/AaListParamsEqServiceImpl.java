@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.qtech.common.utils.SecurityUtils.getLoginUser;
-import static com.qtech.im.aa.utils.Constants.EQ_REVERSE_IGNORE_SIM_PREFIX;
+import static com.qtech.share.aa.constant.ComparisonConstants.EQ_REVERSE_IGNORE_SIM_PREFIX;
 
 /**
  * author :  gaozhilin

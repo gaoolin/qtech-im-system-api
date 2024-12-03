@@ -89,6 +89,7 @@
                 CASE
                     WHEN (Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$' AND net_status = 1 AND ((devicetype IN ('AA', 'DB', 'HM') AND Remote_control = '2')
                         OR (devicetype = 'WB' AND Remote_control = '5'))) THEN 1
+                    WHEN (Remote_control REGEXP '^-?[0-9]+(\.[0-9]+)?$' AND net_status = 1 AND Remote_control = '999') THEN -1
                     ELSE 0
                 END remote_status
             FROM (

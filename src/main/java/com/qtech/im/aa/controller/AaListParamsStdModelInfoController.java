@@ -38,7 +38,7 @@ public class AaListParamsStdModelInfoController extends BaseController {
     @RequestMapping(value = "/list" , produces = "application/json" , method = RequestMethod.GET)
     public TableDataInfo list(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
         startPage();
-        List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectAaListParamsStdModelInfoList(aaListParamsStdModelInfoVo);
+        List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdModelInfoVo);
         return getDataTable(list);
     }
 
@@ -46,18 +46,18 @@ public class AaListParamsStdModelInfoController extends BaseController {
     public AjaxResult edit(@RequestBody AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
         aaListParamsStdModelInfoVo.setUpdateBy(sysUserService.selectUserByUserName(SecurityUtils.getUsername()).getNickName());
         aaListParamsStdModelInfoVo.setUpdateTime(DateUtils.getNowDate());
-        return toAjax(aaListParamsStdModelInfoService.updateAaListParamsStdModelInfo(aaListParamsStdModelInfoVo));
+        return toAjax(aaListParamsStdModelInfoService.updateStdModelInfo(aaListParamsStdModelInfoVo));
     }
 
     @RequestMapping(value = "/remove/{id}" , produces = "application/json" , method = RequestMethod.DELETE)
     public AjaxResult remove(@PathVariable Long id) {
-        return toAjax(aaListParamsStdModelInfoService.deleteAaListParamsStdModelInfoByIds(Collections.singletonList(id).toArray(new Long[0])));
+        return toAjax(aaListParamsStdModelInfoService.deleteStdModelInfoByIds(Collections.singletonList(id).toArray(new Long[0])));
     }
 
     @Log(title = "AA-List参数标准模版信息" , businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
-        List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectAaListParamsStdModelInfoList(aaListParamsStdModelInfoVo);
+        List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdModelInfoVo);
         ExcelUtil<AaListParamsStdModelInfoVo> util = new ExcelUtil<AaListParamsStdModelInfoVo>(AaListParamsStdModelInfoVo.class);
         util.exportExcel(response, list, "AA-List参数标准模版信息");
     }

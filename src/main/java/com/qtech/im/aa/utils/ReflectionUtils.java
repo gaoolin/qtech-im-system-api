@@ -1,6 +1,7 @@
 package com.qtech.im.aa.utils;
 
-import com.qtech.im.aa.domain.ImAaListParamsStdModel;
+
+import com.qtech.im.aa.domain.AaListParamsStdModel;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ReflectionUtils {
         }
 
         // 使用示例
-        Field field = ReflectionUtils.getAllDeclaredFields(ImAaListParamsStdModel.class)
+        Field field = ReflectionUtils.getAllDeclaredFields(AaListParamsStdModel.class)
                 .stream()
                 .filter(f -> f.getName().equals("baseField")) // 示例：查找名为"baseField"的字段
                 .findFirst()

@@ -7,8 +7,8 @@ import com.qtech.framework.aspectj.lang.enums.BusinessType;
 import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.domain.AjaxResult;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.aa.domain.ImAaListParamsStdModel;
-import com.qtech.im.aa.service.IImAaListParamsStdModelService;
+import com.qtech.im.aa.domain.AaListParamsStdModel;
+import com.qtech.im.aa.service.IAaListParamsStdModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,31 +29,29 @@ import java.util.*;
 public class AaListParamsStdModelController extends BaseController {
 
     @Autowired
-    private IImAaListParamsStdModelService aaListParamsStdModelDetailService;
+    private IAaListParamsStdModelService aaListParamsStdModelDetailService;
 
     @RequestMapping(value = "/list" , produces = "application/json" , method = RequestMethod.GET)
-    public TableDataInfo list(ImAaListParamsStdModel aaListParamsStdModelDetail) {
+    public TableDataInfo list(AaListParamsStdModel aaListParamsStdModelDetail) {
         startPage();
-        List<ImAaListParamsStdModel> list = aaListParamsStdModelDetailService.selectList(aaListParamsStdModelDetail);
+        List<AaListParamsStdModel> list = aaListParamsStdModelDetailService.selectList(aaListParamsStdModelDetail);
         return getDataTable(list);
     }
 
     @RequestMapping(value = "/{id}" , produces = "application/json" , method = RequestMethod.GET)
     public TableDataInfo getById(@PathVariable Long id) {
-        ImAaListParamsStdModel param = new ImAaListParamsStdModel();
-        param.setId(id);
-        ImAaListParamsStdModel one = aaListParamsStdModelDetailService.selectOne(param);
+        AaListParamsStdModel one = aaListParamsStdModelDetailService.selectOne(id);
         return getDataTable(Collections.singletonList(one));
     }
 
     @RequestMapping(value = "/add" , produces = "application/json" , method = RequestMethod.POST)
-    public AjaxResult add(@RequestBody ImAaListParamsStdModel aaListParamsStdModelDetail) {
+    public AjaxResult add(@RequestBody AaListParamsStdModel aaListParamsStdModelDetail) {
 
         return toAjax(aaListParamsStdModelDetailService.saveOrUpdateAaListParamsStdModel(aaListParamsStdModelDetail));
     }
 
     @RequestMapping(value = "/edit" , produces = "application/json" , method = RequestMethod.POST)
-    public AjaxResult edit(@RequestBody ImAaListParamsStdModel aaListParamsStdModelDetail) {
+    public AjaxResult edit(@RequestBody AaListParamsStdModel aaListParamsStdModelDetail) {
         String nickName = getLoginUser().getUser().getNickName();
         aaListParamsStdModelDetail.setUpdateBy(nickName);
         aaListParamsStdModelDetail.setUpdateTime(DateUtils.getNowDate());
@@ -67,15 +65,15 @@ public class AaListParamsStdModelController extends BaseController {
 
     @Log(title = "AA-List参数标准模版明细" , businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ImAaListParamsStdModel aaListParamsStdModelDetail) {
-        List<ImAaListParamsStdModel> list = aaListParamsStdModelDetailService.selectList(aaListParamsStdModelDetail);
-        ExcelUtil<ImAaListParamsStdModel> util = new ExcelUtil<ImAaListParamsStdModel>(ImAaListParamsStdModel.class);
+    public void export(HttpServletResponse response, AaListParamsStdModel aaListParamsStdModelDetail) {
+        List<AaListParamsStdModel> list = aaListParamsStdModelDetailService.selectList(aaListParamsStdModelDetail);
+        ExcelUtil<AaListParamsStdModel> util = new ExcelUtil<AaListParamsStdModel>(AaListParamsStdModel.class);
         util.exportExcel(response, list, "AA-List参数标准模版明细");
     }
 
     @PostMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response) {
-        ExcelUtil<ImAaListParamsStdModel> util = new ExcelUtil<>(ImAaListParamsStdModel.class);
+        ExcelUtil<AaListParamsStdModel> util = new ExcelUtil<>(AaListParamsStdModel.class);
         util.importTemplateExcel(response, "AA-List参数导入模版");
     }
 
@@ -83,12 +81,12 @@ public class AaListParamsStdModelController extends BaseController {
     @Log(title = "AA参数模版导入" , businessType = BusinessType.IMPORT)
     @PostMapping("/upload/manual")
     public AjaxResult uploadManual(MultipartFile file) throws Exception {
-        ExcelUtil<ImAaListParamsStdModel> util = new ExcelUtil<>(ImAaListParamsStdModel.class);
-        List<ImAaListParamsStdModel> paramsModelList = util.importExcel(file.getInputStream());
+        ExcelUtil<AaListParamsStdModel> util = new ExcelUtil<>(AaListParamsStdModel.class);
+        List<AaListParamsStdModel> paramsModelList = util.importExcel(file.getInputStream());
 
         String nickName = getLoginUser().getUser().getNickName();
         Date date = DateUtils.getNowDate();
-        for (ImAaListParamsStdModel aaListParamsStdModelDetail : paramsModelList) {
+        for (AaListParamsStdModel aaListParamsStdModelDetail : paramsModelList) {
             aaListParamsStdModelDetail.setCreateBy(nickName);
             aaListParamsStdModelDetail.setCreateTime(date);
         }
@@ -99,7 +97,7 @@ public class AaListParamsStdModelController extends BaseController {
     @PreAuthorize("@ss.hasPermi('aa:params:model:upload')")
     @Log(title = "AA参数模版导入", businessType = BusinessType.IMPORT)
     @PostMapping("/upload/online")
-    public AjaxResult uploadOnline(@RequestBody ImAaListParamsStdModel aaListParamsStdModelDetail) throws Exception {
+    public AjaxResult uploadOnline(@RequestBody AaListParamsStdModel aaListParamsStdModelDetail) throws Exception {
         if (aaListParamsStdModelDetail == null) {
             return AjaxResult.error("请求体不能为空");
         }

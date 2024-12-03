@@ -109,6 +109,12 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.qtech.share</groupId>
+            <artifactId>im-datadev-shared</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+
         <!-- pool 对象池 -->
         <dependency>
             <groupId>org.apache.commons</groupId>

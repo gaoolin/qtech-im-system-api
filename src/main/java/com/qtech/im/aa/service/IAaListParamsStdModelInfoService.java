@@ -1,6 +1,9 @@
 package com.qtech.im.aa.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.qtech.im.aa.domain.AaListParamsStdModelInfoVo;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,16 +15,14 @@ import java.util.List;
  */
 
 
-public interface IAaListParamsStdModelInfoService {
-    public List<AaListParamsStdModelInfoVo> selectAaListParamsStdModelInfoList(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
+public interface IAaListParamsStdModelInfoService extends IService<AaListParamsStdModelInfoVo> {
 
-    public AaListParamsStdModelInfoVo selectOneAaListParamsStdModelInfo(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
+    public List<AaListParamsStdModelInfoVo> selectStdModelInfoList(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
 
-    public int insertAaListParamsStdModelInfo(Object entity);
+    public boolean updateStdModelInfo(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
 
-    public int updateAaListParamsStdModelInfo(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
+    public boolean saveOrUpdateStdModelInfo(Object entity);
 
-    public boolean saveOrUpdateAaListParamsStdModelInfo(Object entity);
-
-    public int deleteAaListParamsStdModelInfoByIds(Long[] list);
+    @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
+    public boolean deleteStdModelInfoByIds(Long[] list);
 }
