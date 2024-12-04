@@ -1,9 +1,8 @@
 package com.qtech.im.aa.mapper;
 
-import com.qtech.im.aa.domain.ImAaListParamsParsed;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.qtech.im.aa.domain.AaListParamsParsed;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
 
 /**
  * author :  gaozhilin
@@ -13,7 +12,5 @@ import java.util.List;
  */
 
 @Mapper
-public interface AaListParamsParsedDetailMapper  {
-
-    public List<ImAaListParamsParsed> selectAaListParamsParsedDetailList(ImAaListParamsParsed aaListParamsParsed);
+public interface AaListParamsParsedDetailMapper extends BaseMapper<AaListParamsParsed> {
 }

@@ -23,6 +23,5 @@ public interface IAaListParamsStdModelInfoService extends IService<AaListParamsS
 
     public boolean saveOrUpdateStdModelInfo(Object entity);
 
-    @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
-    public boolean deleteStdModelInfoByIds(Long[] list);
+    public boolean deleteStdModelInfoById(Long id);
 }

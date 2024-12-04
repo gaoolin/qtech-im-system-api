@@ -53,6 +53,7 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
         if (StringUtils.isNotBlank(aaListParamsStdModel.getProdType())) {
             wrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModel.getProdType());
         }
+        wrapper.orderByDesc(AaListParamsStdModel::getCreateTime);
         return list(wrapper);
     }
 

@@ -1,6 +1,8 @@
 package com.qtech.im.aa.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.qtech.share.aa.pojo.ImAaListParams;
@@ -20,11 +22,12 @@ import java.util.*;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@TableName(value = "IM_AA_LIST_PARAMS_STD_MODEL")
+@TableName(value = "IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL")
 @Data
 public class AaListParamsStdModel extends ImAaListParams {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private String prodType;
 

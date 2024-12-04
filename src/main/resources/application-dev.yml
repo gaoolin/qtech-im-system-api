@@ -103,3 +103,7 @@ spring:
 fixture:
   statistics:
     url: http://127.0.0.1:5000/fixture/statistics/line
+
+logging:
+  file:
+    path: E:\log\mq

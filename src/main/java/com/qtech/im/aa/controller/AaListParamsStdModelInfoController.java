@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,26 +34,26 @@ public class AaListParamsStdModelInfoController extends BaseController {
     @Autowired
     private ISysUserService sysUserService;
 
-    @RequestMapping(value = "/list" , produces = "application/json" , method = RequestMethod.GET)
+    @RequestMapping(value = "/list", produces = "application/json", method = RequestMethod.GET)
     public TableDataInfo list(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
         startPage();
         List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdModelInfoVo);
         return getDataTable(list);
     }
 
-    @RequestMapping(value = "/edit" , produces = "application/json" , method = RequestMethod.POST)
+    @RequestMapping(value = "/edit", produces = "application/json", method = RequestMethod.POST)
     public AjaxResult edit(@RequestBody AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
         aaListParamsStdModelInfoVo.setUpdateBy(sysUserService.selectUserByUserName(SecurityUtils.getUsername()).getNickName());
         aaListParamsStdModelInfoVo.setUpdateTime(DateUtils.getNowDate());
         return toAjax(aaListParamsStdModelInfoService.updateStdModelInfo(aaListParamsStdModelInfoVo));
     }
 
-    @RequestMapping(value = "/remove/{id}" , produces = "application/json" , method = RequestMethod.DELETE)
+    @RequestMapping(value = "/remove/{id}", produces = "application/json", method = RequestMethod.DELETE)
     public AjaxResult remove(@PathVariable Long id) {
-        return toAjax(aaListParamsStdModelInfoService.deleteStdModelInfoByIds(Collections.singletonList(id).toArray(new Long[0])));
+        return toAjax(aaListParamsStdModelInfoService.deleteStdModelInfoById(id));
     }
 
-    @Log(title = "AA-List参数标准模版信息" , businessType = BusinessType.EXPORT)
+    @Log(title = "AA-List参数标准模版信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
         List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdModelInfoVo);

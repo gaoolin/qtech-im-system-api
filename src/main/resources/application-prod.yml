@@ -118,3 +118,7 @@ spring:
 fixture:
   statistics:
     url: http://fixture-statistics.fixture-statistics:5000/fixture/statistics/line
+
+logging:
+  file:
+    path: /home/qtech/logs

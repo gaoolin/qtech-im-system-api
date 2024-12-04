@@ -145,8 +145,6 @@
             <if test="simId != null and simId != ''">and sim_id like concat('%',#{simId},'%') </if>
             <if test="prodType != null and prodType != ''">and lower(prod_type) like concat('%', lower(#{prodType}),'%') </if>
             <if test="statusCode != null">
-                -- status 为int类型
-                -- and (status = #{status} or (#{status} = 0 and status is null))
                 and status = #{statusCode}
             </if>
         </where>

@@ -1,6 +1,7 @@
 package com.qtech.im.aa.service;
 
-import com.qtech.im.aa.domain.ImAaListParamsParsed;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.qtech.im.aa.domain.AaListParamsParsed;
 
 import java.util.List;
 
@@ -12,6 +13,6 @@ import java.util.List;
  */
 
 
-public interface IAaListParamsParsedDetailService {
-    public List<ImAaListParamsParsed> selectAaListParamsParsedDetailList(ImAaListParamsParsed aaListParamsParsed);
+public interface IAaListParamsParsedDetailService extends IService<AaListParamsParsed> {
+    public List<AaListParamsParsed> selectParsedDetailList(AaListParamsParsed aaListParamsParsed);
 }

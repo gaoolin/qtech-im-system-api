@@ -1,16 +1,17 @@
 package com.qtech.im.aa.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.qtech.framework.aspectj.lang.annotation.Excel;
+import com.qtech.share.aa.pojo.ImAaListParams;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * author :  gaozhilin
@@ -22,7 +23,8 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ImAaListParamsParsed extends ImAaListParams {
+@TableName("qtech_eq_dwd.im_aa_list_parsed_detail")
+public class AaListParamsParsed extends ImAaListParams {
     @Excel(name = "盒子号")
     private String simId;
 
@@ -32,6 +34,10 @@ public class ImAaListParamsParsed extends ImAaListParams {
     @Excel(name = "接收时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receivedTime;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @TableField(exist = false)
+    private Map<String, Object> params;
 
     private List<Field> getAllFields(Class<?> clazz) {
         List<Field> fields = new ArrayList<>();

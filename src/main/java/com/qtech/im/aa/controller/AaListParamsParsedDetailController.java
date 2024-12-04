@@ -2,7 +2,7 @@ package com.qtech.im.aa.controller;
 
 import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.aa.domain.ImAaListParamsParsed;
+import com.qtech.im.aa.domain.AaListParamsParsed;
 import com.qtech.im.aa.service.IAaListParamsParsedDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +25,9 @@ public class AaListParamsParsedDetailController extends BaseController {
     private IAaListParamsParsedDetailService aaListParamsParsedDetailService;
 
     @RequestMapping("/list")
-    public TableDataInfo list(ImAaListParamsParsed aaListParamsParsed) {
+    public TableDataInfo list(AaListParamsParsed aaListParamsParsed) {
         startPage();
-        List<ImAaListParamsParsed> list = aaListParamsParsedDetailService.selectAaListParamsParsedDetailList(aaListParamsParsed);
+        List<AaListParamsParsed> list = aaListParamsParsedDetailService.selectParsedDetailList(aaListParamsParsed);
         return getDataTable(list);
     }
 }

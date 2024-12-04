@@ -1,9 +1,12 @@
 package com.qtech.im.aa.domain;
 
-import com.qtech.framework.web.domain.BaseEntity;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * author :  gaozhilin
@@ -12,11 +15,11 @@ import lombok.ToString;
  * desc   :
  */
 
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class AaListParamsStdModelInfoVo extends BaseEntity {
+@TableName(value = "IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO")
+public class AaListParamsStdModelInfoVo implements Serializable {
     private static final long serialVersionUID = 1L;
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private String prodType;
     private Integer listParams;
@@ -24,4 +27,9 @@ public class AaListParamsStdModelInfoVo extends BaseEntity {
     private Integer status;
     private String provider;
     private String belongTo;
+    private String createBy;
+    private Date createTime;
+    private String updateBy;
+    private Date updateTime;
+    private String remark;
 }

@@ -6,6 +6,7 @@ import com.qtech.framework.aspectj.lang.annotation.Log;
 import com.qtech.framework.aspectj.lang.enums.BusinessType;
 import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.domain.AjaxResult;
+import com.qtech.framework.web.domain.R;
 import com.qtech.framework.web.page.TableDataInfo;
 import com.qtech.im.aa.domain.AaListParamsStdModel;
 import com.qtech.im.aa.service.IAaListParamsStdModelService;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * author :  gaozhilin
@@ -31,26 +35,25 @@ public class AaListParamsStdModelController extends BaseController {
     @Autowired
     private IAaListParamsStdModelService aaListParamsStdModelDetailService;
 
-    @RequestMapping(value = "/list" , produces = "application/json" , method = RequestMethod.GET)
+    @RequestMapping(value = "/list", produces = "application/json", method = RequestMethod.GET)
     public TableDataInfo list(AaListParamsStdModel aaListParamsStdModelDetail) {
         startPage();
         List<AaListParamsStdModel> list = aaListParamsStdModelDetailService.selectList(aaListParamsStdModelDetail);
         return getDataTable(list);
     }
 
-    @RequestMapping(value = "/{id}" , produces = "application/json" , method = RequestMethod.GET)
-    public TableDataInfo getById(@PathVariable Long id) {
+    @RequestMapping(value = "/{id}", produces = "application/json", method = RequestMethod.GET)
+    public R<AaListParamsStdModel> getById(@PathVariable Long id) {
         AaListParamsStdModel one = aaListParamsStdModelDetailService.selectOne(id);
-        return getDataTable(Collections.singletonList(one));
+        return R.ok(one);
     }
 
-    @RequestMapping(value = "/add" , produces = "application/json" , method = RequestMethod.POST)
+    @RequestMapping(value = "/add", produces = "application/json", method = RequestMethod.POST)
     public AjaxResult add(@RequestBody AaListParamsStdModel aaListParamsStdModelDetail) {
-
         return toAjax(aaListParamsStdModelDetailService.saveOrUpdateAaListParamsStdModel(aaListParamsStdModelDetail));
     }
 
-    @RequestMapping(value = "/edit" , produces = "application/json" , method = RequestMethod.POST)
+    @RequestMapping(value = "/edit", produces = "application/json", method = RequestMethod.POST)
     public AjaxResult edit(@RequestBody AaListParamsStdModel aaListParamsStdModelDetail) {
         String nickName = getLoginUser().getUser().getNickName();
         aaListParamsStdModelDetail.setUpdateBy(nickName);
@@ -58,12 +61,12 @@ public class AaListParamsStdModelController extends BaseController {
         return toAjax(aaListParamsStdModelDetailService.updateAaListParamsStdModel(aaListParamsStdModelDetail));
     }
 
-    @RequestMapping(value = "/remove/{ids}" , produces = "application/json" , method = RequestMethod.DELETE)
+    @RequestMapping(value = "/remove/{ids}", produces = "application/json", method = RequestMethod.DELETE)
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(aaListParamsStdModelDetailService.deleteAaListParamsStdModelByIds(Arrays.asList(ids)));
     }
 
-    @Log(title = "AA-List参数标准模版明细" , businessType = BusinessType.EXPORT)
+    @Log(title = "AA-List参数标准模版明细", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AaListParamsStdModel aaListParamsStdModelDetail) {
         List<AaListParamsStdModel> list = aaListParamsStdModelDetailService.selectList(aaListParamsStdModelDetail);
@@ -78,7 +81,7 @@ public class AaListParamsStdModelController extends BaseController {
     }
 
     @PreAuthorize("@ss.hasPermi('aa:params:model:upload')")
-    @Log(title = "AA参数模版导入" , businessType = BusinessType.IMPORT)
+    @Log(title = "AA参数模版导入", businessType = BusinessType.IMPORT)
     @PostMapping("/upload/manual")
     public AjaxResult uploadManual(MultipartFile file) throws Exception {
         ExcelUtil<AaListParamsStdModel> util = new ExcelUtil<>(AaListParamsStdModel.class);
