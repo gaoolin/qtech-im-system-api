@@ -1,6 +1,6 @@
 package com.qtech.im.aa.mapper;
 
-import com.qtech.im.aa.domain.AaStdProgramManagementVo;
+import com.qtech.im.aa.domain.AaStdProgramManagement;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,13 +16,13 @@ import java.util.List;
 @Mapper
 public interface AaStdProgramManagementMapper {
 
-    public List<AaStdProgramManagementVo> selectAaStdProgramManagementList(AaStdProgramManagementVo aaStdProgramManagementVo);
+    public List<AaStdProgramManagement> selectAaStdProgramManagementList(AaStdProgramManagement aaStdProgramManagement);
 
-    public AaStdProgramManagementVo selectAaStdProgramManagementById(Long id);
+    public AaStdProgramManagement selectAaStdProgramManagementById(Long id);
 
-    public int insertAaStdProgramManagement(AaStdProgramManagementVo aaStdProgramManagementVo);
+    public int insertAaStdProgramManagement(AaStdProgramManagement aaStdProgramManagement);
 
     public int deleteAaStdProgramManagementById(@Param("id") Long id);
 
-    int updateAaStdProgramManagement(AaStdProgramManagementVo aaStdProgramManagementVo);
+    int updateAaStdProgramManagement(AaStdProgramManagement aaStdProgramManagement);
 }

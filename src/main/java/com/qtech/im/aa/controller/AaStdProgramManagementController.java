@@ -8,7 +8,7 @@ import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.domain.AjaxResult;
 import com.qtech.framework.web.domain.R;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.aa.domain.AaStdProgramManagementVo;
+import com.qtech.im.aa.domain.AaStdProgramManagement;
 import com.qtech.im.aa.service.IAaS3Service;
 import com.qtech.im.aa.service.IAaStdProgramManagementService;
 import io.swagger.annotations.Api;
@@ -44,16 +44,16 @@ public class AaStdProgramManagementController extends BaseController {
     private ObjectMapper objectMapper;
 
     @RequestMapping(value = "/search" , method = RequestMethod.GET)
-    public TableDataInfo search(AaStdProgramManagementVo aaStdProgramManagementVo) {
+    public TableDataInfo search(AaStdProgramManagement aaStdProgramManagement) {
         startPage();
-        List<AaStdProgramManagementVo> list = aaStdProgramManagementService.selectAaStdProgramManagementList(aaStdProgramManagementVo);
+        List<AaStdProgramManagement> list = aaStdProgramManagementService.selectAaStdProgramManagementList(aaStdProgramManagement);
         return getDataTable(list);
     }
 
     @RequestMapping(value = "/add" , method = RequestMethod.POST)
-    public AjaxResult add(@RequestBody AaStdProgramManagementVo aaStdProgramManagementVo) {
+    public AjaxResult add(@RequestBody AaStdProgramManagement aaStdProgramManagement) {
 
-        String fileName = aaStdProgramManagementVo.getFileName();
+        String fileName = aaStdProgramManagement.getFileName();
         // 检查文件名是否符合要求
         String[] result = new String[0];
         if (fileName != null) {
@@ -70,36 +70,36 @@ public class AaStdProgramManagementController extends BaseController {
             return warn("文件类型不正确，请上传压缩包");
         }
 
-        aaStdProgramManagementVo.setProdType(StringUtils.upperCase(prefix));
-        aaStdProgramManagementVo.setFileName(fileName); // 添加文件前缀
-        aaStdProgramManagementVo.setVersion(StringUtils.upperCase(version)); // 添加版本号
-        aaStdProgramManagementVo.setStatus(0);
-        aaStdProgramManagementVo.setDownloadCnt(0L);
+        aaStdProgramManagement.setProdType(StringUtils.upperCase(prefix));
+        aaStdProgramManagement.setFileName(fileName); // 添加文件前缀
+        aaStdProgramManagement.setVersion(StringUtils.upperCase(version)); // 添加版本号
+        aaStdProgramManagement.setStatus(0);
+        aaStdProgramManagement.setDownloadCnt(0L);
         String nickName = getLoginUser().getUser().getNickName();
-        aaStdProgramManagementVo.setCreateBy(nickName);
+        aaStdProgramManagement.setCreateBy(nickName);
 
-        int i = aaStdProgramManagementService.insertAaStdProgramManagement(aaStdProgramManagementVo);
+        int i = aaStdProgramManagementService.insertAaStdProgramManagement(aaStdProgramManagement);
         return success(i);
     }
 
     @PostMapping("/edit")
-    public AjaxResult edit(@RequestBody AaStdProgramManagementVo aaStdProgramManagementVo) {
-        aaStdProgramManagementVo.setUpdateBy(getUsername());
-        aaStdProgramManagementVo.setUpdateTime(DateUtils.getNowDate());
-        return toAjax(aaStdProgramManagementService.updateAaStdProgramManagement(aaStdProgramManagementVo));
+    public AjaxResult edit(@RequestBody AaStdProgramManagement aaStdProgramManagement) {
+        aaStdProgramManagement.setUpdateBy(getUsername());
+        aaStdProgramManagement.setUpdateTime(DateUtils.getNowDate());
+        return toAjax(aaStdProgramManagementService.updateAaStdProgramManagement(aaStdProgramManagement));
     }
 
     @GetMapping("/isExist")
     public R<Boolean> doCheckFileExist(@RequestParam("fileName") String fileName) {
-        AaStdProgramManagementVo aaStdProgramManagementVo = new AaStdProgramManagementVo();
+        AaStdProgramManagement aaStdProgramManagement = new AaStdProgramManagement();
         String[] params = extractFileNameAndVersion(fileName);
         if (params != null) {
             String prodType = params[0];
             String version = params[1];
-            aaStdProgramManagementVo.setProdType(prodType);
-            aaStdProgramManagementVo.setVersion(version);
-            aaStdProgramManagementVo.setFlag(0);
-            List<AaStdProgramManagementVo> list = aaStdProgramManagementService.selectAaStdProgramManagementList(aaStdProgramManagementVo);
+            aaStdProgramManagement.setProdType(prodType);
+            aaStdProgramManagement.setVersion(version);
+            aaStdProgramManagement.setFlag(0);
+            List<AaStdProgramManagement> list = aaStdProgramManagementService.selectAaStdProgramManagementList(aaStdProgramManagement);
             if (!list.isEmpty()) {
                 return R.ok(true);
             }
@@ -111,7 +111,7 @@ public class AaStdProgramManagementController extends BaseController {
     @RequestMapping(value = "/upload" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE, method = RequestMethod.POST)
     public AjaxResult uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
 
-        AaStdProgramManagementVo aaStdProgramManagementVo = new AaStdProgramManagementVo();
+        AaStdProgramManagement aaStdProgramManagement = new AaStdProgramManagement();
         String originalFilename = file.getOriginalFilename();
 
         // 检查文件名是否符合要求
@@ -130,20 +130,20 @@ public class AaStdProgramManagementController extends BaseController {
             return warn("文件类型不正确，请上传压缩包");
         }
 
-        aaStdProgramManagementVo.setProdType(StringUtils.upperCase(prefix));
-        aaStdProgramManagementVo.setSize(formatFileSize(file.getSize())); // 格式化文件大小
-        aaStdProgramManagementVo.setFileName(originalFilename); // 添加文件前缀
-        aaStdProgramManagementVo.setVersion(StringUtils.upperCase(version)); // 添加版本号
-        aaStdProgramManagementVo.setStatus(1);
-        aaStdProgramManagementVo.setDownloadCnt(0L);
+        aaStdProgramManagement.setProdType(StringUtils.upperCase(prefix));
+        aaStdProgramManagement.setSize(formatFileSize(file.getSize())); // 格式化文件大小
+        aaStdProgramManagement.setFileName(originalFilename); // 添加文件前缀
+        aaStdProgramManagement.setVersion(StringUtils.upperCase(version)); // 添加版本号
+        aaStdProgramManagement.setStatus(1);
+        aaStdProgramManagement.setDownloadCnt(0L);
         String nickName = getLoginUser().getUser().getNickName();
         Date getNowDate = DateUtils.getNowDate();
-        aaStdProgramManagementVo.setCreateBy(nickName);
-        aaStdProgramManagementVo.setCreateTime(getNowDate);
+        aaStdProgramManagement.setCreateBy(nickName);
+        aaStdProgramManagement.setCreateTime(getNowDate);
 
         String data = aaS3Service.uploadFile("aa-program-files" , file);
 
-        aaStdProgramManagementService.insertAaStdProgramManagement(aaStdProgramManagementVo);
+        aaStdProgramManagementService.insertAaStdProgramManagement(aaStdProgramManagement);
         return success(file.getOriginalFilename() + ":" + data);
     }
 
@@ -188,11 +188,11 @@ public class AaStdProgramManagementController extends BaseController {
                     // 对文件名进行URL编码，避免中文乱码
                     // String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
 
-                    AaStdProgramManagementVo aaStdProgramManagementVo = new AaStdProgramManagementVo();
-                    aaStdProgramManagementVo.setFileName(fileName);
-                    AaStdProgramManagementVo aaStdProgramManagementVoDb = aaStdProgramManagementService.selectOneAaStdProgramManagement(aaStdProgramManagementVo);
-                    aaStdProgramManagementVoDb.setDownloadCnt(aaStdProgramManagementVoDb.getDownloadCnt() + 1L);
-                    aaStdProgramManagementService.updateAaStdProgramManagement(aaStdProgramManagementVoDb);
+                    AaStdProgramManagement aaStdProgramManagement = new AaStdProgramManagement();
+                    aaStdProgramManagement.setFileName(fileName);
+                    AaStdProgramManagement aaStdProgramManagementDb = aaStdProgramManagementService.selectOneAaStdProgramManagement(aaStdProgramManagement);
+                    aaStdProgramManagementDb.setDownloadCnt(aaStdProgramManagementDb.getDownloadCnt() + 1L);
+                    aaStdProgramManagementService.updateAaStdProgramManagement(aaStdProgramManagementDb);
                     return R.ok(jsonNode.get("data").asText());
                 } else {
                     return R.fail(jsonNode.get("msg").asText());

@@ -1,6 +1,6 @@
 package com.qtech.im.aa.mapper;
 
-import com.qtech.im.aa.domain.AaListParamsEqVo;
+import com.qtech.im.aa.domain.AaListParamsEq;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,13 +14,13 @@ import java.util.List;
 
 @Mapper
 public interface AaListParamsEqMapper {
-    public int editAaListParamsIgnoreEq(AaListParamsEqVo aaListParamsEqVo);
+    public int editAaListParamsIgnoreEq(AaListParamsEq aaListParamsEq);
 
-    public AaListParamsEqVo selectAaListParamsEqById(String id);
+    public AaListParamsEq selectAaListParamsEqById(String id);
 
-    public List<AaListParamsEqVo> selectAaListParamsEqList(AaListParamsEqVo aaListParamsEqVo);
+    public List<AaListParamsEq> selectAaListParamsEqList(AaListParamsEq aaListParamsEq);
 
-    public int insertAaListParamsIgnoreEq(AaListParamsEqVo aaListParamsEqVo);
+    public int insertAaListParamsIgnoreEq(AaListParamsEq aaListParamsEq);
 
-    public int editAaListParamsEq(AaListParamsEqVo aaListParamsEqVo);
+    public int editAaListParamsEq(AaListParamsEq aaListParamsEq);
 }

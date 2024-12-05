@@ -7,7 +7,7 @@ import com.qtech.common.utils.StringUtils;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.aa.domain.AaListParamsStdModel;
-import com.qtech.im.aa.domain.AaListParamsStdModelInfoVo;
+import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
 import com.qtech.im.aa.mapper.AaListParamsStdModelMapper;
 import com.qtech.im.aa.service.IAaListParamsStdModelInfoService;
 import com.qtech.im.aa.service.IAaListParamsStdModelService;
@@ -192,7 +192,7 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
                 });
 
                 boolean isInsert;
-                AaListParamsStdModelInfoVo modelInfo = ModelDetailConvertToModelInfo.doConvert(detail);
+                AaListParamsStdModelInfo modelInfo = ModelDetailConvertToModelInfo.doConvert(detail);
                 if (modelInfo != null) {
                     modelInfo.setCreateBy(getLoginUser().getUser().getNickName());
                     modelInfo.setCreateTime(DateUtils.getNowDate());

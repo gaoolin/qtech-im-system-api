@@ -2,7 +2,7 @@ package com.qtech.im.aa.utils;
 
 import com.qtech.common.utils.StringUtils;
 import com.qtech.im.aa.domain.AaListParamsStdModel;
-import com.qtech.im.aa.domain.AaListParamsStdModelInfoVo;
+import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
@@ -21,7 +21,7 @@ import static com.qtech.share.aa.constant.ComparisonConstants.PROPERTIES_TO_COMP
 @Slf4j
 public class ModelDetailConvertToModelInfo {
 
-    public static AaListParamsStdModelInfoVo doConvert(AaListParamsStdModel aaListParamsStdModelDetail) {
+    public static AaListParamsStdModelInfo doConvert(AaListParamsStdModel aaListParamsStdModelDetail) {
         AtomicInteger listParamsCnt = new AtomicInteger();
         AtomicInteger itemParamsCnt = new AtomicInteger();
         if (aaListParamsStdModelDetail == null) {
@@ -48,7 +48,7 @@ public class ModelDetailConvertToModelInfo {
             }
         });
 
-        AaListParamsStdModelInfoVo param = new AaListParamsStdModelInfoVo();
+        AaListParamsStdModelInfo param = new AaListParamsStdModelInfo();
         param.setListParams(listParamsCnt.get());
         param.setItemParams(itemParamsCnt.get());
         param.setProdType(aaListParamsStdModelDetail.getProdType());

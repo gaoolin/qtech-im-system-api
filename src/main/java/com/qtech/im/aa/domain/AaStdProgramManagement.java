@@ -16,7 +16,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class AaStdProgramManagementVo extends BaseEntity {
+public class AaStdProgramManagement extends BaseEntity {
     private Long id;
     private String prodType;
     private String fileName;

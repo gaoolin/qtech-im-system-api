@@ -3,9 +3,10 @@ package com.qtech.im.aa.service.impl;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.framework.redis.RedisCache;
-import com.qtech.im.aa.domain.AaListParamsEqVo;
+import com.qtech.im.aa.domain.AaListParamsEq;
 import com.qtech.im.aa.mapper.AaListParamsEqMapper;
 import com.qtech.im.aa.service.IAaListParamsEqService;
+import com.qtech.im.aa.vo.AaListParamsEqVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.exceptions.TooManyResultsException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.qtech.common.utils.SecurityUtils.getLoginUser;
 import static com.qtech.share.aa.constant.ComparisonConstants.EQ_REVERSE_IGNORE_SIM_PREFIX;
@@ -39,9 +41,14 @@ public class AaListParamsEqServiceImpl implements IAaListParamsEqService {
     }
 
     @Override
-    public List<AaListParamsEqVo> selectAaListParamsEqList(AaListParamsEqVo aaListParamsEqVo) {
+    public List<AaListParamsEqVo> selectAaListParamsEqList(AaListParamsEq aaListParamsEq) {
+        List<AaListParamsEqVo> vos = null;
         try {
-            return aaListParamsEqMapper.selectAaListParamsEqList(aaListParamsEqVo);
+            List<AaListParamsEq> list = aaListParamsEqMapper.selectAaListParamsEqList(aaListParamsEq);
+            if (CollectionUtils.isNotEmpty(list)) {
+                vos = list.stream().map(AaListParamsEqVo::new).collect(Collectors.toList());
+            }
+            return vos;
         } catch (Exception e) {
             // 更具体的异常处理
             if (e instanceof NullPointerException) {
@@ -58,8 +65,8 @@ public class AaListParamsEqServiceImpl implements IAaListParamsEqService {
     }
 
     @Override
-    public AaListParamsEqVo selectOneAaListParamsEq(AaListParamsEqVo aaListParamsEqVo) {
-        List<AaListParamsEqVo> list = aaListParamsEqMapper.selectAaListParamsEqList(aaListParamsEqVo);
+    public AaListParamsEq selectOneAaListParamsEq(AaListParamsEq aaListParamsEq) {
+        List<AaListParamsEq> list = aaListParamsEqMapper.selectAaListParamsEqList(aaListParamsEq);
         if (CollectionUtils.isNotEmpty(list)) {
             int size = list.size();
             if (size > 1) {
@@ -72,7 +79,7 @@ public class AaListParamsEqServiceImpl implements IAaListParamsEqService {
     }
 
     @Override
-    public AaListParamsEqVo selectAaListParamsEqById(String id) {
+    public AaListParamsEq selectAaListParamsEqById(String id) {
         try {
             return aaListParamsEqMapper.selectAaListParamsEqById(id);
         } catch (Exception e) {
@@ -82,21 +89,21 @@ public class AaListParamsEqServiceImpl implements IAaListParamsEqService {
     }
 
     @Override
-    public int editAaListParamsIgnoreEq(AaListParamsEqVo aaListParamsEqVo) {
+    public int editAaListParamsIgnoreEq(AaListParamsEq aaListParamsEq) {
         try {
-            Integer status = aaListParamsEqVo.getStatusCode();
+            Integer status = aaListParamsEq.getStatusCode();
             if (status == null) {
                 throw new RuntimeException("status is null, can not be updated");
             } else if (status == 1) {
-                redisCache.setCacheObject(EQ_REVERSE_IGNORE_SIM_PREFIX + aaListParamsEqVo.getSimId(), "true");
+                redisCache.setCacheObject(EQ_REVERSE_IGNORE_SIM_PREFIX + aaListParamsEq.getSimId(), "true");
             } else if (status == 0) {
-                redisCache.deleteObject(EQ_REVERSE_IGNORE_SIM_PREFIX + aaListParamsEqVo.getSimId());
+                redisCache.deleteObject(EQ_REVERSE_IGNORE_SIM_PREFIX + aaListParamsEq.getSimId());
             } else {
                 throw new RuntimeException("unknown status");
             }
-            aaListParamsEqVo.setUpdateTime(Date.from(Instant.now()));
-            aaListParamsEqVo.setUpdateBy(getLoginUser().getUser().getNickName());
-            return aaListParamsEqMapper.editAaListParamsIgnoreEq(aaListParamsEqVo);
+            aaListParamsEq.setUpdateTime(Date.from(Instant.now()));
+            aaListParamsEq.setUpdateBy(getLoginUser().getUser().getNickName());
+            return aaListParamsEqMapper.editAaListParamsIgnoreEq(aaListParamsEq);
         } catch (Exception e) {
             log.error("editAaListParamsEq error", e);
             throw new RuntimeException("修改数据发生异常，请联系管理员！");
@@ -104,19 +111,19 @@ public class AaListParamsEqServiceImpl implements IAaListParamsEqService {
     }
 
     /**
-     * @param aaListParamsEqVo
+     * @param aaListParamsEq
      * @return int
      * @description 主要用于插入数据和更新除了状态以外的数据
      */
     @Override
-    public int insertAaListParamsIgnoreEq(AaListParamsEqVo aaListParamsEqVo) {
-        if (aaListParamsEqVo != null) {
-            aaListParamsEqVo.setUpdateTime(Date.from(Instant.now()));
-            aaListParamsEqVo.setUpdateBy(getLoginUser().getUser().getNickName());
-            aaListParamsEqVo.setOpCnt(1);
-            redisCache.setCacheObject(EQ_REVERSE_IGNORE_SIM_PREFIX + aaListParamsEqVo.getSimId(), "true");
+    public int insertAaListParamsIgnoreEq(AaListParamsEq aaListParamsEq) {
+        if (aaListParamsEq != null) {
+            aaListParamsEq.setUpdateTime(Date.from(Instant.now()));
+            aaListParamsEq.setUpdateBy(getLoginUser().getUser().getNickName());
+            aaListParamsEq.setOpCnt(1);
+            redisCache.setCacheObject(EQ_REVERSE_IGNORE_SIM_PREFIX + aaListParamsEq.getSimId(), "true");
             try {
-                return aaListParamsEqMapper.insertAaListParamsIgnoreEq(aaListParamsEqVo);
+                return aaListParamsEqMapper.insertAaListParamsIgnoreEq(aaListParamsEq);
             } catch (Exception e) {
                 log.error("upsetAaListParamsEq error", e);
                 throw new RuntimeException("添加数据发生异常，请联系管理员！");
@@ -143,13 +150,13 @@ public class AaListParamsEqServiceImpl implements IAaListParamsEqService {
     }
 
     @Override
-    public int editAaListParamsEq(AaListParamsEqVo aaListParamsEqVo) {
-        return aaListParamsEqMapper.editAaListParamsEq(aaListParamsEqVo);
+    public int editAaListParamsEq(AaListParamsEq aaListParamsEq) {
+        return aaListParamsEqMapper.editAaListParamsEq(aaListParamsEq);
     }
 
     @Override
-    public Boolean isExist(AaListParamsEqVo aaListParamsEqVo) {
-        AaListParamsEqVo res = selectAaListParamsEqById(aaListParamsEqVo.getSimId());
+    public Boolean isExist(AaListParamsEq aaListParamsEq) {
+        AaListParamsEq res = selectAaListParamsEqById(aaListParamsEq.getSimId());
         return res != null;
     }
 }

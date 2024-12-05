@@ -3,8 +3,9 @@ package com.qtech.im.aa.controller;
 import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.domain.R;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.aa.domain.AaListParamsCheckResultVo;
+import com.qtech.im.aa.domain.AaListParamsCheckResult;
 import com.qtech.im.aa.service.IAaListParamsLatestCheckResultService;
+import com.qtech.im.aa.vo.AaListParamsCheckResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +28,9 @@ public class AaListParamsLatestCheckResultController extends BaseController {
     private IAaListParamsLatestCheckResultService aaListParamsLatestCheckResultService;
 
     @GetMapping("/list")
-    public TableDataInfo list(AaListParamsCheckResultVo aaListParamsCheckResultVo) {
+    public TableDataInfo list(AaListParamsCheckResult aaListParamsCheckResult) {
         startPage();
-        return getDataTable(aaListParamsLatestCheckResultService.selectAaListParamsLatestCheckResultList(aaListParamsCheckResultVo));
+        return getDataTable(aaListParamsLatestCheckResultService.selectAaListParamsLatestCheckResultList(aaListParamsCheckResult));
     }
 
     @GetMapping("/factoryNames")
@@ -39,8 +40,8 @@ public class AaListParamsLatestCheckResultController extends BaseController {
     }
 
     @GetMapping("/groupNames")
-    public R<List<AaListParamsCheckResultVo>> getGroupNames(AaListParamsCheckResultVo aaListParamsCheckResultVo) {
-        List<AaListParamsCheckResultVo> list = aaListParamsLatestCheckResultService.selectGroupNameList(aaListParamsCheckResultVo);
+    public R<List<AaListParamsCheckResultVo>> getGroupNames(AaListParamsCheckResult aaListParamsCheckResult) {
+        List<AaListParamsCheckResultVo> list = aaListParamsLatestCheckResultService.selectGroupNameList(aaListParamsCheckResult);
         return R.ok(list);
     }
 }

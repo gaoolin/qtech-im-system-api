@@ -2,7 +2,7 @@ package com.qtech.im.aa.service.impl;
 
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
-import com.qtech.im.aa.domain.AaStdProgramManagementVo;
+import com.qtech.im.aa.domain.AaStdProgramManagement;
 import com.qtech.im.aa.mapper.AaStdProgramManagementMapper;
 import com.qtech.im.aa.service.IAaStdProgramManagementService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +32,14 @@ public class AaStdProgramManagementServiceImpl implements IAaStdProgramManagemen
     }
 
     @Override
-    public AaStdProgramManagementVo selectAaStdProgramManagementById(Long id) {
+    public AaStdProgramManagement selectAaStdProgramManagementById(Long id) {
         return aaStdProgramManagementMapper.selectAaStdProgramManagementById(id);
     }
 
     @Override
-    public List<AaStdProgramManagementVo> selectAaStdProgramManagementList(AaStdProgramManagementVo aaStdProgramManagementVo) {
+    public List<AaStdProgramManagement> selectAaStdProgramManagementList(AaStdProgramManagement aaStdProgramManagement) {
         try {
-            return aaStdProgramManagementMapper.selectAaStdProgramManagementList(aaStdProgramManagementVo);
+            return aaStdProgramManagementMapper.selectAaStdProgramManagementList(aaStdProgramManagement);
         } catch (Exception e) {
             log.error("查询数据库发生异常，请联系系统负责人。", e);
             throw new RuntimeException("查询数据库发生异常，请联系系统负责人。");
@@ -47,8 +47,8 @@ public class AaStdProgramManagementServiceImpl implements IAaStdProgramManagemen
     }
 
     @Override
-    public AaStdProgramManagementVo selectOneAaStdProgramManagement(AaStdProgramManagementVo aaStdProgramManagementVo) {
-        List<AaStdProgramManagementVo> list = aaStdProgramManagementMapper.selectAaStdProgramManagementList(aaStdProgramManagementVo);
+    public AaStdProgramManagement selectOneAaStdProgramManagement(AaStdProgramManagement aaStdProgramManagement) {
+        List<AaStdProgramManagement> list = aaStdProgramManagementMapper.selectAaStdProgramManagementList(aaStdProgramManagement);
         if (CollectionUtils.isNotEmpty(list)) {
             int size = list.size();
             if (size > 1) {
@@ -60,9 +60,9 @@ public class AaStdProgramManagementServiceImpl implements IAaStdProgramManagemen
     }
 
     @Override
-    public int insertAaStdProgramManagement(AaStdProgramManagementVo aaStdProgramManagementVo) {
+    public int insertAaStdProgramManagement(AaStdProgramManagement aaStdProgramManagement) {
         try {
-            return aaStdProgramManagementMapper.insertAaStdProgramManagement(aaStdProgramManagementVo);
+            return aaStdProgramManagementMapper.insertAaStdProgramManagement(aaStdProgramManagement);
         } catch (Exception e) {
             log.error("插入数据库发生异常，请联系系统负责人。", e);
             throw new RuntimeException("插入数据库发生异常，请联系系统负责人。");
@@ -70,8 +70,8 @@ public class AaStdProgramManagementServiceImpl implements IAaStdProgramManagemen
     }
 
     @Override
-    public int updateAaStdProgramManagement(AaStdProgramManagementVo aaStdProgramManagementVo) {
-        return aaStdProgramManagementMapper.updateAaStdProgramManagement(aaStdProgramManagementVo);
+    public int updateAaStdProgramManagement(AaStdProgramManagement aaStdProgramManagement) {
+        return aaStdProgramManagementMapper.updateAaStdProgramManagement(aaStdProgramManagement);
     }
 
     @Override

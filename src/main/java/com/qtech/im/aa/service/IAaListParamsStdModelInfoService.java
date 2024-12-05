@@ -1,9 +1,8 @@
 package com.qtech.im.aa.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.qtech.im.aa.domain.AaListParamsStdModelInfoVo;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
+import com.qtech.im.aa.vo.AaListParamsStdModelInfoVo;
 
 import java.util.List;
 
@@ -15,11 +14,11 @@ import java.util.List;
  */
 
 
-public interface IAaListParamsStdModelInfoService extends IService<AaListParamsStdModelInfoVo> {
+public interface IAaListParamsStdModelInfoService extends IService<AaListParamsStdModelInfo> {
 
-    public List<AaListParamsStdModelInfoVo> selectStdModelInfoList(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
+    public List<AaListParamsStdModelInfoVo> selectStdModelInfoList(AaListParamsStdModelInfo aaListParamsStdModelInfo);
 
-    public boolean updateStdModelInfo(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo);
+    public boolean updateStdModelInfo(AaListParamsStdModelInfo aaListParamsStdModelInfo);
 
     public boolean saveOrUpdateStdModelInfo(Object entity);
 

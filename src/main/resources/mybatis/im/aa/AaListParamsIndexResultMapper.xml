@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.aa.mapper.AaListParamsIndexResultMapper">
-    <resultMap id="BaseResultMap" type="AaListParamsIndexVo">
+    <resultMap id="BaseResultMap" type="AaListParamsIndex">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="company_name" property="factoryName" jdbcType="VARCHAR"/>
         <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
@@ -97,7 +97,7 @@
 		select max(chk_dt) from qtech_eq_dwd.im_aa_list_chk_result_detail
 	</select>
 
-	<select id="list" resultMap="BaseResultMap" parameterType="aaListParamsCheckResultVo">
+	<select id="list" resultMap="BaseResultMap" parameterType="aaListParamsCheckResult">
 		SELECT
 			CASE
 				WHEN company_name IS NULL THEN '总计'

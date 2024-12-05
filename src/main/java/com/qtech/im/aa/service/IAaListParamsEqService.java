@@ -1,7 +1,8 @@
 package com.qtech.im.aa.service;
 
 
-import com.qtech.im.aa.domain.AaListParamsEqVo;
+import com.qtech.im.aa.domain.AaListParamsEq;
+import com.qtech.im.aa.vo.AaListParamsEqVo;
 
 import java.util.List;
 
@@ -14,22 +15,22 @@ import java.util.List;
 
 
 public interface IAaListParamsEqService {
-    public List<AaListParamsEqVo> selectAaListParamsEqList(AaListParamsEqVo aaListParamsEqVo);
+    public List<AaListParamsEqVo> selectAaListParamsEqList(AaListParamsEq aaListParamsEq);
 
-    public AaListParamsEqVo selectOneAaListParamsEq(AaListParamsEqVo aaListParamsEqVo);
+    public AaListParamsEq selectOneAaListParamsEq(AaListParamsEq aaListParamsEq);
 
-    public Boolean isExist(AaListParamsEqVo aaListParamsEqVo);
+    public Boolean isExist(AaListParamsEq aaListParamsEq);
 
-    public AaListParamsEqVo selectAaListParamsEqById(String id);
+    public AaListParamsEq selectAaListParamsEqById(String id);
 
-    public int editAaListParamsIgnoreEq(AaListParamsEqVo aaListParamsEqVo);
+    public int editAaListParamsIgnoreEq(AaListParamsEq aaListParamsEq);
 
-    public int insertAaListParamsIgnoreEq(AaListParamsEqVo aaListParamsEqVo);
+    public int insertAaListParamsIgnoreEq(AaListParamsEq aaListParamsEq);
 
     public void cleanupDayShiftIgnores(); // 实现清理白班的忽略状态
 
     public void cleanupNightShiftIgnores(); // 实现清理夜班的忽略状态
     public void cleanupIgnores(); // 这里根据你存储`simId`的策略清理Redis中的忽略键
 
-    public int editAaListParamsEq(AaListParamsEqVo aaListParamsEqVo);
+    public int editAaListParamsEq(AaListParamsEq aaListParamsEq);
 }

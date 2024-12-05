@@ -2,8 +2,9 @@ package com.qtech.im.aa.controller;
 
 import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.aa.domain.AaListParamsCheckResultVo;
+import com.qtech.im.aa.domain.AaListParamsCheckResult;
 import com.qtech.im.aa.service.IAaListParamsHistoryCheckResultService;
+import com.qtech.im.aa.vo.AaListParamsCheckResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,10 +24,11 @@ public class AaListParamsHistoryCheckResultController extends BaseController {
 
     @Autowired
     private IAaListParamsHistoryCheckResultService aaListParamsCheckResultService;
+
     @RequestMapping("/list")
-    public TableDataInfo list(AaListParamsCheckResultVo aaListParamsCheckResultVo) {
+    public TableDataInfo list(AaListParamsCheckResult aaListParamsCheckResult) {
         startPage();
-        List<AaListParamsCheckResultVo> list = aaListParamsCheckResultService.selectAaListParamsCheckResultList(aaListParamsCheckResultVo);
+        List<AaListParamsCheckResultVo> list = aaListParamsCheckResultService.selectAaListParamsCheckResultList(aaListParamsCheckResult);
         return getDataTable(list);
     }
 }

@@ -1,6 +1,6 @@
 package com.qtech.im.aa.mapper;
 
-import com.qtech.im.aa.domain.AaListParamsIndexVo;
+import com.qtech.im.aa.domain.AaListParamsIndex;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Mapper
 public interface AaListParamsIndexResultMapper {
-    public List<AaListParamsIndexVo> list(AaListParamsIndexVo aaListParamsIndexVo);
+    public List<AaListParamsIndex> list(AaListParamsIndex aaListParamsIndex);
 
     public LocalDateTime updateTime();
 }

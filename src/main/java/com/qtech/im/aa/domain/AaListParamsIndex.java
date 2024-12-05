@@ -16,7 +16,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class AaListParamsIndexVo extends ImEqsAndNetCnt {
+public class AaListParamsIndex extends ImEqsAndNetCnt {
     @Excel(name = "点检总数")
     private int chkCnt;
     @Excel(name = "点检通过数")

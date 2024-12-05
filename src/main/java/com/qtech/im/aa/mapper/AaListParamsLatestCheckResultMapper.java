@@ -1,6 +1,6 @@
 package com.qtech.im.aa.mapper;
 
-import com.qtech.im.aa.domain.AaListParamsCheckResultVo;
+import com.qtech.im.aa.domain.AaListParamsCheckResult;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,9 +14,9 @@ import java.util.List;
 
 @Mapper
 public interface AaListParamsLatestCheckResultMapper {
-    public List<AaListParamsCheckResultVo> selectAaListParamsLatestCheckResultList(AaListParamsCheckResultVo aaListParamsCheckResultVo);
+    public List<AaListParamsCheckResult> selectAaListParamsLatestCheckResultList(AaListParamsCheckResult aaListParamsCheckResult);
 
-    public List<AaListParamsCheckResultVo> selectGroupNameList(AaListParamsCheckResultVo aaListParamsCheckResultVo);
+    public List<AaListParamsCheckResult> selectGroupNameList(AaListParamsCheckResult aaListParamsCheckResult);
 
-    public List<AaListParamsCheckResultVo> selectFactoryNames();
+    public List<AaListParamsCheckResult> selectFactoryNames();
 }

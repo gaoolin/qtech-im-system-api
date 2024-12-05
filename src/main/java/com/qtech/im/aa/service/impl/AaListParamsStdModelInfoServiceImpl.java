@@ -6,11 +6,12 @@ import com.qtech.common.utils.StringUtils;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.aa.domain.AaListParamsStdModel;
-import com.qtech.im.aa.domain.AaListParamsStdModelInfoVo;
+import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
 import com.qtech.im.aa.mapper.AaListParamsStdModelInfoMapper;
 import com.qtech.im.aa.mapper.AaListParamsStdModelMapper;
 import com.qtech.im.aa.service.IAaListParamsStdModelInfoService;
 import com.qtech.im.aa.utils.ModelDetailConvertToModelInfo;
+import com.qtech.im.aa.vo.AaListParamsStdModelInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.qtech.share.aa.constant.ComparisonConstants.REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX;
@@ -32,58 +34,62 @@ import static com.qtech.share.aa.constant.ComparisonConstants.REDIS_COMPARISON_M
 @Slf4j
 @DataSource(DataSourceType.FOURTH)
 @Service
-public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParamsStdModelInfoMapper, AaListParamsStdModelInfoVo> implements IAaListParamsStdModelInfoService {
+public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParamsStdModelInfoMapper, AaListParamsStdModelInfo> implements IAaListParamsStdModelInfoService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     private AaListParamsStdModelMapper aaListParamsStdModelMapper;
 
-    public static LambdaQueryWrapper<AaListParamsStdModelInfoVo> buildQueryWrapper(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
-        LambdaQueryWrapper<AaListParamsStdModelInfoVo> wrapper = new LambdaQueryWrapper<>();
-        if (aaListParamsStdModelInfoVo.getId() != null) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getId, aaListParamsStdModelInfoVo.getId());
+    public static LambdaQueryWrapper<AaListParamsStdModelInfo> buildQueryWrapper(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
+        LambdaQueryWrapper<AaListParamsStdModelInfo> wrapper = new LambdaQueryWrapper<>();
+        if (aaListParamsStdModelInfo.getId() != null) {
+            wrapper.eq(AaListParamsStdModelInfo::getId, aaListParamsStdModelInfo.getId());
         }
-        if (StringUtils.isNotBlank(aaListParamsStdModelInfoVo.getProdType())) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getProdType, aaListParamsStdModelInfoVo.getProdType());
+        if (StringUtils.isNotBlank(aaListParamsStdModelInfo.getProdType())) {
+            wrapper.eq(AaListParamsStdModelInfo::getProdType, aaListParamsStdModelInfo.getProdType());
         }
-        if (aaListParamsStdModelInfoVo.getListParams() != null) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getListParams, aaListParamsStdModelInfoVo.getListParams());
+        if (aaListParamsStdModelInfo.getListParams() != null) {
+            wrapper.eq(AaListParamsStdModelInfo::getListParams, aaListParamsStdModelInfo.getListParams());
         }
-        if (aaListParamsStdModelInfoVo.getItemParams() != null) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getItemParams, aaListParamsStdModelInfoVo.getItemParams());
+        if (aaListParamsStdModelInfo.getItemParams() != null) {
+            wrapper.eq(AaListParamsStdModelInfo::getItemParams, aaListParamsStdModelInfo.getItemParams());
         }
-        if (aaListParamsStdModelInfoVo.getStatus() != null) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getStatus, aaListParamsStdModelInfoVo.getStatus());
+        if (aaListParamsStdModelInfo.getStatus() != null) {
+            wrapper.eq(AaListParamsStdModelInfo::getStatus, aaListParamsStdModelInfo.getStatus());
         }
-        if (StringUtils.isNotBlank(aaListParamsStdModelInfoVo.getProvider())) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getProvider, aaListParamsStdModelInfoVo.getProvider());
+        if (StringUtils.isNotBlank(aaListParamsStdModelInfo.getProvider())) {
+            wrapper.eq(AaListParamsStdModelInfo::getProvider, aaListParamsStdModelInfo.getProvider());
         }
-        if (StringUtils.isNotBlank(aaListParamsStdModelInfoVo.getBelongTo())) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getBelongTo, aaListParamsStdModelInfoVo.getBelongTo());
+        if (StringUtils.isNotBlank(aaListParamsStdModelInfo.getBelongTo())) {
+            wrapper.eq(AaListParamsStdModelInfo::getBelongTo, aaListParamsStdModelInfo.getBelongTo());
         }
-        if (StringUtils.isNotBlank(aaListParamsStdModelInfoVo.getCreateBy())) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getCreateBy, aaListParamsStdModelInfoVo.getCreateBy());
+        if (StringUtils.isNotBlank(aaListParamsStdModelInfo.getCreateBy())) {
+            wrapper.eq(AaListParamsStdModelInfo::getCreateBy, aaListParamsStdModelInfo.getCreateBy());
         }
-        if (aaListParamsStdModelInfoVo.getCreateTime() != null) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getCreateTime, aaListParamsStdModelInfoVo.getCreateTime());
+        if (aaListParamsStdModelInfo.getCreateTime() != null) {
+            wrapper.eq(AaListParamsStdModelInfo::getCreateTime, aaListParamsStdModelInfo.getCreateTime());
         }
-        if (StringUtils.isNotBlank(aaListParamsStdModelInfoVo.getUpdateBy())) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getUpdateBy, aaListParamsStdModelInfoVo.getUpdateBy());
+        if (StringUtils.isNotBlank(aaListParamsStdModelInfo.getUpdateBy())) {
+            wrapper.eq(AaListParamsStdModelInfo::getUpdateBy, aaListParamsStdModelInfo.getUpdateBy());
         }
-        if (aaListParamsStdModelInfoVo.getUpdateTime() != null) {
-            wrapper.eq(AaListParamsStdModelInfoVo::getUpdateTime, aaListParamsStdModelInfoVo.getUpdateTime());
+        if (aaListParamsStdModelInfo.getUpdateTime() != null) {
+            wrapper.eq(AaListParamsStdModelInfo::getUpdateTime, aaListParamsStdModelInfo.getUpdateTime());
         }
 
         return wrapper;
     }
 
     @Override
-    public List<AaListParamsStdModelInfoVo> selectStdModelInfoList(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
+    public List<AaListParamsStdModelInfoVo> selectStdModelInfoList(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
         try {
-            LambdaQueryWrapper<AaListParamsStdModelInfoVo> wrapper = buildQueryWrapper(aaListParamsStdModelInfoVo);
-            wrapper.orderByDesc(AaListParamsStdModelInfoVo::getCreateTime);
-            return list(wrapper);
+            ArrayList<AaListParamsStdModelInfoVo> vos = new ArrayList<>();
+            LambdaQueryWrapper<AaListParamsStdModelInfo> wrapper = buildQueryWrapper(aaListParamsStdModelInfo);
+            wrapper.orderByDesc(AaListParamsStdModelInfo::getCreateTime);
+            list(wrapper).forEach(modelInfo -> {
+                vos.add(new AaListParamsStdModelInfoVo(modelInfo));
+            });
+            return vos;
         } catch (Exception e) {
             log.error("selectStdModelInfoList:", e);
             throw new RuntimeException("查询数据库发生异常，请联系管理员。");
@@ -92,23 +98,23 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
 
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
-    public boolean updateStdModelInfo(AaListParamsStdModelInfoVo aaListParamsStdModelInfoVo) {
+    public boolean updateStdModelInfo(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
         try {
-            String prodType = aaListParamsStdModelInfoVo.getProdType();
+            String prodType = aaListParamsStdModelInfo.getProdType();
             stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
 
-            LambdaQueryWrapper<AaListParamsStdModelInfoVo> queryWrapper = new LambdaQueryWrapper<>();
-            if (StringUtils.isBlank(prodType) && aaListParamsStdModelInfoVo.getId() == null) {
+            LambdaQueryWrapper<AaListParamsStdModelInfo> queryWrapper = new LambdaQueryWrapper<>();
+            if (StringUtils.isBlank(prodType) && aaListParamsStdModelInfo.getId() == null) {
                 throw new RuntimeException("产品类型不能为空！");
             } else {
                 if (StringUtils.isNotBlank(prodType)) {
-                    queryWrapper.eq(AaListParamsStdModelInfoVo::getProdType, prodType);
+                    queryWrapper.eq(AaListParamsStdModelInfo::getProdType, prodType);
                 }
-                if (aaListParamsStdModelInfoVo.getId() != null) {
-                    queryWrapper.eq(AaListParamsStdModelInfoVo::getId, aaListParamsStdModelInfoVo.getId());
+                if (aaListParamsStdModelInfo.getId() != null) {
+                    queryWrapper.eq(AaListParamsStdModelInfo::getId, aaListParamsStdModelInfo.getId());
                 }
             }
-            return update(aaListParamsStdModelInfoVo, queryWrapper);
+            return update(aaListParamsStdModelInfo, queryWrapper);
         } catch (Exception e) {
             log.error("updateStdModelInfo:", e);
             throw new RuntimeException("修改数据发生异常，请联系管理员。");
@@ -118,12 +124,12 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
     @Override
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     public boolean saveOrUpdateStdModelInfo(Object entity) {
-        AaListParamsStdModelInfoVo modelInfo = null;
+        AaListParamsStdModelInfo modelInfo = null;
         AaListParamsStdModel modelDetail = null;
 
         try {
-            if (entity instanceof AaListParamsStdModelInfoVo) {
-                modelInfo = (AaListParamsStdModelInfoVo) entity;
+            if (entity instanceof AaListParamsStdModelInfo) {
+                modelInfo = (AaListParamsStdModelInfo) entity;
             } else if (entity instanceof AaListParamsStdModel) {
                 modelDetail = (AaListParamsStdModel) entity;
                 modelInfo = ModelDetailConvertToModelInfo.doConvert(modelDetail);
@@ -158,10 +164,10 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
 
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
-    public boolean doSaveOrUpdate(AaListParamsStdModelInfoVo modelInfo) {
+    public boolean doSaveOrUpdate(AaListParamsStdModelInfo modelInfo) {
         try {
-            LambdaQueryWrapper<AaListParamsStdModelInfoVo> wrapper = new LambdaQueryWrapper<>();
-            wrapper.eq(AaListParamsStdModelInfoVo::getProdType, modelInfo.getProdType());
+            LambdaQueryWrapper<AaListParamsStdModelInfo> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(AaListParamsStdModelInfo::getProdType, modelInfo.getProdType());
             if (getOne(wrapper) != null) {
                 stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + modelInfo.getProdType());
                 return update(modelInfo, wrapper);
@@ -183,7 +189,7 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
     @Override
     public boolean deleteStdModelInfoById(Long id) {
         try {
-            AaListParamsStdModelInfoVo modelInfo = getById(id);
+            AaListParamsStdModelInfo modelInfo = getById(id);
             if (modelInfo == null) {
                 return false; // 或者抛出异常
             }

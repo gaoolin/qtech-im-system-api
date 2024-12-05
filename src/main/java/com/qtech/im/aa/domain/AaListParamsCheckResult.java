@@ -15,6 +15,6 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class AaListParamsCheckResultVo extends ImReportBaseInfo {
+public class AaListParamsCheckResult extends ImReportBaseInfo {
     private Integer flag;
 }

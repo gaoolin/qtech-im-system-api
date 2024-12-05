@@ -2,15 +2,17 @@ package com.qtech.im.aa.service.impl;
 
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
-import com.qtech.im.aa.domain.AaListParamsIndexVo;
+import com.qtech.im.aa.domain.AaListParamsIndex;
 import com.qtech.im.aa.mapper.AaListParamsIndexResultMapper;
 import com.qtech.im.aa.service.IAaListParamsIndexService;
+import com.qtech.im.aa.vo.AaListParamsIndexVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * author :  gaozhilin
@@ -27,9 +29,11 @@ public class AaLIstParamsIndexServiceImpl implements IAaListParamsIndexService {
     private AaListParamsIndexResultMapper aaListParamsIndexResultMapper;
 
     @Override
-    public List<AaListParamsIndexVo> selectAaListParamsIndexResultList(AaListParamsIndexVo aaListParamsIndexVo) {
+    public List<AaListParamsIndexVo> selectAaListParamsIndexResultList(AaListParamsIndex aaListParamsIndex) {
+
         try {
-            return aaListParamsIndexResultMapper.list(aaListParamsIndexVo);
+            List<AaListParamsIndex> list = aaListParamsIndexResultMapper.list(aaListParamsIndex);
+            return list.stream().map(AaListParamsIndexVo::new).collect(Collectors.toList());
         } catch (Exception e) {
             throw new RuntimeException("查询数据库发生异常，请联系系统负责人！");
         }

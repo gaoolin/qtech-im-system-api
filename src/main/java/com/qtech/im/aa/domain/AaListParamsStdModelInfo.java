@@ -1,12 +1,14 @@
 package com.qtech.im.aa.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.qtech.framework.web.domain.BaseEntity;
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.util.Map;
 
 /**
  * author :  gaozhilin
@@ -17,8 +19,7 @@ import java.util.Date;
 
 @Data
 @TableName(value = "IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO")
-public class AaListParamsStdModelInfoVo implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class AaListParamsStdModelInfo extends BaseEntity {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private String prodType;
@@ -27,9 +28,9 @@ public class AaListParamsStdModelInfoVo implements Serializable {
     private Integer status;
     private String provider;
     private String belongTo;
-    private String createBy;
-    private Date createTime;
-    private String updateBy;
-    private Date updateTime;
-    private String remark;
+    @TableField(exist = false)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Map<String, Object> params;
+    @TableField(exist = false)
+    private String searchValue;
 }

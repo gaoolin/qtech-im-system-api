@@ -1,7 +1,8 @@
 package com.qtech.im.aa.service;
 
 
-import com.qtech.im.aa.domain.AaListParamsCheckResultVo;
+import com.qtech.im.aa.domain.AaListParamsCheckResult;
+import com.qtech.im.aa.vo.AaListParamsCheckResultVo;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ import java.util.List;
 
 public interface IAaListParamsHistoryCheckResultService {
 
-    public List<AaListParamsCheckResultVo> selectAaListParamsCheckResultList(AaListParamsCheckResultVo aaListParamsCheckResultVo);
+    public List<AaListParamsCheckResultVo> selectAaListParamsCheckResultList(AaListParamsCheckResult aaListParamsCheckResult);
 }

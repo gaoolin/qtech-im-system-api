@@ -2,13 +2,15 @@ package com.qtech.im.aa.service.impl;
 
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
-import com.qtech.im.aa.domain.AaListParamsCheckResultVo;
+import com.qtech.im.aa.domain.AaListParamsCheckResult;
 import com.qtech.im.aa.mapper.AaListParamsHistoryCheckResultMapper;
 import com.qtech.im.aa.service.IAaListParamsHistoryCheckResultService;
+import com.qtech.im.aa.vo.AaListParamsCheckResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,15 +27,17 @@ public class AaListParamsHistoryCheckResultServiceImpl implements IAaListParamsH
 
     @Autowired
     private AaListParamsHistoryCheckResultMapper aaListParamsHistoryCheckResultMapper;
+
     @Override
-    public List<AaListParamsCheckResultVo> selectAaListParamsCheckResultList(AaListParamsCheckResultVo aaListParamsCheckResultVo) {
-        List<AaListParamsCheckResultVo> list = null;
+    public List<AaListParamsCheckResultVo> selectAaListParamsCheckResultList(AaListParamsCheckResult aaListParamsCheckResult) {
+        ArrayList<AaListParamsCheckResultVo> vos = new ArrayList<>();
         try {
-            list = aaListParamsHistoryCheckResultMapper.selectAaListParamsCheckResultList(aaListParamsCheckResultVo);
+            List<AaListParamsCheckResult> list = aaListParamsHistoryCheckResultMapper.selectAaListParamsCheckResultList(aaListParamsCheckResult);
+            list.forEach(item -> vos.add(new AaListParamsCheckResultVo(item)));
+            return vos;
         } catch (Exception e) {
             log.error("查询数据库发生异常，请联系管理员！\n{}", e.getMessage());
             throw new RuntimeException("查询数据库发生异常，请联系管理员！");
         }
-        return list;
     }
 }

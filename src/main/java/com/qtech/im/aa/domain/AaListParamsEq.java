@@ -23,15 +23,11 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class AaListParamsEqVo extends ImReportBaseInfo {
-    @Excel(name = "状态", dictType = "aa_list_params_ignore_status", defaultValue = "受控")
+public class AaListParamsEq extends ImReportBaseInfo {
     private Integer statusCode;
     private String source;
-    @Excel(name = "操作次数")
     private Integer opCnt;
-    @Excel(name = "操作人")
     private String updateBy;
-    @Excel(name = "上次操作时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 

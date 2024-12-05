@@ -1,6 +1,6 @@
 package com.qtech.im.aa.service;
 
-import com.qtech.im.aa.domain.AaStdProgramManagementVo;
+import com.qtech.im.aa.domain.AaStdProgramManagement;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import java.util.List;
 
 
 public interface IAaStdProgramManagementService {
-    public AaStdProgramManagementVo selectAaStdProgramManagementById(Long id);
-    public List<AaStdProgramManagementVo> selectAaStdProgramManagementList(AaStdProgramManagementVo aaStdProgramManagementVo);
-    public AaStdProgramManagementVo selectOneAaStdProgramManagement(AaStdProgramManagementVo aaStdProgramManagementVo);
-    public int insertAaStdProgramManagement(AaStdProgramManagementVo aaStdProgramManagementVo);
-    public int updateAaStdProgramManagement(AaStdProgramManagementVo aaStdProgramManagementVo);
+    public AaStdProgramManagement selectAaStdProgramManagementById(Long id);
+    public List<AaStdProgramManagement> selectAaStdProgramManagementList(AaStdProgramManagement aaStdProgramManagement);
+    public AaStdProgramManagement selectOneAaStdProgramManagement(AaStdProgramManagement aaStdProgramManagement);
+    public int insertAaStdProgramManagement(AaStdProgramManagement aaStdProgramManagement);
+    public int updateAaStdProgramManagement(AaStdProgramManagement aaStdProgramManagement);
     public int deleteAaStdProgramManagementById(Long id);
     public int deleteAaStdProgramManagementByIds(Long[] ids);
 }

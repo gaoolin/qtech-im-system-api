@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.aa.mapper.AaListParamsEqMapper">
-    <resultMap id="aaListParamsEqResult" type="AaListParamsEqVo">
+    <resultMap id="aaListParamsEqResult" type="AaListParamsEq">
         <result property="id" column="id"/>
         <result property="factoryName" column="company_name"/>
         <result property="groupName" column="group_name"/>
@@ -92,7 +92,7 @@
             c.pbox_id = e.sim_id
     </sql>
 
-    <insert id="insertAaListParamsIgnoreEq" parameterType="AaListParamsEqVo">
+    <insert id="insertAaListParamsIgnoreEq" parameterType="AaListParamsEq">
         insert into qtech_eq_ads.im_eq_reverse_ignore_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="simId != null">sim_id,</if>
