@@ -1,6 +1,8 @@
 package com.qtech.im.wire.service;
 
-import com.qtech.im.wire.domain.ImWireUsageStandard;
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.wire.domain.ImStandardGoldWireUsage;
+import com.qtech.im.wire.vo.ImStandardGoldWireUsageVo;
 
 import java.util.List;
 
@@ -10,15 +12,14 @@ import java.util.List;
  * @author gaozhilin
  * @date 2023-03-29
  */
-public interface IWireUsageStandardService
-{
+public interface IGoldWireUsageStandardService {
     /**
      * 查询金线标准用量信息
      *
-     * @param prodType 金线标准用量信息主键
+     * @param prodTypes 金线标准用量信息主键
      * @return 金线标准用量信息
      */
-    public ImWireUsageStandard selectWireUsageStandardByProdType(String prodType);
+    public List<ImStandardGoldWireUsage> listByProdType(List<String> prodTypes);
 
     /**
      * 查询金线标准用量信息列表
@@ -26,7 +27,7 @@ public interface IWireUsageStandardService
      * @param imWireUsageStandard 金线标准用量信息
      * @return 金线标准用量信息集合
      */
-    public List<ImWireUsageStandard> selectWireUsageStandardList(ImWireUsageStandard imWireUsageStandard);
+    public QtechImVoUtil.QtechImVos<ImStandardGoldWireUsageVo> list(ImStandardGoldWireUsage imWireUsageStandard);
 
     /**
      * 新增金线标准用量信息
@@ -34,7 +35,7 @@ public interface IWireUsageStandardService
      * @param imWireUsageStandard 金线标准用量信息
      * @return 结果
      */
-    public int insertWireUsageStandard(ImWireUsageStandard imWireUsageStandard);
+    int addOne(ImStandardGoldWireUsageVo imWireUsageStandard);
 
     /**
      * 修改金线标准用量信息
@@ -42,7 +43,7 @@ public interface IWireUsageStandardService
      * @param imWireUsageStandard 金线标准用量信息
      * @return 结果
      */
-    public int updateWireUsageStandard(ImWireUsageStandard imWireUsageStandard);
+    public int update(ImStandardGoldWireUsage imWireUsageStandard);
 
     /**
      * 删除金线标准用量信息信息
@@ -50,12 +51,14 @@ public interface IWireUsageStandardService
      * @param prodType 金线标准用量信息主键
      * @return 结果
      */
-    public int deleteWireUsageStandardByProdType(String prodType);
+    public int remove(String prodType);
 
     /**
-     * @description  批量导入金线标准用量数据
      * @param imWireUsageStandards
      * @return int
+     * @description 批量导入金线标准用量数据
      */
-    public String importWireUsageStandard(List<ImWireUsageStandard> imWireUsageStandards);
+    public String addAll(List<ImStandardGoldWireUsageVo> imWireUsageStandards);
+
+    public ImStandardGoldWireUsage getByProdType(String prodType);
 }

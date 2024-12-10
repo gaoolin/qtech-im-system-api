@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.wb.mapper.WbOlpIndexMapper">
 
-    <resultMap id="WbOlpTrendingVoResult" type="WbOlpTrendingVo">
+    <resultMap id="WbOlpTrendingVoResult" type="WbOlpTrending">
         <result property="dt" column="dt"/>
         <result property="statusCode" column="code"/>
         <result property="amount" column="cnt"/>

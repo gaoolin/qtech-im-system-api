@@ -4,8 +4,9 @@ import com.qtech.common.utils.poi.ExcelUtil;
 import com.qtech.framework.aspectj.lang.annotation.Log;
 import com.qtech.framework.aspectj.lang.enums.BusinessType;
 import com.qtech.framework.web.domain.AjaxResult;
-import com.qtech.im.wire.domain.ImWireUsageStandard;
-import com.qtech.im.wire.service.IWireUsageStandardService;
+import com.qtech.im.wire.domain.ImStandardGoldWireUsage;
+import com.qtech.im.wire.service.IGoldWireUsageStandardService;
+import com.qtech.im.wire.vo.ImStandardGoldWireUsageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,22 +28,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/biz/wire/standard")
-public class WireUsageImportController {
+public class GoldWireUsageImportController {
 
     @Autowired
-    private IWireUsageStandardService wireUsageStandardService;
+    private IGoldWireUsageStandardService wireUsageStandardService;
 
     /**
      * 导入标准模板
      */
-    // @RequiresPermissions("cob/wb:stdmodel:import")
     @PreAuthorize("@ss.hasPermi('biz/wire/standard:import')")
     @Log(title = "金线标准用量", businessType = BusinessType.IMPORT)
     @PostMapping("/import")
-    public AjaxResult importStdMod(MultipartFile file) throws Exception {
-        ExcelUtil<ImWireUsageStandard> util = new ExcelUtil<>(ImWireUsageStandard.class);
-        List<ImWireUsageStandard> imWireUsageStandards = util.importExcel(file.getInputStream());
-        String countN = wireUsageStandardService.importWireUsageStandard(imWireUsageStandards);
+    public AjaxResult add(MultipartFile file) throws Exception {
+        ExcelUtil<ImStandardGoldWireUsageVo> util = new ExcelUtil<>(ImStandardGoldWireUsageVo.class);
+        List<ImStandardGoldWireUsageVo> imStandardGoldWireUsageVos = util.importExcel(file.getInputStream());
+        String countN = wireUsageStandardService.addAll(imStandardGoldWireUsageVos);
         String[] split = countN.split("-");
         int insert = Integer.parseInt(split[0]);
         int exist = Integer.parseInt(split[1]);
@@ -58,7 +58,7 @@ public class WireUsageImportController {
     @PostMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response) throws IOException {
 
-        ExcelUtil<ImWireUsageStandard> util = new ExcelUtil<>(ImWireUsageStandard.class);
+        ExcelUtil<ImStandardGoldWireUsageVo> util = new ExcelUtil<>(ImStandardGoldWireUsageVo.class);
         util.importTemplateExcel(response, "金线标准用量表");
     }
 }

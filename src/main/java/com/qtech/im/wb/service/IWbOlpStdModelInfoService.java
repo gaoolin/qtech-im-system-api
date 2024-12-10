@@ -2,7 +2,6 @@ package com.qtech.im.wb.service;
 
 
 import com.qtech.im.wb.domain.WbOlpStdModInfo;
-import com.qtech.im.wb.domain.WbOlpTrendingVo;
 
 import java.util.List;
 

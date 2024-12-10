@@ -5,8 +5,11 @@ import com.qtech.framework.aspectj.lang.annotation.Log;
 import com.qtech.framework.aspectj.lang.enums.BusinessType;
 import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
+import com.qtech.im.common.domain.ImEqsNetCnt;
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.eqn.domain.ImEqsNetAndRemoteInfo;
 import com.qtech.im.eqn.service.IEqNetworkingService;
+import com.qtech.im.eqn.vo.ImEqsNetAndRemoteInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,31 +34,30 @@ public class EqNetworkingController extends BaseController {
     private IEqNetworkingService eqNetworkingService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public TableDataInfo list(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
+    public TableDataInfo list(ImEqsNetAndRemoteInfo imEqsNetAndRemoteInfo) {
         startPage();
-        List<ImEqsAndNetCntVo> list = eqNetworkingService.selectEqNetworkingList(imEqsNetworkingAndRemoteInfoVo);
-        return getDataTable(list);
+        QtechImVoUtil.QtechImVos<ImEqsNetAndRemoteInfoVo> list = eqNetworkingService.list(imEqsNetAndRemoteInfo);
+        return QtechImVoUtil.getVoDataTable(list);
     }
 
     @RequestMapping(value = "offlineEqs", method = RequestMethod.GET)
-    public TableDataInfo offlineEqs(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
+    public TableDataInfo offlineEqs(ImEqsNetAndRemoteInfo imEqsNetAndRemoteInfo) {
         startPage();
-        List<ImEqsAndNetCntVo> list = eqNetworkingService.selectEqNetworkingOfflineList(imEqsNetworkingAndRemoteInfoVo);
+        List<ImEqsNetAndRemoteInfo> list = eqNetworkingService.offlineList(imEqsNetAndRemoteInfo);
         return getDataTable(list);
     }
 
     @Log(title = "设备联网明细", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
-        List<ImEqsAndNetCntVo> list = eqNetworkingService.selectEqNetworkingList(imEqsNetworkingAndRemoteInfoVo);
-        ExcelUtil<ImEqsAndNetCntVo> util = new ExcelUtil<ImEqsAndNetCntVo>(ImEqsAndNetCntVo.class);
-        util.exportExcel(response, list, "设备联网明细");
+    public void export(HttpServletResponse response, ImEqsNetAndRemoteInfo imEqsNetAndRemoteInfo) {
+        QtechImVoUtil.QtechImVos<ImEqsNetAndRemoteInfoVo> list = eqNetworkingService.list(imEqsNetAndRemoteInfo);
+        ExcelUtil<ImEqsNetAndRemoteInfoVo> util = new ExcelUtil<ImEqsNetAndRemoteInfoVo>(ImEqsNetAndRemoteInfoVo.class);
+        util.exportExcel(response, list.getData(), "设备联网明细");
     }
 
     @RequestMapping(value = "/agg", method = RequestMethod.GET)
-    public TableDataInfo selectEqNetworkingAgg(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
-        System.out.println(imEqsNetworkingAndRemoteInfoVo);
-        List<ImEqsAndNetCntVo> list = eqNetworkingService.selectEqNetworkingAgg(imEqsNetworkingAndRemoteInfoVo);
+    public TableDataInfo selectEqNetworkingAgg(ImEqsNetCnt imEqsNetAndRemoteInfo) {
+        List<ImEqsNetCnt> list = eqNetworkingService.agg(imEqsNetAndRemoteInfo);
         return getDataTable(list);
     }
 }

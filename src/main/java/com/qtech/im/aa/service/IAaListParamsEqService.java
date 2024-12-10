@@ -3,6 +3,8 @@ package com.qtech.im.aa.service;
 
 import com.qtech.im.aa.domain.AaListParamsEq;
 import com.qtech.im.aa.vo.AaListParamsEqVo;
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.wb.vo.WbOlpChkVo;
 
 import java.util.List;
 
@@ -15,9 +17,7 @@ import java.util.List;
 
 
 public interface IAaListParamsEqService {
-    public List<AaListParamsEqVo> selectAaListParamsEqList(AaListParamsEq aaListParamsEq);
-
-    public AaListParamsEq selectOneAaListParamsEq(AaListParamsEq aaListParamsEq);
+    public QtechImVoUtil.QtechImVos<AaListParamsEqVo> selectAaListParamsEqList(AaListParamsEq aaListParamsEq);
 
     public Boolean isExist(AaListParamsEq aaListParamsEq);
 

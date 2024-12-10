@@ -1,8 +1,8 @@
 package com.qtech.im.wb.service;
 
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.wb.domain.WbOlpChk;
 import com.qtech.im.wb.vo.WbOlpChkVo;
-
-import java.util.List;
 
 /**
  * author :  gaozhilin
@@ -14,5 +14,5 @@ import java.util.List;
 
 public interface IWbOlpChkService {
 
-    List<WbOlpChkVo> selectWbOlpChkList(WbOlpChkVo vo, int daysFilter);
+    QtechImVoUtil.QtechImVos<WbOlpChkVo> selectWbOlpChkList(WbOlpChk vo, int daysFilter);
 }

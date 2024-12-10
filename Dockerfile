@@ -35,7 +35,8 @@ ENV SPRING_PROFILES_ACTIVE=prod
 ENV JAVA_OPTS="-Dloader.path=/home/libs/ -Dfile.encoding=utf8 -Djava.security.egd=file:/dev/./urandom -Dlogging.file.path=${LOG_PATH}"
 
 # 创建日志目录
-RUN mkdir -p ${LOG_PATH} && chown -R 1000:1000 ${LOG_PATH}
+# RUN mkdir -p ${LOG_PATH} && chown -R 1000:1000 ${LOG_PATH}
+RUN mkdir -p ${LOG_PATH} && chmod -R 777 ${LOG_PATH}
 
 EXPOSE 8080
 

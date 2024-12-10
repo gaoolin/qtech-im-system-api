@@ -1,7 +1,7 @@
 package com.qtech.im.qcp.mapper;
 
-import com.qtech.im.qcp.domain.QcpParamsDetailVo;
-import com.qtech.im.qcp.domain.QcpParamsVo;
+import com.qtech.im.qcp.domain.QcpParamsDetail;
+import com.qtech.im.qcp.domain.QcpParams;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -17,9 +17,9 @@ import java.util.List;
 @Repository
 public interface QcpParamsMapper {
 
-    public List<QcpParamsVo> selectQcpParamsOverviewList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, QcpParamsVo qcpParams);
+    public List<QcpParams> selectQcpParamsOverviewList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, QcpParams qcpParams);
 
-    public List<QcpParamsDetailVo> selectQcpParamsList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, QcpParamsDetailVo qcpParamsDetailVo);
+    public List<QcpParamsDetail> selectQcpParamsList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, QcpParamsDetail qcpParamsDetail);
 
     public String getMaxTime();
 

@@ -1,7 +1,10 @@
 package com.qtech.im.wb.service;
 
 
-import com.qtech.im.wb.domain.WbOlpPercentageVo;
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.wb.domain.WbOlpPercentage;
+import com.qtech.im.wb.vo.WbOlpChkVo;
+import com.qtech.im.wb.vo.WbOlpPercentageVo;
 
 import java.util.List;
 
@@ -15,5 +18,5 @@ import java.util.List;
 
 public interface IWbOlpRatioService {
 
-    public List<WbOlpPercentageVo> getRatio(WbOlpPercentageVo wbOlpPercentageVo);
+    public QtechImVoUtil.QtechImVos<WbOlpPercentageVo> getRatio(WbOlpPercentage wbOlpPercentage);
 }

@@ -1,5 +1,6 @@
 package com.qtech.im.aa.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.framework.redis.RedisCache;
@@ -7,9 +8,9 @@ import com.qtech.im.aa.domain.AaListParamsEq;
 import com.qtech.im.aa.mapper.AaListParamsEqMapper;
 import com.qtech.im.aa.service.IAaListParamsEqService;
 import com.qtech.im.aa.vo.AaListParamsEqVo;
+import com.qtech.im.common.util.QtechImVoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -40,15 +41,17 @@ public class AaListParamsEqServiceImpl implements IAaListParamsEqService {
         this.redisCache = redisCache;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public List<AaListParamsEqVo> selectAaListParamsEqList(AaListParamsEq aaListParamsEq) {
+    public QtechImVoUtil.QtechImVos selectAaListParamsEqList(AaListParamsEq aaListParamsEq) {
         List<AaListParamsEqVo> vos = null;
         try {
             List<AaListParamsEq> list = aaListParamsEqMapper.selectAaListParamsEqList(aaListParamsEq);
+            long total = new PageInfo(list).getTotal();
             if (CollectionUtils.isNotEmpty(list)) {
                 vos = list.stream().map(AaListParamsEqVo::new).collect(Collectors.toList());
             }
-            return vos;
+            return new QtechImVoUtil.QtechImVos<>(vos, total);
         } catch (Exception e) {
             // 更具体的异常处理
             if (e instanceof NullPointerException) {
@@ -62,20 +65,6 @@ public class AaListParamsEqServiceImpl implements IAaListParamsEqService {
                 throw new RuntimeException("查询后台数据库发生异常，请联系管理员！");
             }
         }
-    }
-
-    @Override
-    public AaListParamsEq selectOneAaListParamsEq(AaListParamsEq aaListParamsEq) {
-        List<AaListParamsEq> list = aaListParamsEqMapper.selectAaListParamsEqList(aaListParamsEq);
-        if (CollectionUtils.isNotEmpty(list)) {
-            int size = list.size();
-            if (size > 1) {
-                log.error("selectOneAaListParamsEq error, size > 1");
-                throw new TooManyResultsException("selectOneAaListParamsEq error, size > 1");
-            }
-            return list.get(0);
-        }
-        return null;
     }
 
     @Override

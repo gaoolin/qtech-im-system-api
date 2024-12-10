@@ -22,33 +22,20 @@ import java.time.LocalDateTime;
 @Data
 public class ImReportBaseInfo extends BaseEntity {
     private Long id;
-    @Excel(name = "厂区")
     private String factoryName;  // 工厂名称
-    @Excel(name = "车间")
     private String groupName;  // 所属车间
-    @Excel(name = "站位")
     private String deptName;    // 所属部门
-    @Excel(name = "设备类型")
     private String deviceType;  // 设备类型
-    @Excel(name = "设备编号")
     private String eqId;  // 设备ID
-    @Excel(name = "机台号")
     private String mcId;  // 机台ID
-    @Excel(name = "机型")
     private String prodType; // 机型
-    @Excel(name = "盒子号")
     private String simId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "时间")
     private LocalDateTime dt;
     /** 默认值 null */
-    @Excel(name = "状态码")
     private Integer statusCode;
-    @Excel(name = "状态")
     private String status;
-    @Excel(name = "数量")
     private Long amount;
-    @Excel(name = "描述")
     private String description;
 }

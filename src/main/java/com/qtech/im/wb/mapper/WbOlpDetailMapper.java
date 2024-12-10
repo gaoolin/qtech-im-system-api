@@ -1,6 +1,7 @@
 package com.qtech.im.wb.mapper;
 
-import com.qtech.im.wb.domain.WbOlpParticularsVo;
+import com.qtech.im.wb.domain.WbOlpChk;
+import com.qtech.im.wb.vo.WbOlpChkVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,5 +16,5 @@ import java.util.List;
 @Mapper
 public interface WbOlpDetailMapper {
 
-    public List<WbOlpParticularsVo> getDetail(WbOlpParticularsVo wbOlpParticularsVo);
+    public List<WbOlpChk> getDetail(WbOlpChk wbOlpChk);
 }

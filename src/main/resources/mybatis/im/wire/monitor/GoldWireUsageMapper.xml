@@ -2,12 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qtech.im.wire.mapper.ImWireUsageMapper">
-    <resultMap id="BaseResult" type="ImWireUsage">
+<mapper namespace="com.qtech.im.wire.mapper.GoldWireUsageMapper">
+    <resultMap id="BaseResult" type="ImGoldWireUsage">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result property="factoryName" column="factory_name"/>
         <result property="groupName" column="workshop"/>
         <result property="deptName" column="dept_name"/>
+        <result property="mcId" column="machine_no" />
         <result property="deviceType" column="device_type"/>
         <result property="eqId" column="device_m_id"/>
         <result property="mcId" column="mc_id"/>
@@ -32,6 +33,7 @@
         select
             factory_name,
             workshop,
+            machine_no,
             device_m_id,
             prod_type,
             actual_wire_usage,
@@ -54,6 +56,7 @@
                 select
                     factory_name,
                     workshop,
+                    machine_no,
                     device_m_id,
                     prod_type,
                     actual_wire_usage,
@@ -68,6 +71,7 @@
                         select
                             factory_name,
                             workshop,
+                            machine_no,
                             device_m_id,
                             prod_type,
                             actual_wire_usage,
@@ -80,6 +84,7 @@
                                 select
                                     factory_name,
                                     workshop,
+                                    machine_no,
                                     device_m_id,
                                     prod_type,
                                     round(wire_dosage / yield / 1000000, 7) as actual_wire_usage,
@@ -91,6 +96,7 @@
                                         select
                                             factory_name,
                                             workshop,
+                                            machine_no,
                                             device_m_id,
                                             prod_type,
                                             sum(wire_usage) wire_dosage,
@@ -102,13 +108,14 @@
                         and create_date between #{params.beginTime} and #{params.endTime}
                     </if>
                 </where>
-                group by factory_name, workshop, device_m_id, prod_type) ta
+                group by factory_name, workshop, machine_no, device_m_id, prod_type) ta
                 left join qtech_biz_2.ads_wirebond_standard_usage tb on ta.prod_type = tb.mc_id) tc) td) te
                 left join qtech_biz_2.ads_aa_bom_info tf on te.prod_type = tf.part_spec
                 <where>
                     <if test="prodType != null  and prodType != ''">and prod_type = #{prodType}</if>
                     <if test="factoryName != null  and factoryName != ''">and factory_name = #{factoryName}</if>
                     <if test="groupName != null  and groupName != ''">and workshop = #{groupName}</if>
+                    <if test="mcId != null and mcId != ''">and machine_no = #{mcId}</if>
                     <if test="eqId != null and eqId != ''">and device_m_id = #{eqId}</if>
                     <if test="statusCode !=null">and statusCode = #{statusCode}</if>
                     <if test="wireWidth != null">and wire_width = #{wireWidth}</if>
@@ -193,14 +200,14 @@
                     ) td
             ) te
         left join qtech_biz_2.ads_aa_bom_info tf on te.prod_type = tf.part_spec
-                <where>
-                    <if test = "wireWidth != null">
-                        and wire_width = #{wireWidth}
-                    </if>
-                    <if test = "statusCode !=null">
-                        and statusCode = #{statusCode}
-                    </if>
-                </where>
+        <where>
+            <if test = "wireWidth != null">
+                and wire_width = #{wireWidth}
+            </if>
+            <if test = "statusCode !=null">
+                and statusCode = #{statusCode}
+            </if>
+        </where>
         order by
             yield desc
     </select>

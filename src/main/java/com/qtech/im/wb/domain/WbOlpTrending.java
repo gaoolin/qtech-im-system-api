@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class WbOlpTrendingVo extends ImReportBaseInfo {
+public class WbOlpTrending extends ImReportBaseInfo {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dt;
 }

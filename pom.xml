@@ -43,7 +43,6 @@
     </properties>
 
     <dependencies>
-
         <!-- SpringBoot 核心包 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

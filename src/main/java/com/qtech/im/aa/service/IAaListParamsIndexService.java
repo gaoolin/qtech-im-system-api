@@ -2,6 +2,8 @@ package com.qtech.im.aa.service;
 
 import com.qtech.im.aa.domain.AaListParamsIndex;
 import com.qtech.im.aa.vo.AaListParamsIndexVo;
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.wb.vo.WbOlpChkVo;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ import java.util.List;
 
 
 public interface IAaListParamsIndexService {
-    public List<AaListParamsIndexVo> selectAaListParamsIndexResultList(AaListParamsIndex aaListParamsIndex);
+    public QtechImVoUtil.QtechImVos<AaListParamsIndexVo> selectAaListParamsIndexResultList(AaListParamsIndex aaListParamsIndex);
 
     public String updateTime();
 }

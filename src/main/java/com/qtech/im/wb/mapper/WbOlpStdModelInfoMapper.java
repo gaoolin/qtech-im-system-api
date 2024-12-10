@@ -1,7 +1,7 @@
 package com.qtech.im.wb.mapper;
 
 import com.qtech.im.wb.domain.WbOlpStdModInfo;
-import com.qtech.im.wb.domain.WbOlpTrendingVo;
+import com.qtech.im.wb.domain.WbOlpTrending;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,5 +31,5 @@ public interface WbOlpStdModelInfoMapper {
 
     long getModelsTtlCnt();
 
-    List<WbOlpTrendingVo> getWbOlpTrending();
+    List<WbOlpTrending> getWbOlpTrending();
 }

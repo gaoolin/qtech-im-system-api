@@ -1,17 +1,15 @@
 package com.qtech.im.aa.controller;
 
 import com.qtech.framework.web.controller.BaseController;
-import com.qtech.framework.web.domain.R;
 import com.qtech.framework.web.page.TableDataInfo;
 import com.qtech.im.aa.domain.AaListParamsCheckResult;
 import com.qtech.im.aa.service.IAaListParamsLatestCheckResultService;
 import com.qtech.im.aa.vo.AaListParamsCheckResultVo;
+import com.qtech.im.common.util.QtechImVoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * author :  gaozhilin
@@ -30,18 +28,7 @@ public class AaListParamsLatestCheckResultController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(AaListParamsCheckResult aaListParamsCheckResult) {
         startPage();
-        return getDataTable(aaListParamsLatestCheckResultService.selectAaListParamsLatestCheckResultList(aaListParamsCheckResult));
-    }
-
-    @GetMapping("/factoryNames")
-    public R<List<AaListParamsCheckResultVo>> getFactoryNames() {
-        List<AaListParamsCheckResultVo> list = aaListParamsLatestCheckResultService.selectFactoryNameList();
-        return R.ok(list);
-    }
-
-    @GetMapping("/groupNames")
-    public R<List<AaListParamsCheckResultVo>> getGroupNames(AaListParamsCheckResult aaListParamsCheckResult) {
-        List<AaListParamsCheckResultVo> list = aaListParamsLatestCheckResultService.selectGroupNameList(aaListParamsCheckResult);
-        return R.ok(list);
+        QtechImVoUtil.QtechImVos<AaListParamsCheckResultVo> list = aaListParamsLatestCheckResultService.selectAaListParamsLatestCheckResultList(aaListParamsCheckResult);
+        return QtechImVoUtil.getVoDataTable(list);
     }
 }

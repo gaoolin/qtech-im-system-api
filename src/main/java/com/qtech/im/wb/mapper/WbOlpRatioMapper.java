@@ -1,6 +1,6 @@
 package com.qtech.im.wb.mapper;
 
-import com.qtech.im.wb.domain.WbOlpPercentageVo;
+import com.qtech.im.wb.domain.WbOlpPercentage;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,5 +15,5 @@ import java.util.List;
 @Repository
 public interface WbOlpRatioMapper {
 
-    public List<WbOlpPercentageVo> selectWbOlpRatioList(WbOlpPercentageVo wbOlpPercentageVo);
+    public List<WbOlpPercentage> selectWbOlpRatioList(WbOlpPercentage wbOlpPercentage);
 }

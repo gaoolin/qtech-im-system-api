@@ -5,6 +5,7 @@ import com.qtech.framework.web.page.TableDataInfo;
 import com.qtech.im.aa.domain.AaListParamsCheckResult;
 import com.qtech.im.aa.service.IAaListParamsHistoryCheckResultService;
 import com.qtech.im.aa.vo.AaListParamsCheckResultVo;
+import com.qtech.im.common.util.QtechImVoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,14 +22,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/aa/params/history/status")
 public class AaListParamsHistoryCheckResultController extends BaseController {
-
     @Autowired
     private IAaListParamsHistoryCheckResultService aaListParamsCheckResultService;
-
     @RequestMapping("/list")
     public TableDataInfo list(AaListParamsCheckResult aaListParamsCheckResult) {
         startPage();
-        List<AaListParamsCheckResultVo> list = aaListParamsCheckResultService.selectAaListParamsCheckResultList(aaListParamsCheckResult);
-        return getDataTable(list);
+        QtechImVoUtil.QtechImVos<AaListParamsCheckResultVo> list = aaListParamsCheckResultService.selectAaListParamsCheckResultList(aaListParamsCheckResult);
+        return QtechImVoUtil.getVoDataTable(list);
     }
 }

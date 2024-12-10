@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qtech.im.wire.mapper.WireUsageStandardMapper">
-    <resultMap type="ImWireUsageStandard" id="WireUsageStandardResult">
+<mapper namespace="com.qtech.im.wire.mapper.GoldWireUsageStandardMapper">
+    <resultMap type="ImStandardGoldWireUsage" id="WireUsageStandardResult">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result property="factoryName" column="factory_name"/>
         <result property="groupName" column="workshop"/>
@@ -43,7 +43,7 @@
         from qtech_biz_2.ads_wirebond_standard_usage
     </sql>
 
-    <select id="selectWireUsageStandardList" parameterType="ImWireUsageStandard" resultMap="WireUsageStandardResult">
+    <select id="list" parameterType="ImStandardGoldWireUsage" resultMap="WireUsageStandardResult">
         <include refid="selectWireUsageStandardVo"/>
         <where>
             <if test="prodType != null">and mc_id = #{prodType}</if>
@@ -52,12 +52,24 @@
         order by create_time desc, mc_id
     </select>
 
-    <select id="selectWireUsageStandardByProdType" parameterType="String" resultMap="WireUsageStandardResult">
+    <select id="listByProdTypes" parameterType="list" resultMap="WireUsageStandardResult">
+        <include refid="selectWireUsageStandardVo"/>
+        <where>
+            <if test="prodTypes != null">
+                and mc_id in
+                <foreach item="item" index="index" collection="prodTypes"
+                         open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="getByProdType" resultMap="WireUsageStandardResult">
         <include refid="selectWireUsageStandardVo"/>
         where mc_id = #{prodType}
     </select>
 
-    <insert id="insertWireUsageStandard" parameterType="ImWireUsageStandard">
+    <insert id="addOne" parameterType="ImStandardGoldWireUsage">
         insert into qtech_biz_2.ads_wirebond_standard_usage
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="prodType != null">mc_id,</if>
@@ -83,7 +95,16 @@
         </trim>
     </insert>
 
-    <update id="updateWireUsageStandard" parameterType="ImWireUsageStandard">
+    <insert id="addAll" parameterType="List">
+        insert into qtech_biz_2.ads_wirebond_standard_usage
+        (mc_id,wire_width,standard_wire_usage,remark,create_by,create_time,update_by,update_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.prodType},#{item.wireWidth},#{item.standardWireUsage},#{item.remark},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="ImStandardGoldWireUsage">
         update qtech_biz_2.ads_wirebond_standard_usage
         <trim prefix="SET" suffixOverrides=",">
             <if test="wireWidth != null">wire_width = trim(#{wireWidth}),</if>
@@ -98,7 +119,7 @@
         where mc_id = #{prodType}
     </update>
 
-    <delete id="deleteWireUsageStandardByProdType" parameterType="String">
+    <delete id="removeByProdType" parameterType="String">
         delete
         from qtech_biz_2.ads_wirebond_standard_usage
         where mc_id = #{prodType}

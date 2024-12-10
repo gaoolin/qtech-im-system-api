@@ -2,17 +2,13 @@ package com.qtech.im.wb.controller;
 
 import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.domain.AjaxResult;
-import com.qtech.framework.web.domain.R;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.wb.domain.WbOlpIndexVo;
-import com.qtech.im.wb.domain.WbOlpTrendingVo;
+import com.qtech.im.wb.domain.WbOlpTrending;
 import com.qtech.im.wb.service.IWbOlpIndexService;
-import com.qtech.im.wb.service.IWbOlpStdModelInfoService;
-import com.qtech.im.wb.vo.WbOlpChkVo;
+import com.qtech.im.wb.vo.WbOlpIndexVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -47,7 +43,7 @@ public class WbOlpIndexController extends BaseController {
 
     @GetMapping(value = "/trending")
     public TableDataInfo IndexWbOlpTrending() {
-        List<WbOlpTrendingVo> wbOlpTrending = wbOlpIndexService.getWbOlpTrending();
+        List<WbOlpTrending> wbOlpTrending = wbOlpIndexService.getWbOlpTrending();
         return getDataTable(wbOlpTrending);
     }
 

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.qcp.mapper.QcpParamsMapper">
 
-    <resultMap id="selectQcpParamsOverviewListResult" type="QcpParamsVo">
+    <resultMap id="selectQcpParamsOverviewListResult" type="QcpParams">
         <result property="factoryName" column="company_name" />
         <result property="groupName" column="group_name" />
         <result property="deviceType" column="device_type" />
@@ -15,7 +15,7 @@
         <result property="remoteStatusOff" column="remote_status_off" />
     </resultMap>
 
-    <resultMap id="selectQcpParamsListResult" type="QcpParamsDetailVo">
+    <resultMap id="selectQcpParamsListResult" type="QcpParamsDetail">
         <result property="factoryName" column="company_name" />
         <result property="groupName" column="group_name" />
         <result property="deviceType" column="device_type" />
@@ -225,15 +225,15 @@
                     #{item}
                 </foreach>
             </if>
-            <if test="qcpParamsDetailVo.label == 0">
+            <if test="qcpParamsDetail.label == 0">
                 and version = 'QCP标准参数空'
             </if>
-            <if test="qcpParamsDetailVo.statusCode != null">
+            <if test="qcpParamsDetail.statusCode != null">
                 and version =
                 case
-                    when #{qcpParamsDetailVo.statusCode} = 1 then 'QCP标准参数空'
-                    when #{qcpParamsDetailVo.statusCode} = 2 then 'PASS'
-                    when #{qcpParamsDetailVo.statusCode} = 3 then 'FAIL'
+                    when #{qcpParamsDetail.statusCode} = 1 then 'QCP标准参数空'
+                    when #{qcpParamsDetail.statusCode} = 2 then 'PASS'
+                    when #{qcpParamsDetail.statusCode} = 3 then 'FAIL'
                 end
             </if>
         </where>
@@ -281,12 +281,12 @@
                a.description
         from tb a
         <where>
-            <if test="qcpParamsDetailVo.factoryName != null and qcpParamsDetailVo.factoryName != ''"> and a.company_name = #{qcpParamsDetailVo.factoryName} </if>
-            <if test="qcpParamsDetailVo.groupName != null and qcpParamsDetailVo.groupName != ''"> and a.group_name = #{qcpParamsDetailVo.groupName} </if>
-            <if test="qcpParamsDetailVo.deviceType != null and qcpParamsDetailVo.deviceType != ''"> and a.devicetype = #{qcpParamsDetailVo.deviceType} </if>
-            <if test="qcpParamsDetailVo.eqId != null and qcpParamsDetailVo.eqId != ''"> and lower(a.eq_id) like concat('%', lower(#{qcpParamsDetailVo.eqId}), '%') </if>
-            <if test="qcpParamsDetailVo.mcId != null and qcpParamsDetailVo.mcId != ''"> and lower(a.mc_id) like concat('%', lower(#{qcpParamsDetailVo.mcId}), '%') </if>
-            <if test="qcpParamsDetailVo.prodType != null and qcpParamsDetailVo.prodType != ''"> and lower(a.prod_type) like concat('%', lower(#{qcpParamsDetailVo.prodType}), '%') </if>
+            <if test="qcpParamsDetail.factoryName != null and qcpParamsDetail.factoryName != ''"> and a.company_name = #{qcpParamsDetail.factoryName} </if>
+            <if test="qcpParamsDetail.groupName != null and qcpParamsDetail.groupName != ''"> and a.group_name = #{qcpParamsDetail.groupName} </if>
+            <if test="qcpParamsDetail.deviceType != null and qcpParamsDetail.deviceType != ''"> and a.devicetype = #{qcpParamsDetail.deviceType} </if>
+            <if test="qcpParamsDetail.eqId != null and qcpParamsDetail.eqId != ''"> and lower(a.eq_id) like concat('%', lower(#{qcpParamsDetail.eqId}), '%') </if>
+            <if test="qcpParamsDetail.mcId != null and qcpParamsDetail.mcId != ''"> and lower(a.mc_id) like concat('%', lower(#{qcpParamsDetail.mcId}), '%') </if>
+            <if test="qcpParamsDetail.prodType != null and qcpParamsDetail.prodType != ''"> and lower(a.prod_type) like concat('%', lower(#{qcpParamsDetail.prodType}), '%') </if>
         </where>
         order by
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,

@@ -1,7 +1,6 @@
 package com.qtech.im.wb.domain;
 
 import com.qtech.framework.aspectj.lang.annotation.Excel;
-import com.qtech.im.common.domain.ImEqsAndNetCnt;
 import com.qtech.im.common.domain.ImReportBaseInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

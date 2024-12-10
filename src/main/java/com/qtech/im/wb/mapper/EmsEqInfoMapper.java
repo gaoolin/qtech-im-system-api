@@ -1,6 +1,6 @@
 package com.qtech.im.wb.mapper;
 
-import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
+import com.qtech.im.eqn.domain.ImEqsNetAndRemoteInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,5 +15,5 @@ import java.util.List;
 @Repository
 public interface EmsEqInfoMapper {
 
-    public List<ImEqsAndNetCntVo> selectEmsEqInfoList(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsNetAndRemoteInfo> selectEmsEqInfoList(ImEqsNetAndRemoteInfo imEqsNetAndRemoteInfo);
 }

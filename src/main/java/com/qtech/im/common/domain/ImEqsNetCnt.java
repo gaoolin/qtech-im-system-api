@@ -1,4 +1,4 @@
-package com.qtech.im.wb.domain;
+package com.qtech.im.common.domain;
 
 import com.qtech.im.common.domain.ImReportBaseInfo;
 import lombok.Data;
@@ -8,13 +8,15 @@ import lombok.ToString;
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
- * date   :  2024/01/16 14:04:07
- * desc   :
+ * date   :  2024/12/09 15:03:11
+ * desc   :  设备联网
  */
 
-@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class WbOlpParticularsVo extends ImReportBaseInfo {
-    private String flag;
+@Data
+public class ImEqsNetCnt extends ImReportBaseInfo {
+    private int ttlEqs;
+    private int onlineEqs;
+    private int offlineEqs;
 }

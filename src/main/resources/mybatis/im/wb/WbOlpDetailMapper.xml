@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.wb.mapper.WbOlpDetailMapper">
-    <resultMap id="wbOlpDetailResult" type="WbOlpParticularsVo">
+    <resultMap id="wbOlpDetailResult" type="WbOlpChk">
         <result property="factoryName" column="company_name" />
         <result property="groupName" column="group_name" />
         <result property="eqId" column="eq_id" />

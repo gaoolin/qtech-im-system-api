@@ -1,11 +1,13 @@
 package com.qtech.im.aa.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.aa.domain.AaListParamsCheckResult;
 import com.qtech.im.aa.mapper.AaListParamsLatestCheckResultMapper;
 import com.qtech.im.aa.service.IAaListParamsLatestCheckResultService;
 import com.qtech.im.aa.vo.AaListParamsCheckResultVo;
+import com.qtech.im.common.util.QtechImVoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,42 +30,17 @@ public class AaListParamsLatestCheckResultServiceImpl implements IAaListParamsLa
     @Autowired
     private AaListParamsLatestCheckResultMapper aaListParamsLatestCheckResultMapper;
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public List<AaListParamsCheckResultVo> selectAaListParamsLatestCheckResultList(AaListParamsCheckResult aaListParamsCheckResult) {
-        List<AaListParamsCheckResultVo> vos = null;
+    public QtechImVoUtil.QtechImVos<AaListParamsCheckResultVo> selectAaListParamsLatestCheckResultList(AaListParamsCheckResult aaListParamsCheckResult) {
         try {
             List<AaListParamsCheckResult> list = aaListParamsLatestCheckResultMapper.selectAaListParamsLatestCheckResultList(aaListParamsCheckResult);
-            vos = list.stream().map(AaListParamsCheckResultVo::new).collect(Collectors.toList());
+            long total = new PageInfo(list).getTotal();
+            List<AaListParamsCheckResultVo> vos = list.stream().map(AaListParamsCheckResultVo::new).collect(Collectors.toList());
+            return new QtechImVoUtil.QtechImVos<>(vos, total);
         } catch (Exception e) {
             log.error("查询数据库发生异常，请联系管理员！\n{}", e.getMessage());
             throw new RuntimeException("查询数据库发生异常，请联系管理员！");
         }
-        return vos;
-    }
-
-    @Override
-    public List<AaListParamsCheckResultVo> selectGroupNameList(AaListParamsCheckResult aaListParamsCheckResult) {
-        List<AaListParamsCheckResultVo> vos = null;
-        try {
-            List<AaListParamsCheckResult> list = aaListParamsLatestCheckResultMapper.selectGroupNameList(aaListParamsCheckResult);
-            vos = list.stream().map(AaListParamsCheckResultVo::new).collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("查询数据库发生异常，请联系管理员！\n{}", e.getMessage());
-            throw new RuntimeException("查询数据库发生异常，请联系管理员！");
-        }
-        return vos;
-    }
-
-    @Override
-    public List<AaListParamsCheckResultVo> selectFactoryNameList() {
-        List<AaListParamsCheckResultVo> vos = null;
-        try {
-            List<AaListParamsCheckResult> list = aaListParamsLatestCheckResultMapper.selectFactoryNames();
-            vos = list.stream().map(AaListParamsCheckResultVo::new).collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("查询数据库发生异常，请联系管理员！\n{}", e.getMessage());
-            throw new RuntimeException("查询数据库发生异常，请联系管理员！");
-        }
-        return vos;
     }
 }

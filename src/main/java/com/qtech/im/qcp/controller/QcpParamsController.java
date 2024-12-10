@@ -7,9 +7,12 @@ import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.domain.AjaxResult;
 import com.qtech.framework.web.domain.R;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.qcp.domain.QcpParamsDetailVo;
-import com.qtech.im.qcp.domain.QcpParamsVo;
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.qcp.domain.QcpParams;
+import com.qtech.im.qcp.domain.QcpParamsDetail;
 import com.qtech.im.qcp.service.IQcpParamsService;
+import com.qtech.im.qcp.vo.QcpParamsDetailVo;
+import com.qtech.im.qcp.vo.QcpParamsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * author :  gaozhilin
@@ -34,17 +36,16 @@ public class QcpParamsController extends BaseController {
     private IQcpParamsService qcpParamsService;
 
     @RequestMapping(value = "/overview", method = RequestMethod.GET)
-    public TableDataInfo list(QcpParamsVo qcpParamsVo) {
-        List<QcpParamsVo> qcpParamsVos = qcpParamsService.selectQcpParamsOverviewList(qcpParamsVo);
-        return getDataTable(qcpParamsVos);
+    public TableDataInfo list(QcpParams qcpParams) {
+        QtechImVoUtil.QtechImVos<QcpParamsVo> list = qcpParamsService.selectQcpParamsOverviewList(qcpParams);
+        return QtechImVoUtil.getVoDataTable(list);
     }
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public TableDataInfo listQcpParams(QcpParamsDetailVo qcpParamsDetailVo) {
-        System.out.println(qcpParamsDetailVo);
+    public TableDataInfo listQcpParams(QcpParamsDetail qcpParamsDetail) {
         startPage();
-        List<QcpParamsDetailVo> qcpParamsDetailVos = qcpParamsService.selectQcpParamsList(qcpParamsDetailVo);
-        return getDataTable(qcpParamsDetailVos);
+        QtechImVoUtil.QtechImVos<QcpParamsDetailVo> qcpParamsDetails = qcpParamsService.selectQcpParamsList(qcpParamsDetail);
+        return QtechImVoUtil.getVoDataTable(qcpParamsDetails);
     }
 
     @RequestMapping(value = "/maxTime", method = RequestMethod.GET)
@@ -61,18 +62,17 @@ public class QcpParamsController extends BaseController {
 
     @Log(title = "qcp概览", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, QcpParamsVo qcpParamsVo)
-    {
-        List<QcpParamsVo> qcpParamsVos = qcpParamsService.selectQcpParamsOverviewList(qcpParamsVo);
+    public void export(HttpServletResponse response, QcpParams qcpParams) {
+        QtechImVoUtil.QtechImVos<QcpParamsVo> list = qcpParamsService.selectQcpParamsOverviewList(qcpParams);
         ExcelUtil<QcpParamsVo> util = new ExcelUtil<QcpParamsVo>(QcpParamsVo.class);
-        util.exportExcel(response, qcpParamsVos, "qcp概览");
+        util.exportExcel(response, list.getData(), "qcp概览");
     }
 
     @Log(title = "qcp明细", businessType = BusinessType.EXPORT)
     @PostMapping("/detail/export")
-    public void export(HttpServletResponse response, QcpParamsDetailVo qcpParamsDetailVo) {
-        List<QcpParamsDetailVo> qcpParamsDetailVos = qcpParamsService.selectQcpParamsList(qcpParamsDetailVo);
+    public void export(HttpServletResponse response, QcpParamsDetail qcpParamsDetail) {
+        QtechImVoUtil.QtechImVos<QcpParamsDetailVo> list = qcpParamsService.selectQcpParamsList(qcpParamsDetail);
         ExcelUtil<QcpParamsDetailVo> util = new ExcelUtil<QcpParamsDetailVo>(QcpParamsDetailVo.class);
-        util.exportExcel(response, qcpParamsDetailVos, "qcp明细");
+        util.exportExcel(response, list.getData(), "qcp明细");
     }
 }

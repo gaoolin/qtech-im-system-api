@@ -5,8 +5,10 @@ import com.qtech.framework.aspectj.lang.annotation.Log;
 import com.qtech.framework.aspectj.lang.enums.BusinessType;
 import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.wb.domain.WbOlpParticularsVo;
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.wb.domain.WbOlpChk;
 import com.qtech.im.wb.service.IWbOlpDetailService;
+import com.qtech.im.wb.vo.WbOlpChkVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,18 +32,17 @@ public class WbOlpParticularsController extends BaseController {
     private IWbOlpDetailService wbOlpDetailService;
 
     @RequestMapping(value = "/detail")
-    public TableDataInfo getDetail(WbOlpParticularsVo wbOlpParticularsVo) {
+    public TableDataInfo getDetail(WbOlpChk wbOlpChk) {
         startPage();
-        List<WbOlpParticularsVo> detail = wbOlpDetailService.getDetail(wbOlpParticularsVo);
-        return getDataTable(detail);
+        QtechImVoUtil.QtechImVos<WbOlpChkVo> detail = wbOlpDetailService.getDetail(wbOlpChk);
+        return QtechImVoUtil.getVoDataTable(detail);
     }
 
     @Log(title = "打线图机台比对明细", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WbOlpParticularsVo wbOlpParticularsVo)
-    {
-        List<WbOlpParticularsVo> list = wbOlpDetailService.getDetail(wbOlpParticularsVo);
-        ExcelUtil<WbOlpParticularsVo> util = new ExcelUtil<WbOlpParticularsVo>(WbOlpParticularsVo.class);
-        util.exportExcel(response, list, "打线图机台比对明细");
+    public void export(HttpServletResponse response, WbOlpChk wbOlpChk) {
+        QtechImVoUtil.QtechImVos<WbOlpChkVo> list = wbOlpDetailService.getDetail(wbOlpChk);
+        ExcelUtil<WbOlpChkVo> util = new ExcelUtil<WbOlpChkVo>(WbOlpChkVo.class);
+        util.exportExcel(response, list.getData(), "打线图机台比对明细");
     }
 }

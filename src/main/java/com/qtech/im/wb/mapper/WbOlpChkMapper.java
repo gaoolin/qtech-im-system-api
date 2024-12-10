@@ -1,6 +1,6 @@
 package com.qtech.im.wb.mapper;
 
-import com.qtech.im.wb.vo.WbOlpChkVo;
+import com.qtech.im.wb.domain.WbOlpChk;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +16,5 @@ import java.util.List;
 @Repository
 public interface WbOlpChkMapper {
 
-    public List<WbOlpChkVo> selectWbOlpChkList(@Param("vo") WbOlpChkVo vo, @Param("daysFilter") int daysFilter);
+    public List<WbOlpChk> selectWbOlpChkList(@Param("vo") WbOlpChk vo, @Param("daysFilter") int daysFilter);
 }

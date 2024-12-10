@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.eqn.mapper.EqNetworkingMapper">
-    <resultMap id="qtechImCommonInfoResult" type="ImEqsAndNetCntVo">
+    <resultMap id="qtechImCommonInfoResult" type="ImEqsNetAndRemoteInfo">
         <result property="factoryName" column="company_name" />
         <result property="deptName" column="dep_name" />
         <result property="groupName" column="group_name" />
@@ -11,13 +11,20 @@
         <result property="eqId" column="device_m_id" />
         <result property="mcId" column="machine_no" />
         <result property="simId" column="pbox_id" />
-        <result property="ttlEqs" column="ttl_eqs" />
-        <result property="onlineEqs" column="online_eqs" />
-        <result property="offlineEqs" column="offline_eqs" />
         <result property="netStatus" column="net_status" />
         <result property="remoteCode" column="Remote_control" />
         <result property="remoteStatus" column="remote_status" />
         <result property="dt" column="receive_date" />
+    </resultMap>
+
+    <resultMap id="qtechImEqsNetCntResult" type="ImEqsNetCnt">
+        <result column="company_name" property="factoryName" />
+        <result column="dep_name" property="deptName" />
+        <result column="group_name" property="groupName" />
+        <result column="device_type" property="deviceType" />
+        <result column="ttl_eqs" property="ttlEqs" />
+        <result column="online_eqs" property="onlineEqs" />
+        <result column="offline_eqs" property="offlineEqs" />
     </resultMap>
 
     <select id="selectEqNetworkingOfflineList" parameterType="map" resultMap="qtechImCommonInfoResult">
@@ -52,8 +59,8 @@
                     #{item}
                 </foreach>
                 <choose>
-                    <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''">
-                        and devicetype = #{imEqsNetworkingAndRemoteInfoVo.deviceType}
+                    <when test = "imEqsNetAndRemoteInfo.deviceType != null and imEqsNetAndRemoteInfo.deviceType != ''">
+                        and devicetype = #{imEqsNetAndRemoteInfo.deviceType}
                     </when>
                     <otherwise>
                         and devicetype in
@@ -118,9 +125,9 @@
         FROM _eq_ttl_net_info_tb
         <where>
             net_status = 0
-            <if test="imEqsNetworkingAndRemoteInfoVo.factoryName != null and imEqsNetworkingAndRemoteInfoVo.factoryName != ''"> and company_name = #{imEqsNetworkingAndRemoteInfoVo.factoryName}</if>
-            <if test="imEqsNetworkingAndRemoteInfoVo.groupName != null and imEqsNetworkingAndRemoteInfoVo.groupName != ''"> and group_name = #{imEqsNetworkingAndRemoteInfoVo.groupName}</if>
-            <if test="imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''"> and devicetype = #{imEqsNetworkingAndRemoteInfoVo.deviceType}</if>
+            <if test="imEqsNetAndRemoteInfo.factoryName != null and imEqsNetAndRemoteInfo.factoryName != ''"> and company_name = #{imEqsNetAndRemoteInfo.factoryName}</if>
+            <if test="imEqsNetAndRemoteInfo.groupName != null and imEqsNetAndRemoteInfo.groupName != ''"> and group_name = #{imEqsNetAndRemoteInfo.groupName}</if>
+            <if test="imEqsNetAndRemoteInfo.deviceType != null and imEqsNetAndRemoteInfo.deviceType != ''"> and devicetype = #{imEqsNetAndRemoteInfo.deviceType}</if>
         </where>
         ORDER BY
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
@@ -129,7 +136,7 @@
             machine_no
     </select>
 
-    <select id="selectEqNetworkingAgg" parameterType="map" resultMap="qtechImCommonInfoResult">
+    <select id="selectEqNetworkingAgg" parameterType="map" resultMap="qtechImEqsNetCntResult">
         WITH _eq_net_ok_tb AS (
             SELECT
                 device_id,
@@ -161,8 +168,8 @@
                     #{item}
                 </foreach>
                 <choose>
-                    <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''">
-                        and devicetype = #{imEqsNetworkingAndRemoteInfoVo.deviceType}
+                    <when test = "imEqsNetAndRemoteInfo.deviceType != null and imEqsNetAndRemoteInfo.deviceType != ''">
+                        and devicetype = #{imEqsNetAndRemoteInfo.deviceType}
                     </when>
                     <otherwise>
                         and devicetype in
@@ -223,7 +230,7 @@
                     else a.group_name
                 end as group_name,
                 <choose>
-                    <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
+                    <when test = "imEqsNetAndRemoteInfo.deviceType == null or imEqsNetAndRemoteInfo.deviceType == ''">
                         case
                             when a.devicetype is null then '小计'
                             else a.devicetype
@@ -237,7 +244,7 @@
                 net_status = 0
             group by
                 <choose>
-                    <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''">
+                    <when test = "imEqsNetAndRemoteInfo.deviceType != null and imEqsNetAndRemoteInfo.deviceType != ''">
                         rollup (a.company_name, a.group_name)
                     </when>
                     <otherwise>
@@ -257,7 +264,7 @@
                     else a.group_name
                 end as group_name,
                 <choose>
-                    <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
+                    <when test = "imEqsNetAndRemoteInfo.deviceType == null or imEqsNetAndRemoteInfo.deviceType == ''">
                         case
                             when a.devicetype is null then '小计'
                             else a.devicetype
@@ -269,7 +276,7 @@
                 _eq_ttl_net_info_tb a
             group by
                 <choose>
-                    <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''">
+                    <when test = "imEqsNetAndRemoteInfo.deviceType != null and imEqsNetAndRemoteInfo.deviceType != ''">
                         rollup (a.company_name, a.group_name)
                     </when>
                     <otherwise>
@@ -288,7 +295,7 @@
                 else a.group_name
             end as group_name,
             <choose>
-                <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
+                <when test = "imEqsNetAndRemoteInfo.deviceType == null or imEqsNetAndRemoteInfo.deviceType == ''">
                     case
                         when a.devicetype is null then '小计'
                         else a.devicetype
@@ -301,7 +308,7 @@
         left join _eq_offline_info_group_tb b
             on a.company_name = b.company_name and a.group_name = b.group_name
             <choose>
-                <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
+                <when test = "imEqsNetAndRemoteInfo.deviceType == null or imEqsNetAndRemoteInfo.deviceType == ''">
                     and a.devicetype = b.devicetype
                 </when>
             </choose>
@@ -309,7 +316,7 @@
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />
             <choose>
-                <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
+                <when test = "imEqsNetAndRemoteInfo.deviceType == null or imEqsNetAndRemoteInfo.deviceType == ''">
                     , <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" />
                 </when>
             </choose>
@@ -404,29 +411,29 @@
         FROM
             _eq_ttl_net_info_tb
         <where>
-            <if test="imEqsNetworkingAndRemoteInfoVo.factoryName != null and imEqsNetworkingAndRemoteInfoVo.factoryName != ''">
-                AND company_name = #{imEqsNetworkingAndRemoteInfoVo.factoryName}
+            <if test="imEqsNetAndRemoteInfo.factoryName != null and imEqsNetAndRemoteInfo.factoryName != ''">
+                AND company_name = #{imEqsNetAndRemoteInfo.factoryName}
             </if>
-            <if test="imEqsNetworkingAndRemoteInfoVo.groupName != null and imEqsNetworkingAndRemoteInfoVo.groupName != ''">
-                AND group_name = #{imEqsNetworkingAndRemoteInfoVo.groupName}
+            <if test="imEqsNetAndRemoteInfo.groupName != null and imEqsNetAndRemoteInfo.groupName != ''">
+                AND group_name = #{imEqsNetAndRemoteInfo.groupName}
             </if>
-            <if test="imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''">
-                AND devicetype = #{imEqsNetworkingAndRemoteInfoVo.deviceType}
+            <if test="imEqsNetAndRemoteInfo.deviceType != null and imEqsNetAndRemoteInfo.deviceType != ''">
+                AND devicetype = #{imEqsNetAndRemoteInfo.deviceType}
             </if>
-            <if test="imEqsNetworkingAndRemoteInfoVo.eqId != null and imEqsNetworkingAndRemoteInfoVo.eqId != ''">
-                AND device_m_id = #{imEqsNetworkingAndRemoteInfoVo.eqId}
+            <if test="imEqsNetAndRemoteInfo.eqId != null and imEqsNetAndRemoteInfo.eqId != ''">
+                AND device_m_id = #{imEqsNetAndRemoteInfo.eqId}
             </if>
-            <if test="imEqsNetworkingAndRemoteInfoVo.mcId != null and imEqsNetworkingAndRemoteInfoVo.mcId != ''">
-                AND machine_no = #{imEqsNetworkingAndRemoteInfoVo.mcId}
+            <if test="imEqsNetAndRemoteInfo.mcId != null and imEqsNetAndRemoteInfo.mcId != ''">
+                AND machine_no = #{imEqsNetAndRemoteInfo.mcId}
             </if>
-            <if test="imEqsNetworkingAndRemoteInfoVo.simId != null and imEqsNetworkingAndRemoteInfoVo.simId != ''">
-                AND pbox_id = #{imEqsNetworkingAndRemoteInfoVo.simId}
+            <if test="imEqsNetAndRemoteInfo.simId != null and imEqsNetAndRemoteInfo.simId != ''">
+                AND pbox_id = #{imEqsNetAndRemoteInfo.simId}
             </if>
-            <if test="imEqsNetworkingAndRemoteInfoVo.netStatus != null">
-                AND net_status = #{imEqsNetworkingAndRemoteInfoVo.netStatus}
+            <if test="imEqsNetAndRemoteInfo.netStatus != null">
+                AND net_status = #{imEqsNetAndRemoteInfo.netStatus}
             </if>
-            <if test="imEqsNetworkingAndRemoteInfoVo.remoteStatus != null">
-                AND remote_status = #{imEqsNetworkingAndRemoteInfoVo.remoteStatus}
+            <if test="imEqsNetAndRemoteInfo.remoteStatus != null">
+                AND remote_status = #{imEqsNetAndRemoteInfo.remoteStatus}
             </if>
         </where>
         ORDER BY

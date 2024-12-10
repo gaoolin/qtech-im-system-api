@@ -1,10 +1,11 @@
 package com.qtech.im.qcp.service;
 
 
-import com.qtech.im.qcp.domain.QcpParamsDetailVo;
-import com.qtech.im.qcp.domain.QcpParamsVo;
-
-import java.util.List;
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.qcp.domain.QcpParamsDetail;
+import com.qtech.im.qcp.domain.QcpParams;
+import com.qtech.im.qcp.vo.QcpParamsDetailVo;
+import com.qtech.im.qcp.vo.QcpParamsVo;
 
 /**
  * author :  gaozhilin
@@ -16,9 +17,9 @@ import java.util.List;
 
 public interface IQcpParamsService {
 
-    public List<QcpParamsVo> selectQcpParamsOverviewList(QcpParamsVo qcpParamsVo);
+    public QtechImVoUtil.QtechImVos<QcpParamsVo> selectQcpParamsOverviewList(QcpParams qcpParams);
 
-    public List<QcpParamsDetailVo> selectQcpParamsList(QcpParamsDetailVo qcpParamsDetailVo);
+    public QtechImVoUtil.QtechImVos<QcpParamsDetailVo> selectQcpParamsList(QcpParamsDetail qcpParamsDetail);
 
     public boolean checkIotStatus();
 

@@ -2,6 +2,8 @@ package com.qtech.im.aa.service;
 
 import com.qtech.im.aa.domain.AaListParamsCheckResult;
 import com.qtech.im.aa.vo.AaListParamsCheckResultVo;
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.wb.vo.WbOlpChkVo;
 
 import java.util.List;
 
@@ -14,9 +16,5 @@ import java.util.List;
 
 
 public interface IAaListParamsLatestCheckResultService {
-    public List<AaListParamsCheckResultVo> selectAaListParamsLatestCheckResultList(AaListParamsCheckResult aaListParamsCheckResult);
-
-    public List<AaListParamsCheckResultVo> selectGroupNameList(AaListParamsCheckResult aaListParamsCheckResult);
-
-    public List<AaListParamsCheckResultVo> selectFactoryNameList();
+    public QtechImVoUtil.QtechImVos<AaListParamsCheckResultVo> selectAaListParamsLatestCheckResultList(AaListParamsCheckResult aaListParamsCheckResult);
 }

@@ -1,6 +1,8 @@
 package com.qtech.im.wb.service;
 
-import com.qtech.im.wb.domain.WbOlpParticularsVo;
+import com.qtech.im.common.util.QtechImVoUtil;
+import com.qtech.im.wb.domain.WbOlpChk;
+import com.qtech.im.wb.vo.WbOlpChkVo;
 
 import java.util.List;
 
@@ -14,5 +16,5 @@ import java.util.List;
 
 public interface IWbOlpDetailService {
 
-    public List<WbOlpParticularsVo> getDetail(WbOlpParticularsVo wbOlpParticularsVo);
+    public QtechImVoUtil.QtechImVos<WbOlpChkVo> getDetail(WbOlpChk wbOlpChk);
 }

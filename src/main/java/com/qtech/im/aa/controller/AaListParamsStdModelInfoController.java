@@ -11,12 +11,12 @@ import com.qtech.framework.web.page.TableDataInfo;
 import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
 import com.qtech.im.aa.service.IAaListParamsStdModelInfoService;
 import com.qtech.im.aa.vo.AaListParamsStdModelInfoVo;
+import com.qtech.im.common.util.QtechImVoUtil;
 import com.qtech.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * author :  gaozhilin
@@ -38,8 +38,8 @@ public class AaListParamsStdModelInfoController extends BaseController {
     @RequestMapping(value = "/list", produces = "application/json", method = RequestMethod.GET)
     public TableDataInfo list(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
         startPage();
-        List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdModelInfo);
-        return getDataTable(list);
+        QtechImVoUtil.QtechImVos<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdModelInfo);
+        return QtechImVoUtil.getVoDataTable(list);
     }
 
     @RequestMapping(value = "/edit", produces = "application/json", method = RequestMethod.POST)
@@ -57,8 +57,8 @@ public class AaListParamsStdModelInfoController extends BaseController {
     @Log(title = "AA-List参数标准模版信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AaListParamsStdModelInfo aaListParamsStdModelInfo) {
-        List<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdModelInfo);
+        QtechImVoUtil.QtechImVos<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdModelInfo);
         ExcelUtil<AaListParamsStdModelInfoVo> util = new ExcelUtil<AaListParamsStdModelInfoVo>(AaListParamsStdModelInfoVo.class);
-        util.exportExcel(response, list, "AA-List参数标准模版信息");
+        util.exportExcel(response, list.getData(), "AA-List参数标准模版信息");
     }
 }

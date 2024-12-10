@@ -1,11 +1,13 @@
 package com.qtech.im.aa.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.aa.domain.AaListParamsIndex;
 import com.qtech.im.aa.mapper.AaListParamsIndexResultMapper;
 import com.qtech.im.aa.service.IAaListParamsIndexService;
 import com.qtech.im.aa.vo.AaListParamsIndexVo;
+import com.qtech.im.common.util.QtechImVoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +30,15 @@ public class AaLIstParamsIndexServiceImpl implements IAaListParamsIndexService {
     @Autowired
     private AaListParamsIndexResultMapper aaListParamsIndexResultMapper;
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public List<AaListParamsIndexVo> selectAaListParamsIndexResultList(AaListParamsIndex aaListParamsIndex) {
+    public QtechImVoUtil.QtechImVos<AaListParamsIndexVo> selectAaListParamsIndexResultList(AaListParamsIndex aaListParamsIndex) {
 
         try {
             List<AaListParamsIndex> list = aaListParamsIndexResultMapper.list(aaListParamsIndex);
-            return list.stream().map(AaListParamsIndexVo::new).collect(Collectors.toList());
+            long total = new PageInfo(list).getTotal();
+            List<AaListParamsIndexVo> vos = list.stream().map(AaListParamsIndexVo::new).collect(Collectors.toList());
+            return new QtechImVoUtil.QtechImVos<>(vos, total);
         } catch (Exception e) {
             throw new RuntimeException("查询数据库发生异常，请联系系统负责人！");
         }

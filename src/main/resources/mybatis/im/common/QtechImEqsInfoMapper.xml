@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.im.common.mapper.QtechImEqsInfoMapper">
 
-    <resultMap id="qtechImCommonInfoResult" type="ImEqsAndNetCntVo">
+    <resultMap id="qtechImCommonInfoResult" type="ImEqsNetAndRemoteInfo">
         <result property="factoryName" column="company_name" />
         <result property="deptName" column="dep_name" />
         <result property="groupName" column="group_name" />
@@ -12,9 +12,6 @@
         <result property="eqId" column="device_m_id" />
         <result property="mcId" column="machine_no" />
         <result property="simId" column="pbox_id" />
-        <result property="ttlEqs" column="ttl_eqs" />
-        <result property="onlineEqs" column="online_eqs" />
-        <result property="offlineEqs" column="offline_eqs" />
         <result property="remoteCode" column="remote_control" />
         <result property="remoteStatus" column="remote_status" />
     </resultMap>
@@ -58,8 +55,8 @@
                 </foreach>
 
                 <choose>
-                    <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''">
-                        and devicetype = #{imEqsNetworkingAndRemoteInfoVo.deviceType}
+                    <when test = "imEqsNetAndRemoteInfo.deviceType != null and imEqsNetAndRemoteInfo.deviceType != ''">
+                        and devicetype = #{imEqsNetAndRemoteInfo.deviceType}
                     </when>
                     <otherwise>
                         AND devicetype IN
@@ -82,8 +79,8 @@
                     <where>
                         ask_date > minutes_sub(now(), 5)
                         <choose>
-                            <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''">
-                                and device_type = #{imEqsNetworkingAndRemoteInfoVo.deviceType}
+                            <when test = "imEqsNetAndRemoteInfo.deviceType != null and imEqsNetAndRemoteInfo.deviceType != ''">
+                                and device_type = #{imEqsNetAndRemoteInfo.deviceType}
                             </when>
                             <otherwise>
                                 and device_type IN
@@ -110,7 +107,7 @@
                         else a.group_name
                     end as group_name,
                     <choose>
-                        <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
+                        <when test = "imEqsNetAndRemoteInfo.deviceType == null or imEqsNetAndRemoteInfo.deviceType == ''">
                             case
                                 when a.devicetype is null then '小计'
                                 else a.devicetype
@@ -124,7 +121,7 @@
                     a.device_m_id not in (select eqid from tc)
                 group by
                     <choose>
-                        <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''">
+                        <when test = "imEqsNetAndRemoteInfo.deviceType != null and imEqsNetAndRemoteInfo.deviceType != ''">
                             rollup (a.company_name, a.group_name)
                         </when>
                         <otherwise>
@@ -143,7 +140,7 @@
                         else a.group_name
                     end as group_name,
                     <choose>
-                        <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
+                        <when test = "imEqsNetAndRemoteInfo.deviceType == null or imEqsNetAndRemoteInfo.deviceType == ''">
                             case
                                 when a.devicetype is null then '小计'
                                 else a.devicetype
@@ -155,7 +152,7 @@
                     ta a
                 group by
                     <choose>
-                        <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType != null and imEqsNetworkingAndRemoteInfoVo.deviceType != ''">
+                        <when test = "imEqsNetAndRemoteInfo.deviceType != null and imEqsNetAndRemoteInfo.deviceType != ''">
                             rollup (a.company_name, a.group_name)
                         </when>
                         <otherwise>
@@ -173,7 +170,7 @@
                 else a.group_name
             end as group_name,
             <choose>
-                <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
+                <when test = "imEqsNetAndRemoteInfo.deviceType == null or imEqsNetAndRemoteInfo.deviceType == ''">
                     case
                         when a.devicetype is null then '小计'
                         else a.devicetype
@@ -186,7 +183,7 @@
         left join td b
             on a.company_name = b.company_name and a.group_name = b.group_name
             <choose>
-                <when test = "imEqsNetworkingAndRemoteInfoVo.deviceType == null or imEqsNetworkingAndRemoteInfoVo.deviceType == ''">
+                <when test = "imEqsNetAndRemoteInfo.deviceType == null or imEqsNetAndRemoteInfo.deviceType == ''">
                     and a.devicetype = b.devicetype
                 </when>
             </choose>

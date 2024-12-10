@@ -6,7 +6,7 @@ import com.qtech.im.common.domain.ImReportBaseInfo;
 import com.qtech.im.common.mapper.QtechImEqsInfoMapper;
 import com.qtech.im.common.service.IQtechImEqsInfoService;
 import com.qtech.im.config.TbQueryConditionConfig;
-import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
+import com.qtech.im.eqn.domain.ImEqsNetAndRemoteInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,11 +32,11 @@ public class QtechImEqsInfoServiceImpl implements IQtechImEqsInfoService {
     private TbQueryConditionConfig tbQueryConditionConfig;
 
     @Override
-    public List<ImEqsAndNetCntVo> listEqsInfo(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo) {
+    public List<ImEqsNetAndRemoteInfo> listEqsInfo(ImEqsNetAndRemoteInfo imEqsNetAndRemoteInfo) {
         List<String> deptNames = tbQueryConditionConfig.getDeptNames();
         List<String> deviceTypes = tbQueryConditionConfig.getDeviceTypes();
         try {
-            return qtechImEqsInfoMapper.listEqsInfo(deptNames, deviceTypes, imEqsNetworkingAndRemoteInfoVo);
+            return qtechImEqsInfoMapper.listEqsInfo(deptNames, deviceTypes, imEqsNetAndRemoteInfo);
         } catch (Exception e) {
             log.error("查询数据库失败", e);
             throw new RuntimeException("查询数据库发生异常，请联系系统负责人！");

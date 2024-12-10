@@ -2,6 +2,7 @@ package com.qtech.im.aa.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageInfo;
 import com.qtech.common.utils.StringUtils;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
@@ -12,6 +13,7 @@ import com.qtech.im.aa.mapper.AaListParamsStdModelMapper;
 import com.qtech.im.aa.service.IAaListParamsStdModelInfoService;
 import com.qtech.im.aa.utils.ModelDetailConvertToModelInfo;
 import com.qtech.im.aa.vo.AaListParamsStdModelInfoVo;
+import com.qtech.im.common.util.QtechImVoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -80,16 +82,19 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
         return wrapper;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public List<AaListParamsStdModelInfoVo> selectStdModelInfoList(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
+    public QtechImVoUtil.QtechImVos<AaListParamsStdModelInfoVo> selectStdModelInfoList(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
         try {
             ArrayList<AaListParamsStdModelInfoVo> vos = new ArrayList<>();
             LambdaQueryWrapper<AaListParamsStdModelInfo> wrapper = buildQueryWrapper(aaListParamsStdModelInfo);
             wrapper.orderByDesc(AaListParamsStdModelInfo::getCreateTime);
-            list(wrapper).forEach(modelInfo -> {
-                vos.add(new AaListParamsStdModelInfoVo(modelInfo));
-            });
-            return vos;
+            List<AaListParamsStdModelInfo> list = list(wrapper);
+            long total = new PageInfo(list).getTotal();
+            if (!list.isEmpty()) {
+                list.forEach(item -> vos.add(new AaListParamsStdModelInfoVo(item)));
+            }
+            return new QtechImVoUtil.QtechImVos<>(vos, total);
         } catch (Exception e) {
             log.error("selectStdModelInfoList:", e);
             throw new RuntimeException("查询数据库发生异常，请联系管理员。");

@@ -1,6 +1,5 @@
 package com.qtech.im.eqn.domain;
 
-import com.qtech.im.common.domain.ImEqsAndNetCnt;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -17,12 +16,11 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class DeviceData extends ImEqsAndNetCnt {
+public class DeviceData extends ImEqsNetAndRemoteInfo {
     private String receiveDate;
     private String deviceId;
     private String deviceType;
     private String remoteControl;
-
     private String status; // ONLINE / OFFLINE
     private LocalDateTime lastUpdated;
 }

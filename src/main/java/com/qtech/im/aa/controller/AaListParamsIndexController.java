@@ -9,6 +9,7 @@ import com.qtech.framework.web.page.TableDataInfo;
 import com.qtech.im.aa.domain.AaListParamsIndex;
 import com.qtech.im.aa.service.IAaListParamsIndexService;
 import com.qtech.im.aa.vo.AaListParamsIndexVo;
+import com.qtech.im.common.util.QtechImVoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,8 +46,8 @@ public class AaListParamsIndexController extends BaseController {
             boolean hasEndTime = params.containsKey("endTime");
             if (hasBeginTime && hasEndTime) {
                 startPage();
-                List<AaListParamsIndexVo> list = aaListParamsIndexService.selectAaListParamsIndexResultList(aaListParamsIndex);
-                return getDataTable(list);
+                QtechImVoUtil.QtechImVos<AaListParamsIndexVo> list = aaListParamsIndexService.selectAaListParamsIndexResultList(aaListParamsIndex);
+                return QtechImVoUtil.getVoDataTable(list);
             }
         }
         return null;
@@ -61,8 +61,8 @@ public class AaListParamsIndexController extends BaseController {
     @Log(title = "AA参数点检概览导出", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AaListParamsIndex aaListParamsIndex) {
-        List<AaListParamsIndexVo> list = aaListParamsIndexService.selectAaListParamsIndexResultList(aaListParamsIndex);
+        QtechImVoUtil.QtechImVos<AaListParamsIndexVo> list = aaListParamsIndexService.selectAaListParamsIndexResultList(aaListParamsIndex);
         ExcelUtil<AaListParamsIndexVo> util = new ExcelUtil<AaListParamsIndexVo>(AaListParamsIndexVo.class);
-        util.exportExcel(response, list, "AA参数点检概览");
+        util.exportExcel(response, list.getData(), "AA参数点检概览");
     }
 }

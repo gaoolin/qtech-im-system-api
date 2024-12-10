@@ -13,8 +13,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ImWireUsageStandard extends ImWireUsage {
-
+public class ImStandardGoldWireUsage extends ImGoldWireUsage {
     /**
      * 标签
      */

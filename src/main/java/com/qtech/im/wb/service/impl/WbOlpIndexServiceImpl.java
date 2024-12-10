@@ -2,7 +2,7 @@ package com.qtech.im.wb.service.impl;
 
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
-import com.qtech.im.wb.domain.WbOlpTrendingVo;
+import com.qtech.im.wb.domain.WbOlpTrending;
 import com.qtech.im.wb.mapper.WbOlpIndexMapper;
 import com.qtech.im.wb.service.IWbOlpIndexService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class WbOlpIndexServiceImpl implements IWbOlpIndexService {
     }
 
     @Override
-    public List<WbOlpTrendingVo> getWbOlpTrending() {
+    public List<WbOlpTrending> getWbOlpTrending() {
         try {
             return wbOlpIndexMapper.getWbOlpTrending();
         } catch (Exception e) {

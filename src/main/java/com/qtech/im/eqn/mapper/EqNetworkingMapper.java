@@ -1,6 +1,7 @@
 package com.qtech.im.eqn.mapper;
 
-import com.qtech.im.eqn.domain.ImEqsAndNetCntVo;
+import com.qtech.im.common.domain.ImEqsNetCnt;
+import com.qtech.im.eqn.domain.ImEqsNetAndRemoteInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -15,15 +16,12 @@ import java.util.List;
 
 @Repository
 public interface EqNetworkingMapper {
+    public List<ImEqsNetAndRemoteInfo> selectEqNetworkingOfflineList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
+                                                                     ImEqsNetAndRemoteInfo imEqsNetAndRemoteInfo);
 
-    // public List<ImEqsAndNetCntVo> selectEqNetworkingList(ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsNetCnt> selectEqNetworkingAgg(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
+                                                             ImEqsNetCnt imEqsNetAndRemoteInfo);
 
-    public List<ImEqsAndNetCntVo> selectEqNetworkingOfflineList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
-                                                                ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
-
-    public List<ImEqsAndNetCntVo> selectEqNetworkingAgg(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
-                                                        ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
-
-    public List<ImEqsAndNetCntVo> selectEqNetworkingList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
-                                                         ImEqsAndNetCntVo imEqsNetworkingAndRemoteInfoVo);
+    public List<ImEqsNetAndRemoteInfo> selectEqNetworkingList(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes,
+                                                              ImEqsNetAndRemoteInfo imEqsNetAndRemoteInfo);
 }

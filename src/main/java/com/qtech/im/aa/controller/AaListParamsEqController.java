@@ -9,10 +9,11 @@ import com.qtech.framework.web.page.TableDataInfo;
 import com.qtech.im.aa.domain.AaListParamsEq;
 import com.qtech.im.aa.service.IAaListParamsEqService;
 import com.qtech.im.aa.vo.AaListParamsEqVo;
+import com.qtech.im.common.util.QtechImVoUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * author :  gaozhilin
@@ -27,15 +28,16 @@ public class AaListParamsEqController extends BaseController {
 
     private final IAaListParamsEqService aaListParamsEqService;
 
+    @Autowired
     public AaListParamsEqController(IAaListParamsEqService aaListParamsEqService) {
         this.aaListParamsEqService = aaListParamsEqService;
     }
 
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public TableDataInfo list(AaListParamsEq aaListParamsEq) {
         startPage();
-        List<AaListParamsEqVo> list = aaListParamsEqService.selectAaListParamsEqList(aaListParamsEq);
-        return getDataTable(list);
+        QtechImVoUtil.QtechImVos<AaListParamsEqVo> list = aaListParamsEqService.selectAaListParamsEqList(aaListParamsEq);
+        return QtechImVoUtil.getVoDataTable(list);
     }
 
     @Log(title = "AA机台受控状态修改", businessType = BusinessType.UPDATE)
@@ -60,8 +62,8 @@ public class AaListParamsEqController extends BaseController {
     @Log(title = "AA List管控设备状态导出", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AaListParamsEq aaListParamsEq) {
-        List<AaListParamsEqVo> list = aaListParamsEqService.selectAaListParamsEqList(aaListParamsEq);
+        QtechImVoUtil.QtechImVos<AaListParamsEqVo> list = aaListParamsEqService.selectAaListParamsEqList(aaListParamsEq);
         ExcelUtil<AaListParamsEqVo> util = new ExcelUtil<>(AaListParamsEqVo.class);
-        util.exportExcel(response, list, "AA List管控设备状态");
+        util.exportExcel(response, list.getData(), "AA List管控设备状态");
     }
 }
