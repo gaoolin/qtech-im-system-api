@@ -2,11 +2,8 @@ package com.qtech.im.aa.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
-import com.qtech.im.aa.vo.AaListParamsEqVo;
 import com.qtech.im.aa.vo.AaListParamsStdModelInfoVo;
 import com.qtech.im.common.util.QtechImVoUtil;
-
-import java.util.List;
 
 /**
  * author :  gaozhilin
