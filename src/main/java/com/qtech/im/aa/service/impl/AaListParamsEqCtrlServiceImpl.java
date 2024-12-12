@@ -101,6 +101,7 @@ public class AaListParamsEqCtrlServiceImpl extends ServiceImpl<AaListParamsEqCtr
             // 获取当前登录用户的昵称
             String nickName = Optional.ofNullable(getLoginUser()).map(LoginUser::getUser).map(SysUser::getNickName).orElseThrow(() -> new RuntimeException("获取当前登录用户失败"));
 
+            aaListParamsEqCtrl.setSource("aa-list");
             aaListParamsEqCtrl.setUpdateDt(LocalDateTime.now());
             aaListParamsEqCtrl.setUpdateBy(nickName);
             aaListParamsEqCtrl.setOpCnt(1);
