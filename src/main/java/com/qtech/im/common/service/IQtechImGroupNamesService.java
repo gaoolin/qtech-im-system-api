@@ -24,4 +24,6 @@ public interface IQtechImGroupNamesService {
     public List<ImReportBaseInfo> getEqnGroupNames(ImReportBaseInfo imReportBaseInfo);
 
     public List<ImReportBaseInfo> getQcpGroupNames(ImReportBaseInfo imReportBaseInfo);
+
+    public List<ImReportBaseInfo> getAaCtrlGroupNames(ImReportBaseInfo imReportBaseInfo);
 }

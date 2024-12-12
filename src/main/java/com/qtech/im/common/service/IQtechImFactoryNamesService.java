@@ -26,4 +26,6 @@ public interface IQtechImFactoryNamesService {
     public List<ImReportBaseInfo> getEqnFactoryNames();
 
     public List<ImReportBaseInfo> getQcpFactoryNames();
+
+    public List<ImReportBaseInfo> getAaCtrlFactoryNames(ImReportBaseInfo imReportBaseInfo);
 }

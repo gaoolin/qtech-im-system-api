@@ -25,4 +25,6 @@ public interface QtechImGroupNamesMapper {
     public List<ImReportBaseInfo> getEqnGroupNames(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, ImReportBaseInfo imReportBaseInfo);
 
     public List<ImReportBaseInfo> getQcpGroupNames(@Param("deptNames") List<String> deptNames, @Param("deviceTypes") List<String> deviceTypes, ImReportBaseInfo imReportBaseInfo);
+
+    public List<ImReportBaseInfo> getAaCtrlGroupNames(ImReportBaseInfo imReportBaseInfo);
 }

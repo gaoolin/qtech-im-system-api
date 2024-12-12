@@ -104,4 +104,13 @@ public class QtechImGroupNamesController {
         }
         return R.ok(list);
     }
+
+    @GetMapping("/aa/ctrl")
+    public R<List<ImReportBaseInfo>> listAaCtrlGroupNames(ImReportBaseInfo imReportBaseInfo) {
+        List<ImReportBaseInfo> list = qtechImGroupNamesService.getAaCtrlGroupNames(imReportBaseInfo);
+        if (list.isEmpty()) {
+            return R.fail("未查询到工位信息");
+        }
+        return R.ok(list);
+    }
 }

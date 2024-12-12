@@ -104,4 +104,15 @@ public class QtechImFactoryNamesServiceImpl implements IQtechImFactoryNamesServi
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
         }
     }
+
+    @DataSource(DataSourceType.SECOND)
+    @Override
+    public List<ImReportBaseInfo> getAaCtrlFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        try {
+            return qtechImFactoryNamesMapper.getAaCtrlFactoryNames(imReportBaseInfo);
+        } catch (Exception e) {
+            log.error("查询数据库失败", e);
+            throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
+        }
+    }
 }

@@ -105,4 +105,13 @@ public class QtechImFactoryNamesController extends BaseController {
         }
         return R.ok(list);
     }
+
+    @GetMapping("/aa/ctrl")
+    public R<List<ImReportBaseInfo>> listCtrlFactoryNames(ImReportBaseInfo imReportBaseInfo) {
+        List<ImReportBaseInfo> list = qtechImFactoryInfoService.getAaCtrlFactoryNames(imReportBaseInfo);
+        if (list.isEmpty()) {
+            return R.fail("未查询到厂区信息");
+        }
+        return R.ok(list);
+    }
 }

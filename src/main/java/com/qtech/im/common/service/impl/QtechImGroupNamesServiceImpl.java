@@ -105,4 +105,19 @@ public class QtechImGroupNamesServiceImpl implements IQtechImGroupNamesService {
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
         }
     }
+
+    /**
+     * @param imReportBaseInfo
+     * @return
+     */
+    @DataSource(DataSourceType.SECOND)
+    @Override
+    public List<ImReportBaseInfo> getAaCtrlGroupNames(ImReportBaseInfo imReportBaseInfo) {
+        try {
+            return qtechImGroupNamesMapper.getAaCtrlGroupNames(imReportBaseInfo);
+        } catch (Exception e) {
+            log.error("查询数据库失败" , e);
+            throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
+        }
+    }
 }
