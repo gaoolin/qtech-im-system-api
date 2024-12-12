@@ -13,8 +13,8 @@ import lombok.Getter;
 // 枚举类型管理状态码
 @Getter
 public enum Status {
-    ACTIVE(0),
-    INACTIVE(1);
+    ACTIVE(1),
+    INACTIVE(0);
 
     private final int code;
 
