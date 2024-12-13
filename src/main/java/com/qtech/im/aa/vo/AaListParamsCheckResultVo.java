@@ -27,7 +27,7 @@ public class AaListParamsCheckResultVo {
     private String prodType;
     @Excel(name = "盒子号")
     private String simId;
-    @Excel(name = "时间")
+    @Excel(name = "点检时间")
     private String dt;
     @Excel(name = "状态", dictType = "aa_list_params_status")
     private Integer statusCode;

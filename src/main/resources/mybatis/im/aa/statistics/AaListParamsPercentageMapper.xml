@@ -2,21 +2,21 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qtech.im.wb.mapper.WbOlpRatioMapper">
-    <resultMap id="wbOlpOverviewResult" type="WbOlpPercentage">
-        <result property="factoryName" column="company_name"/>
-        <result property="groupName" column="group_name"/>
-        <result property="eqId" column="eq_id"/>
-        <result property="mcId" column="mc_id"/>
-        <result property="prodType" column="prod_type"/>
-        <result property="computeCnt" column="compute_cnt"/>
-        <result property="okCnt" column="ok_cnt"/>
-        <result property="errCnt" column="err_cnt"/>
-        <result property="errRatio" column="err_ratio"/>
+<mapper namespace="com.qtech.im.aa.mapper.statistics.AaListParamsPercentageMapper">
+    <resultMap id="aaListParamsPercentageResult" type="com.qtech.im.aa.vo.statistics.AaListParamsPercentageVo">
+        <result column="company_name" property="factoryName"/>
+        <result column="group_name" property="groupName"/>
+        <result column="eq_id" property="eqId"/>
+        <result column="mc_id" property="mcId"/>
+        <result column="code" property="statusCode"/>
+        <result column="prod_type" property="prodType"/>
+        <result column="compute_cnt" property="totalCnt"/>
+        <result column="ok_cnt" property="okCnt"/>
+        <result column="err_cnt" property="ngCnt"/>
+        <result column="err_ratio" property="errRatio"/>
     </resultMap>
 
-    <select id="selectWbOlpRatioList"
-            resultMap="wbOlpOverviewResult">
+    <select id="selectAaParamsPercentageList" parameterType="AaListParams" resultMap="aaListParamsPercentageResult">
         select
             company_name,
             group_name,
@@ -46,7 +46,7 @@
                     group_name,
                     device_m_id as eq_id,
                     machine_no as mc_id,
-                    mc_id as prod_type,
+                    prod_type,
                     count(code) as compute_cnt,
                     sum(case when code = 0 then 1 else 0 end) as ok_cnt,
                     sum(case when code != 0 then 1 else 0 end) as err_cnt
@@ -74,19 +74,19 @@
                     (
                     select
                         sim_id,
-                        mc_id,
-                        dt,
+                        prod_type,
+                        chk_dt,
                         code,
                         description
                     from
-                        qtech_eq_dwd.im_wb_olp_chk_result_detail
+                        qtech_eq_dwd.im_aa_list_chk_result_detail
                     <where>
                         <choose>
-                            <when test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
-                                and dt between #{params.beginTime} and #{params.endTime}
+                            <when test="params.startTime != null and params.startTime != '' and params.endTime != null and params.endTime != ''">
+                                and chk_dt between #{params.startTime} and #{params.endTime}
                             </when>
                             <otherwise>
-                                and dt > hours_sub(now(), 24)
+                                and chk_dt > hours_sub(now(), 24)
                             </otherwise>
                         </choose>
                         <if test="statusCode != null">
@@ -98,14 +98,14 @@
                 <choose>
                     <when test="(factoryName == null or factoryName == '') and (groupName == null or groupName == '') and (prodType == null or prodType == '')
                     and (eqId == null or eqId == '') and (mcId == null or mcId == '')">
-                        group by company_name, group_name, machine_no, device_m_id, mc_id
+                        group by company_name, group_name, machine_no, device_m_id, prod_type
                     </when>
                     <otherwise>
-                        group by company_name, group_name, machine_no, device_m_id, mc_id
+                        group by company_name, group_name, machine_no, device_m_id, prod_type
                         <trim prefix="having" prefixOverrides="and">
                             <if test="factoryName !=null and factoryName != ''"> and company_name = #{factoryName} </if>
                             <if test="groupName !=null and groupName != ''"> and group_name = #{groupName} </if>
-                            <if test="prodType != null and prodType != ''"> and lower(mc_id) like concat('%', lower(#{prodType}), '%') </if>
+                            <if test="prodType != null and prodType != ''"> and lower(prod_type) like concat('%', lower(#{prodType}), '%') </if>
                             <if test="eqId != null and eqId != ''"> and lower(device_m_id) like concat('%', lower(#{eqId}), '%') </if>
                             <if test="mcId != null and mcId != ''"> and lower(machine_no) like concat('%', lower(#{mcId}), '%') </if>
                         </trim>
@@ -122,11 +122,11 @@
                         and ok_cnt > 0
                     </where>) td
                 </when>
-                <otherwise>
-                    ) td
+                <otherwise>) td
                 </otherwise>
             </choose>
         order by <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder"></include>, mc_id asc
     </select>
+
 </mapper>
