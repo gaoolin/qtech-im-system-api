@@ -15,5 +15,5 @@ import java.util.List;
 
 @Mapper
 public interface AaListParamsPercentageMapper extends BaseMapper<AaListParamsPercentageVo> {
-    public List<AaListParamsPercentageVo> selectAaParamsPercentageList(AaListParamsPercentageVo aaListParamsPercentage);
+    public List<AaListParamsPercentageVo> selectAaParamsPercentageList(AaListParamsPercentageVo aaListParamsPercentageVo);
 }

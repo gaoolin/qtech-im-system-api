@@ -6,6 +6,7 @@ import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.im.aa.mapper.statistics.AaListParamsPercentageMapper;
 import com.qtech.im.aa.service.statistics.IAaListParamsPercentageService;
 import com.qtech.im.aa.vo.statistics.AaListParamsPercentageVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.List;
  * desc   :
  */
 
+@Slf4j
 @DataSource(DataSourceType.SECOND)
 @Service
 public class AaListParamsPercentageServiceImpl extends ServiceImpl<AaListParamsPercentageMapper, AaListParamsPercentageVo> implements IAaListParamsPercentageService {
@@ -35,7 +37,12 @@ public class AaListParamsPercentageServiceImpl extends ServiceImpl<AaListParamsP
     }
 
     @Override
-    public List<AaListParamsPercentageVo> selectAaParamsPercentageList(AaListParamsPercentageVo aaListParamsPercentage) {
-        return aaListParamsPercentageMapper.selectAaParamsPercentageList(aaListParamsPercentage);
+    public List<AaListParamsPercentageVo> selectAaParamsPercentageList(AaListParamsPercentageVo aaListParamsPercentageVo) {
+        try {
+            return aaListParamsPercentageMapper.selectAaParamsPercentageList(aaListParamsPercentageVo);
+        } catch (Exception e) {
+            log.error("selectAaParamsPercentageList error", e);
+            throw new RuntimeException("查询数据时发生异常，请联系系统管理员！");
+        }
     }
 }

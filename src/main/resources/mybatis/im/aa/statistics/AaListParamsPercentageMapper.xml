@@ -16,7 +16,7 @@
         <result column="err_ratio" property="errRatio"/>
     </resultMap>
 
-    <select id="selectAaParamsPercentageList" parameterType="AaListParams" resultMap="aaListParamsPercentageResult">
+    <select id="selectAaParamsPercentageList" parameterType="com.qtech.im.aa.vo.statistics.AaListParamsPercentageVo" resultMap="aaListParamsPercentageResult">
         select
             company_name,
             group_name,
@@ -82,8 +82,8 @@
                         qtech_eq_dwd.im_aa_list_chk_result_detail
                     <where>
                         <choose>
-                            <when test="params.startTime != null and params.startTime != '' and params.endTime != null and params.endTime != ''">
-                                and chk_dt between #{params.startTime} and #{params.endTime}
+                            <when test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                                and chk_dt between #{params.beginTime} and #{params.endTime}
                             </when>
                             <otherwise>
                                 and chk_dt > hours_sub(now(), 24)

@@ -7,8 +7,6 @@
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="company_name" property="factoryName" jdbcType="VARCHAR"/>
         <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
-        <result column="ttl_eqs" property="ttlEqs" jdbcType="INTEGER"/>
-        <result column="online_eqs" property="onlineEqs" jdbcType="INTEGER"/>
         <result column="chk_cnt" property="chkCnt" jdbcType="INTEGER"/>
         <result column="ok_cnt" property="okCnt" jdbcType="INTEGER"/>
         <result column="err_cnt" property="errCnt" jdbcType="INTEGER"/>

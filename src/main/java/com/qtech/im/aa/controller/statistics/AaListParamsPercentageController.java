@@ -29,9 +29,10 @@ public class AaListParamsPercentageController extends BaseController {
         this.aaListParamsPercentageService = aaListParamsPercentageService;
     }
 
-    @GetMapping("list")
-    public TableDataInfo list(AaListParamsPercentageVo aaListParamsPercentage) {
-        List<AaListParamsPercentageVo> list = aaListParamsPercentageService.selectAaParamsPercentageList(aaListParamsPercentage);
+    @GetMapping("/list")
+    public TableDataInfo list(AaListParamsPercentageVo aaListParamsPercentageVo) {
+        startPage();
+        List<AaListParamsPercentageVo> list = aaListParamsPercentageService.selectAaParamsPercentageList(aaListParamsPercentageVo);
         return getDataTable(list);
     }
 }

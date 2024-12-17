@@ -2,7 +2,6 @@ package com.qtech.im.aa.service.statistics;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qtech.im.aa.vo.statistics.AaListParamsPercentageVo;
-import com.qtech.im.common.util.QtechImVoUtil;
 
 import java.util.List;
 
