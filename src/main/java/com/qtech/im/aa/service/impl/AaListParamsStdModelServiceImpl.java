@@ -96,9 +96,9 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     @Override
-    public boolean updateAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModelDetail) {
+    public boolean updateAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel) {
         LambdaQueryWrapper<AaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModelDetail.getProdType());
+        wrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModel.getProdType());
         AaListParamsStdModel one = getOne(wrapper);
 
         boolean b = false;
@@ -117,10 +117,10 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
     }
 
     @Override
-    public void deleteAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModelDetail) {
-        if (aaListParamsStdModelDetail != null) {
+    public void deleteAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel) {
+        if (aaListParamsStdModel != null) {
             try {
-                String prodType = aaListParamsStdModelDetail.getProdType();
+                String prodType = aaListParamsStdModel.getProdType();
                 stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
                 LambdaQueryWrapper<AaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
                 wrapper.eq(AaListParamsStdModel::getProdType, prodType);

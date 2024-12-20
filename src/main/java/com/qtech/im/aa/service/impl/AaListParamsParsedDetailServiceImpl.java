@@ -33,6 +33,9 @@ public class AaListParamsParsedDetailServiceImpl extends ServiceImpl<AaListParam
             if (aaListParamsParsed.getProdType() != null) {
                 wrapper.eq(AaListParamsParsed::getProdType, aaListParamsParsed.getProdType());
             }
+            if (aaListParamsParsed.getSimId() != null) {
+                wrapper.eq(AaListParamsParsed::getSimId, aaListParamsParsed.getSimId());
+            }
             if (!aaListParamsParsed.getParams().isEmpty()) {
                 wrapper.between(AaListParamsParsed::getReceivedTime, aaListParamsParsed.getParams().get("beginTime"), aaListParamsParsed.getParams().get("endTime"));
             }

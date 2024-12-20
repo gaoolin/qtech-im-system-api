@@ -1,9 +1,6 @@
 package com.qtech.im.aa.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.qtech.share.aa.pojo.ImAaListParams;
 import lombok.Data;
@@ -36,6 +33,7 @@ public class AaListParamsStdModel extends ImAaListParams {
     private Date createTime;
     private String updateBy;
     private Date updateTime;
+
     /**
      * 请求参数
      */
