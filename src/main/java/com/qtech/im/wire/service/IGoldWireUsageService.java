@@ -2,9 +2,9 @@ package com.qtech.im.wire.service;
 
 import com.qtech.im.common.util.QtechImVoUtil;
 import com.qtech.im.wire.domain.ImGoldWireUsage;
-import com.qtech.im.wire.vo.ImGoldWireUsageVo;
-
-import java.util.List;
+import com.qtech.im.wire.vo.ImGoldWireEqUsageVo;
+import com.qtech.im.wire.vo.ImGoldWireFactoryUsageVo;
+import com.qtech.im.wire.vo.ImGoldWireGroupUsageVo;
 
 /**
  * author :  gaozhilin
@@ -15,9 +15,9 @@ import java.util.List;
 
 
 public interface IGoldWireUsageService {
-    public QtechImVoUtil.QtechImVos<ImGoldWireUsageVo> selectEqLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage);
+    public QtechImVoUtil.QtechImVos<ImGoldWireEqUsageVo> selectEqLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage);
 
-    public List<ImGoldWireUsage> selectGroupLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage);
+    public QtechImVoUtil.QtechImVos<ImGoldWireGroupUsageVo> selectGroupLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage);
 
-    public List<ImGoldWireUsage> selectFactoryLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage);
+    public QtechImVoUtil.QtechImVos<ImGoldWireFactoryUsageVo> selectFactoryLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage);
 }

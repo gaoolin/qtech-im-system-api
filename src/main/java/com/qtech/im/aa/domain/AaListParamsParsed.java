@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.qtech.framework.aspectj.lang.annotation.Excel;
 import com.qtech.share.aa.pojo.ImAaListParams;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -20,6 +22,7 @@ import java.util.*;
  * desc   :
  */
 
+@ApiModel(value = "AA List参数解析对象", description = "AA List参数解析结果表")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

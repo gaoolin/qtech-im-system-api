@@ -7,7 +7,9 @@ import com.qtech.im.common.util.QtechImVoUtil;
 import com.qtech.im.wire.domain.ImGoldWireUsage;
 import com.qtech.im.wire.mapper.GoldWireUsageMapper;
 import com.qtech.im.wire.service.IGoldWireUsageService;
-import com.qtech.im.wire.vo.ImGoldWireUsageVo;
+import com.qtech.im.wire.vo.ImGoldWireEqUsageVo;
+import com.qtech.im.wire.vo.ImGoldWireFactoryUsageVo;
+import com.qtech.im.wire.vo.ImGoldWireGroupUsageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,12 +34,12 @@ public class GoldWireUsageServiceImpl implements IGoldWireUsageService {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public QtechImVoUtil.QtechImVos<ImGoldWireUsageVo> selectEqLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage) {
+    public QtechImVoUtil.QtechImVos<ImGoldWireEqUsageVo> selectEqLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage) {
         try {
-            ArrayList<ImGoldWireUsageVo> vos = new ArrayList<>();
+            ArrayList<ImGoldWireEqUsageVo> vos = new ArrayList<>();
             List<ImGoldWireUsage> list = goldWireUsageMapper.selectEqLevelWireUsageList(eqLevelWireUsage);
             long total = new PageInfo(list).getTotal();
-            list.forEach(item -> vos.add(new ImGoldWireUsageVo(item)));
+            list.forEach(item -> vos.add(new ImGoldWireEqUsageVo(item)));
             return new QtechImVoUtil.QtechImVos<>(vos, total);
         } catch (Exception e) {
             log.error("selectEqLevelWireUsageList:", e);
@@ -45,20 +47,30 @@ public class GoldWireUsageServiceImpl implements IGoldWireUsageService {
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public List<ImGoldWireUsage> selectGroupLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage) {
+    public QtechImVoUtil.QtechImVos<ImGoldWireGroupUsageVo> selectGroupLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage) {
         try {
-            return goldWireUsageMapper.selectGroupLevelWireUsageList(eqLevelWireUsage);
+            ArrayList<ImGoldWireGroupUsageVo> vos = new ArrayList<>();
+            List<ImGoldWireUsage> list = goldWireUsageMapper.selectGroupLevelWireUsageList(eqLevelWireUsage);
+            long total = new PageInfo(list).getTotal();
+            list.forEach(item -> vos.add(new ImGoldWireGroupUsageVo(item)));
+            return new QtechImVoUtil.QtechImVos<>(vos, total);
         } catch (Exception e) {
             log.error("selectGroupLevelWireUsageList:", e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public List<ImGoldWireUsage> selectFactoryLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage) {
+    public QtechImVoUtil.QtechImVos<ImGoldWireFactoryUsageVo> selectFactoryLevelWireUsageList(ImGoldWireUsage eqLevelWireUsage) {
         try {
-            return goldWireUsageMapper.selectFactoryLevelWireUsageList(eqLevelWireUsage);
+            ArrayList<ImGoldWireFactoryUsageVo> vos = new ArrayList<>();
+            List<ImGoldWireUsage> list = goldWireUsageMapper.selectFactoryLevelWireUsageList(eqLevelWireUsage);
+            long total = new PageInfo(list).getTotal();
+            list.forEach(item -> vos.add(new ImGoldWireFactoryUsageVo(item)));
+            return new QtechImVoUtil.QtechImVos<>(vos, total);
         } catch (Exception e) {
             log.error("selectFactoryLevelWireUsageList:", e);
             throw new RuntimeException("系统处理数据发生异常，请联系系统负责人！");

@@ -1,10 +1,13 @@
 package com.qtech.im.aa.scheduleder;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.qtech.framework.aspectj.lang.annotation.DataSource;
+import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.framework.redis.RedisCache;
 import com.qtech.im.aa.domain.AaListParamsEqCtrl;
 import com.qtech.im.aa.service.IAaListParamsEqCtrlService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +23,8 @@ import static com.qtech.share.aa.constant.ComparisonConstants.EQ_REVERSE_IGNORE_
  */
 
 @Component
+// @EnableScheduling
 public class CleanupIgnoresEqs {
-    private static final String CLEANUP_IGNORES_EQS_SQL = "update aa_list_params_eq_ctrl set status = 1 where status = 0";
     private final RedisCache redisCache;
     private final IAaListParamsEqCtrlService aaListParamsEqCtrlService;
 
@@ -36,7 +39,8 @@ public class CleanupIgnoresEqs {
         refreshEqStatus();
     }
 
-    @Scheduled(cron = "0 0 9 * * ?") // 每天早上09:00执行
+    // @Scheduled(cron = "0 0 9 * * ?") // 每天早上09:00执行
+    // @Scheduled(cron = "0/30 * * * * ?")
     public void cleanupNightShiftIgnores() {
         refreshEqStatus();
     }
@@ -44,6 +48,7 @@ public class CleanupIgnoresEqs {
     public void cleanupIgnores() {
     }
 
+    @DataSource(DataSourceType.SECOND)
     private void refreshEqStatus() {
         Collection<String> keys = redisCache.keys(EQ_REVERSE_IGNORE_SIM_PREFIX + "*");
         redisCache.deleteObject(keys);
