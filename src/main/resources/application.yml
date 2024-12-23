@@ -102,7 +102,6 @@ mybatis:
     call-setters-on-nulls: true
     useGeneratedKeys: false
 
-
 mybatis-plus:
   # 搜索指定包别名
   typeAliasesPackage: com.qtech.**.domain
@@ -120,7 +119,7 @@ mybatis-plus:
   global-config:
     banner: false
     db-config:
-      update_strategy: IGNORED
+      update-strategy: ignored
 
 # PageHelper分页插件
 pagehelper:

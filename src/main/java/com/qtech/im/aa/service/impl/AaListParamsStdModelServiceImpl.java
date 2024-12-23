@@ -6,6 +6,7 @@ import com.qtech.common.utils.DateUtils;
 import com.qtech.common.utils.StringUtils;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
+import com.qtech.framework.redis.RedisCache;
 import com.qtech.im.aa.domain.AaListParamsStdModel;
 import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
 import com.qtech.im.aa.mapper.AaListParamsStdModelMapper;
@@ -15,7 +16,6 @@ import com.qtech.im.aa.utils.ModelDetailConvertToModelInfo;
 import com.qtech.im.aa.utils.ReflectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +37,8 @@ import static com.qtech.share.aa.constant.ComparisonConstants.REDIS_COMPARISON_M
 @Slf4j
 @Service
 public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStdModelMapper, AaListParamsStdModel> implements IAaListParamsStdModelService {
-
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisCache redisCache;
 
     @Autowired
     private IAaListParamsStdModelInfoService aaListParamsStdModelInfoService;
@@ -62,12 +61,21 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
     public boolean saveOrUpdateAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel) {
         // 检查数据是否存在
         LambdaQueryWrapper<AaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModel.getProdType());
+        if (aaListParamsStdModel.getId() != null) {
+            wrapper.eq(AaListParamsStdModel::getId, aaListParamsStdModel.getId());
+        }
+        if (StringUtils.isNotBlank(aaListParamsStdModel.getProdType())) {
+            wrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModel.getProdType());
+        }
         AaListParamsStdModel one = getOne(wrapper);
 
         if (one != null) {
             // 数据已存在，执行更新操作
-            stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
+            Boolean hasKey = redisCache.hasKey(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
+            if (hasKey) {
+                redisCache.deleteObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
+            }
+            // stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
             aaListParamsStdModel.setUpdateBy(getLoginUser().getUser().getNickName());
             aaListParamsStdModel.setUpdateTime(DateUtils.getNowDate());
             boolean a = update(aaListParamsStdModel, wrapper);
@@ -98,7 +106,12 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
     @Override
     public boolean updateAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel) {
         LambdaQueryWrapper<AaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModel.getProdType());
+        if (aaListParamsStdModel.getId() != null) {
+            wrapper.eq(AaListParamsStdModel::getId, aaListParamsStdModel.getId());
+        }
+        if (aaListParamsStdModel.getProdType() != null) {
+            wrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModel.getProdType());
+        }
         AaListParamsStdModel one = getOne(wrapper);
 
         boolean b = false;
@@ -106,9 +119,12 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
             if (one == null) {
                 throw new RuntimeException("修改数据发生异常，请联系管理员！");
             } else {
-                stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
+                Boolean hasKey = redisCache.hasKey(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
+                if (hasKey) {
+                    redisCache.deleteObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
+                }
             }
-            b = update(wrapper);
+            b = update(aaListParamsStdModel, wrapper);
         } catch (Exception e) {
             log.error("修改数据发生异常，请联系管理员！\n{}", e.getMessage());
             throw new RuntimeException("修改数据发生异常，请联系管理员！");
@@ -121,7 +137,10 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
         if (aaListParamsStdModel != null) {
             try {
                 String prodType = aaListParamsStdModel.getProdType();
-                stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
+                Boolean hasKey = redisCache.hasKey(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
+                if (hasKey) {
+                    redisCache.deleteObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
+                }
                 LambdaQueryWrapper<AaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
                 wrapper.eq(AaListParamsStdModel::getProdType, prodType);
                 remove(wrapper);
@@ -138,7 +157,10 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
         list.forEach(id -> {
             AaListParamsStdModel res = getById(id);
             if (res != null) {
-                stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + res.getProdType());
+                Boolean hasKey = redisCache.hasKey(REDIS_COMPARISON_MODEL_KEY_PREFIX + res.getProdType());
+                if (hasKey) {
+                    redisCache.deleteObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + res.getProdType());
+                }
             }
         });
 
@@ -251,7 +273,3 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
         return getOne(wrapper);
     }
 }
-
-
-
-

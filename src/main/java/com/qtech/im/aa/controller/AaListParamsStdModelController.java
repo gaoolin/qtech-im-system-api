@@ -48,11 +48,17 @@ public class AaListParamsStdModelController extends BaseController {
         return R.ok(one);
     }
 
+    /**
+     * 此Api用于AA List标准模版新增或者已存在模版更新请求处理
+     */
     @RequestMapping(value = "/add", produces = "application/json", method = RequestMethod.POST)
     public AjaxResult add(@RequestBody AaListParamsStdModel aaListParamsStdModelDetail) {
         return toAjax(aaListParamsStdModelDetailService.saveOrUpdateAaListParamsStdModel(aaListParamsStdModelDetail));
     }
 
+    /**
+     * 此Api用于AA List标准模版编辑请求处理
+     */
     @RequestMapping(value = "/edit", produces = "application/json", method = RequestMethod.POST)
     public AjaxResult edit(@RequestBody AaListParamsStdModel aaListParamsStdModelDetail) {
         String nickName = getLoginUser().getUser().getNickName();

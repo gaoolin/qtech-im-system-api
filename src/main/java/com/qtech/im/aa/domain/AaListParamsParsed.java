@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.qtech.framework.aspectj.lang.annotation.Excel;
 import com.qtech.share.aa.pojo.ImAaListParams;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

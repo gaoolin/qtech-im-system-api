@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.qtech.common.utils.StringUtils;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
+import com.qtech.framework.redis.RedisCache;
 import com.qtech.im.aa.domain.AaListParamsStdModel;
 import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
 import com.qtech.im.aa.mapper.AaListParamsStdModelInfoMapper;
@@ -38,7 +39,7 @@ import static com.qtech.share.aa.constant.ComparisonConstants.REDIS_COMPARISON_M
 @Service
 public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParamsStdModelInfoMapper, AaListParamsStdModelInfo> implements IAaListParamsStdModelInfoService {
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisCache redisCache;
 
     @Autowired
     private AaListParamsStdModelMapper aaListParamsStdModelMapper;
@@ -106,7 +107,10 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
     public boolean updateStdModelInfo(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
         try {
             String prodType = aaListParamsStdModelInfo.getProdType();
-            stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
+            Boolean hasKey = redisCache.hasKey(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
+            if (hasKey) {
+                redisCache.deleteObject(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
+            }
 
             LambdaQueryWrapper<AaListParamsStdModelInfo> queryWrapper = new LambdaQueryWrapper<>();
             if (StringUtils.isBlank(prodType) && aaListParamsStdModelInfo.getId() == null) {
@@ -174,7 +178,10 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
             LambdaQueryWrapper<AaListParamsStdModelInfo> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(AaListParamsStdModelInfo::getProdType, modelInfo.getProdType());
             if (getOne(wrapper) != null) {
-                stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + modelInfo.getProdType());
+                Boolean hasKey = redisCache.hasKey(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + modelInfo.getProdType());
+                if (hasKey) {
+                    redisCache.deleteObject(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + modelInfo.getProdType());
+                }
                 return update(modelInfo, wrapper);
             } else {
                 return save(modelInfo);
@@ -199,7 +206,10 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
                 return false; // 或者抛出异常
             }
             String prodType = modelInfo.getProdType();
-            stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
+            Boolean hasKey = redisCache.hasKey(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
+            if (hasKey) {
+                redisCache.deleteObject(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
+            }
             boolean a = removeById(id);
             int result = aaListParamsStdModelMapper.deleteByProdType(prodType);
             boolean b = result > 0;
