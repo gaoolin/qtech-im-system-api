@@ -25,10 +25,4 @@ public interface IAaListParamsEqCtrlService extends IService<AaListParamsEqCtrl>
     public Boolean edit(AaListParamsEqCtrl aaListParamsEqCtrl);
 
     public Boolean addOne(AaListParamsEqCtrl aaListParamsEqCtrl);
-
-    public void cleanupDayShiftIgnores(); // 实现清理白班的忽略状态
-
-    public void cleanupNightShiftIgnores(); // 实现清理夜班的忽略状态
-
-    public void cleanupIgnores(); // 这里根据你存储`simId`的策略清理Redis中的忽略键
 }

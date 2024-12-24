@@ -15,11 +15,9 @@ import com.qtech.im.aa.vo.AaListParamsEqCtrlVo;
 import com.qtech.project.system.domain.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,25 +114,6 @@ public class AaListParamsEqCtrlServiceImpl extends ServiceImpl<AaListParamsEqCtr
             }
         }
         return false;
-    }
-
-    @Override
-    @Scheduled(cron = "0 0 21 * * ?") // 每天晚上21:00执行
-    public void cleanupDayShiftIgnores() {
-        Collection<String> keys = redisCache.keys(EQ_REVERSE_IGNORE_SIM_PREFIX + "*");
-        redisCache.deleteObject(keys);
-    }
-
-    @Override
-    @Scheduled(cron = "0 0 9 * * ?") // 每天早上09:00执行
-    public void cleanupNightShiftIgnores() {
-        Collection<String> keys = redisCache.keys(EQ_REVERSE_IGNORE_SIM_PREFIX + "*");
-        redisCache.deleteObject(keys);
-    }
-
-    @Override
-    public void cleanupIgnores() {
-
     }
 
     @Override

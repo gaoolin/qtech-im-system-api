@@ -1,5 +1,9 @@
 package com.qtech.framework.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.qtech.im.aa.domain.AaListParamsStdModel;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +12,9 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
 
 /**
  * redis配置
@@ -48,6 +54,29 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
+    public RedisTemplate<String, AaListParamsStdModel> aaListParamsStdModelRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, AaListParamsStdModel> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+
+        // 设置 Key 的序列化方式
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+
+        // 设置 Value 的序列化方式
+        Jackson2JsonRedisSerializer<AaListParamsStdModel> serializer = new Jackson2JsonRedisSerializer<>(AaListParamsStdModel.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        serializer.setObjectMapper(objectMapper);
+
+        template.setValueSerializer(serializer);
+        template.setHashValueSerializer(serializer);
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
     public DefaultRedisScript<Long> limitScript() {
         DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptText(limitScriptText());
@@ -59,17 +88,6 @@ public class RedisConfig extends CachingConfigurerSupport {
      * 限流脚本
      */
     private String limitScriptText() {
-        return "local key = KEYS[1]\n" +
-                "local count = tonumber(ARGV[1])\n" +
-                "local time = tonumber(ARGV[2])\n" +
-                "local current = redis.call('get', key);\n" +
-                "if current and tonumber(current) > count then\n" +
-                "    return tonumber(current);\n" +
-                "end\n" +
-                "current = redis.call('incr', key)\n" +
-                "if tonumber(current) == 1 then\n" +
-                "    redis.call('expire', key, time)\n" +
-                "end\n" +
-                "return tonumber(current);";
+        return "local key = KEYS[1]\n" + "local count = tonumber(ARGV[1])\n" + "local time = tonumber(ARGV[2])\n" + "local current = redis.call('get', key);\n" + "if current and tonumber(current) > count then\n" + "    return tonumber(current);\n" + "end\n" + "current = redis.call('incr', key)\n" + "if tonumber(current) == 1 then\n" + "    redis.call('expire', key, time)\n" + "end\n" + "return tonumber(current);";
     }
 }

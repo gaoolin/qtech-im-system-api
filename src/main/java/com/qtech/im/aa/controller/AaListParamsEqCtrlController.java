@@ -26,17 +26,17 @@ import java.util.List;
 @RequestMapping("/aa/params/eq")
 public class AaListParamsEqCtrlController extends BaseController {
 
-    private final IAaListParamsEqCtrlService aaListParamsEqService;
+    private final IAaListParamsEqCtrlService aaListParamsEqCtrlService;
 
     @Autowired
-    public AaListParamsEqCtrlController(IAaListParamsEqCtrlService aaListParamsEqService) {
-        this.aaListParamsEqService = aaListParamsEqService;
+    public AaListParamsEqCtrlController(IAaListParamsEqCtrlService aaListParamsEqCtrlService) {
+        this.aaListParamsEqCtrlService = aaListParamsEqCtrlService;
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public TableDataInfo list(AaListParamsEqCtrlVo aaListParamsEqCtrlVo) {
         startPage();
-        List<AaListParamsEqCtrlVo> list = aaListParamsEqService.list(aaListParamsEqCtrlVo);
+        List<AaListParamsEqCtrlVo> list = aaListParamsEqCtrlService.list(aaListParamsEqCtrlVo);
         return getDataTable(list);
     }
 
@@ -44,25 +44,25 @@ public class AaListParamsEqCtrlController extends BaseController {
     @RequestMapping(value = "/ignore", method = {RequestMethod.POST, RequestMethod.PUT})
     public AjaxResult changeSwitch(@RequestBody AaListParamsEqCtrl aaListParamsEqCtrl) {
         Boolean changed = false;
-        Boolean exist = aaListParamsEqService.isExist(aaListParamsEqCtrl);
+        Boolean exist = aaListParamsEqCtrlService.isExist(aaListParamsEqCtrl);
         if (exist) {
-            changed = aaListParamsEqService.edit(aaListParamsEqCtrl);
+            changed = aaListParamsEqCtrlService.edit(aaListParamsEqCtrl);
         } else {
-            changed = aaListParamsEqService.addOne(aaListParamsEqCtrl);
+            changed = aaListParamsEqCtrlService.addOne(aaListParamsEqCtrl);
         }
         return toAjax(changed);
     }
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
     public AjaxResult edit(@RequestBody AaListParamsEqCtrl aaListParamsEqCtrl) {
-        boolean updated = aaListParamsEqService.edit(aaListParamsEqCtrl);
+        boolean updated = aaListParamsEqCtrlService.edit(aaListParamsEqCtrl);
         return toAjax(updated);
     }
 
     @Log(title = "AA List管控设备状态导出", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, AaListParamsEqCtrlVo aaListParamsEqCtrlVo) {
-        List<AaListParamsEqCtrlVo> list = aaListParamsEqService.list(aaListParamsEqCtrlVo);
+        List<AaListParamsEqCtrlVo> list = aaListParamsEqCtrlService.list(aaListParamsEqCtrlVo);
         ExcelUtil<AaListParamsEqCtrlVo> util = new ExcelUtil<>(AaListParamsEqCtrlVo.class);
         util.exportExcel(response, list, "AA List管控设备状态");
     }
