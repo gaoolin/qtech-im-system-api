@@ -9,6 +9,7 @@ import com.qtech.framework.web.domain.BaseEntity;
 import lombok.Data;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * author :  gaozhilin
@@ -16,7 +17,6 @@ import java.util.Map;
  * date   :  2024/07/02 13:37:00
  * desc   :
  */
-
 @Data
 @TableName(value = "IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO")
 public class AaListParamsStdModelInfo extends BaseEntity {
@@ -32,5 +32,24 @@ public class AaListParamsStdModelInfo extends BaseEntity {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
     @TableField(exist = false)
+    @JsonInclude
     private String searchValue;
+
+
+    // 重写equals和hashCode方法，用于判断对象的对应属性是否相等
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AaListParamsStdModelInfo that = (AaListParamsStdModelInfo) o;
+        return Objects.equals(prodType, that.prodType) &&
+                Objects.equals(listParams, that.listParams) &&
+                Objects.equals(itemParams, that.itemParams) &&
+                Objects.equals(status, that.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(prodType, listParams, itemParams, status);
+    }
 }

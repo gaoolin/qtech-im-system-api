@@ -17,7 +17,6 @@ import com.qtech.im.aa.vo.AaListParamsStdModelInfoVo;
 import com.qtech.im.common.util.QtechImVoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -142,28 +141,27 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
             } else if (entity instanceof AaListParamsStdModel) {
                 modelDetail = (AaListParamsStdModel) entity;
                 modelInfo = ModelDetailConvertToModelInfo.doConvert(modelDetail);
+
+                if (modelInfo != null) {
+
+                    if (StringUtils.isNotEmpty(modelDetail.getCreateBy())) {
+                        modelInfo.setCreateBy(modelDetail.getCreateBy());
+                    }
+
+                    if (modelDetail.getCreateTime() != null) {
+                        modelInfo.setCreateTime(modelDetail.getCreateTime());
+                    }
+
+                    if (StringUtils.isNotBlank(modelDetail.getUpdateBy())) {
+                        modelInfo.setUpdateBy(modelDetail.getUpdateBy());
+                    }
+
+                    if (modelDetail.getUpdateTime() != null) {
+                        modelInfo.setUpdateTime(modelDetail.getUpdateTime());
+                    }
+                }
             }
-
-            if (modelInfo != null) {
-
-                assert modelDetail != null;
-                if (StringUtils.isNotEmpty(modelDetail.getCreateBy())) {
-                    modelInfo.setCreateBy(modelDetail.getCreateBy());
-                }
-
-                if (modelDetail.getCreateTime() != null) {
-                    modelInfo.setCreateTime(modelDetail.getCreateTime());
-                }
-
-                if (StringUtils.isNotBlank(modelDetail.getUpdateBy())) {
-                    modelInfo.setUpdateBy(modelDetail.getUpdateBy());
-                }
-
-                if (modelDetail.getUpdateTime() != null) {
-                    modelInfo.setUpdateTime(modelDetail.getUpdateTime());
-                }
-                return doSaveOrUpdate(modelInfo);
-            }
+            return doSaveOrUpdate(modelInfo);
         } catch (Exception e) {
             // 记录日志或进行其他异常处理
             log.error("saveOrUpdateAaListParamsStdModelInfo:", e);
@@ -171,21 +169,25 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
         return false;
     }
 
-
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     public boolean doSaveOrUpdate(AaListParamsStdModelInfo modelInfo) {
         try {
             LambdaQueryWrapper<AaListParamsStdModelInfo> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(AaListParamsStdModelInfo::getProdType, modelInfo.getProdType());
-            if (getOne(wrapper) != null) {
-                Boolean hasKey = redisCache.hasKey(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + modelInfo.getProdType());
-                if (hasKey) {
-                    redisCache.deleteObject(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + modelInfo.getProdType());
-                }
-                return update(modelInfo, wrapper);
+            AaListParamsStdModelInfo one = getOne(wrapper);
+            boolean flag = false;
+            if (one != null) {
+                flag = update(modelInfo, wrapper);
             } else {
-                return save(modelInfo);
+                flag = save(modelInfo);
             }
+
+            Boolean hasKey = redisCache.hasKey(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + modelInfo.getProdType());
+            if (hasKey) {
+                redisCache.deleteObject(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + modelInfo.getProdType());
+            }
+            redisCache.setCacheObject(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + modelInfo.getProdType(), modelInfo);
+            return flag;
         } catch (Exception e) {
             // 记录日志或进行其他异常处理
             log.error("saveOrUpdateModelInfo:", e);
