@@ -49,7 +49,7 @@ public class SynchronizeTemplatesJob {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 */15 * * * ?")
     public void synchronizeTemplates() {
         // 获取数据库中模板明细和概要信息
         Map<String, AaListParamsStdModel> dbDetailMap = getDatabaseDetails();

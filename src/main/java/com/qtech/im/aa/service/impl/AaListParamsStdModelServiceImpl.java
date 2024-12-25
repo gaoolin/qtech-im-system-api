@@ -1,6 +1,7 @@
 package com.qtech.im.aa.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qtech.common.utils.DateUtils;
 import com.qtech.common.utils.StringUtils;
@@ -61,11 +62,14 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
     public boolean saveOrUpdateAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel) {
         // 检查数据是否存在
         LambdaQueryWrapper<AaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
+        LambdaUpdateWrapper<AaListParamsStdModel> updateWrapper = baseMapper.updateWithNullField(aaListParamsStdModel);
         if (aaListParamsStdModel.getId() != null) {
             wrapper.eq(AaListParamsStdModel::getId, aaListParamsStdModel.getId());
+            updateWrapper.eq(AaListParamsStdModel::getId, aaListParamsStdModel.getId());
         }
         if (StringUtils.isNotBlank(aaListParamsStdModel.getProdType())) {
             wrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModel.getProdType());
+            updateWrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModel.getProdType());
         }
         AaListParamsStdModel one = getOne(wrapper);
 
@@ -78,7 +82,7 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
             // stringRedisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
             aaListParamsStdModel.setUpdateBy(getLoginUser().getUser().getNickName());
             aaListParamsStdModel.setUpdateTime(DateUtils.getNowDate());
-            boolean a = update(aaListParamsStdModel, wrapper);
+            boolean a = update(updateWrapper);
             boolean b = aaListParamsStdModelInfoService.saveOrUpdateStdModelInfo(aaListParamsStdModel);
             if (!a || !b) {
                 throw new RuntimeException("更新数据发生异常，请联系管理员！");
@@ -106,11 +110,14 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
     @Override
     public boolean updateAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel) {
         LambdaQueryWrapper<AaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
+        LambdaUpdateWrapper<AaListParamsStdModel> updateWrapper = baseMapper.updateWithNullField(aaListParamsStdModel);
         if (aaListParamsStdModel.getId() != null) {
             wrapper.eq(AaListParamsStdModel::getId, aaListParamsStdModel.getId());
+            updateWrapper.eq(AaListParamsStdModel::getId, aaListParamsStdModel.getId());
         }
         if (aaListParamsStdModel.getProdType() != null) {
             wrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModel.getProdType());
+            updateWrapper.eq(AaListParamsStdModel::getProdType, aaListParamsStdModel.getProdType());
         }
         AaListParamsStdModel one = getOne(wrapper);
 
@@ -124,7 +131,8 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
                     redisCache.deleteObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + one.getProdType());
                 }
             }
-            b = update(aaListParamsStdModel, wrapper);
+            // b = update(aaListParamsStdModel, wrapper);
+            b = update(updateWrapper);
         } catch (Exception e) {
             log.error("修改数据发生异常，请联系管理员！\n{}", e.getMessage());
             throw new RuntimeException("修改数据发生异常，请联系管理员！");

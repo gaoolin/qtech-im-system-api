@@ -3,6 +3,7 @@ package com.qtech.im.aa.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.mchange.v2.encounter.StrongEqualityEncounterCounter;
 import com.qtech.im.aa.domain.AaListParamsStdModel;
+import com.qtech.im.config.GaeaBaseMapper;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -15,7 +16,7 @@ import org.apache.ibatis.annotations.Select;
  */
 
 @Mapper
-public interface AaListParamsStdModelMapper extends BaseMapper<AaListParamsStdModel> {
+public interface AaListParamsStdModelMapper extends GaeaBaseMapper<AaListParamsStdModel> {
     @Delete("DELETE FROM IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL WHERE PROD_TYPE = #{prodType}")
     int deleteByProdType(String prodType);
 

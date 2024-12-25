@@ -31,7 +31,7 @@ import static com.qtech.share.aa.constant.ComparisonConstants.REDIS_COMPARISON_M
  * desc   :
  */
 @Slf4j
-@Component
+// @Component
 // @EnableScheduling
 @DataSource(DataSourceType.FOURTH)
 public class ChkAndSynchronousAaListModelJob {
@@ -41,7 +41,7 @@ public class ChkAndSynchronousAaListModelJob {
     private final StringRedisTemplate redisTemplateInfo;
     private final ObjectMapper objectMapper;
 
-    @Autowired
+    // @Autowired
     public ChkAndSynchronousAaListModelJob(ObjectMapper objectMapper, RedisTemplate<String, AaListParamsStdModel> redisTemplate, StringRedisTemplate redisTemplateInfo, IAaListParamsStdModelService aaListParamsStdModelService, IAaListParamsStdModelInfoService aaListParamsStdModelInfoService) {
         this.objectMapper = objectMapper;
         this.redisTemplate = redisTemplate;

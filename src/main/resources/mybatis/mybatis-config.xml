@@ -15,6 +15,10 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         <setting name="logImpl"                  value="SLF4J"  />
         <!-- 使用驼峰命名法转换字段 -->
 		<!-- <setting name="mapUnderscoreToCamelCase" value="true"/> -->
+
+        <!-- 用于解决 LambdaUpdateWrapper 空值更新的问题 在配置文件application.yml中配置jdbc-type-for-null: null不起作用。
+        可能跟我使用了mybatis-config.xml，覆盖了相关配置有关-->
+        <setting name="jdbcTypeForNull" value="NULL"/>
 	</settings>
 	
 </configuration>
