@@ -50,6 +50,14 @@ public interface GaeaBaseMapper<T> extends BaseMapper<T> {
         List<Field> allFields = TableInfoHelper.getAllFields(entity.getClass());
         MetaObject metaObject = SystemMetaObject.forObject(entity);
         allFields.forEach(field -> {
+            // 跳过 serialVersionUID
+            if (field.getName().equals("serialVersionUID")) {
+                return;
+            }
+            // 更新时不用更新主键
+            if (field.getName().equals("id")) {
+                return;
+            }
             Object value = metaObject.getValue(field.getName());
             updateWrapper.set(cameToUnderline(field.getName()), value);
         });

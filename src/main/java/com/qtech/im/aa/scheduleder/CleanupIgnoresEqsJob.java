@@ -66,7 +66,8 @@ public class CleanupIgnoresEqsJob {
         aaListParamsEqCtrlService.update(null, updateWrapper);
     }
 
-    @Scheduled(cron = "0 * * * * ?") // 每分钟检查一次数据一致性
+    // @Scheduled(cron = "0 * * * * ?") // 每分钟检查一次数据一致性
+    @Scheduled(cron = "0 */15 * * * ?")
     public void checkAndRepairDataConsistency() {
         RLock lock = redissonClient.getLock("data_consistency_check_lock");
         try {

@@ -1,7 +1,7 @@
 package com.qtech.im.aa.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
+import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,5 +12,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 
 @Mapper
-public interface AaListParamsStdModelInfoMapper extends BaseMapper<AaListParamsStdModelInfo> {
+public interface AaListParamsStdTemplateInfoMapper extends BaseMapper<AaListParamsStdTemplateInfo> {
 }

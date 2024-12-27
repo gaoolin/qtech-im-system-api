@@ -4,10 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
-import com.qtech.im.aa.domain.AaListParamsStdModel;
-import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
-import com.qtech.im.aa.service.IAaListParamsStdModelInfoService;
-import com.qtech.im.aa.service.IAaListParamsStdModelService;
+import com.qtech.im.aa.domain.AaListParamsStdTemplate;
+import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
+import com.qtech.im.aa.service.IAaListParamsStdTemplateInfoService;
+import com.qtech.im.aa.service.IAaListParamsStdTemplateService;
 import com.qtech.im.aa.utils.ModelDetailConvertToModelInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +39,11 @@ import static com.qtech.share.aa.constant.ComparisonConstants.REDIS_COMPARISON_M
 public class SynchronizeTemplatesJob {
 
     @Autowired
-    private IAaListParamsStdModelInfoService modelInfoService;
+    private IAaListParamsStdTemplateInfoService modelInfoService;
     @Autowired
-    private IAaListParamsStdModelService modelService;
+    private IAaListParamsStdTemplateService modelService;
     @Autowired
-    private RedisTemplate<String, AaListParamsStdModel> redisTemplate;
+    private RedisTemplate<String, AaListParamsStdTemplate> redisTemplate;
     @Autowired
     private RedisTemplate<String, String> redisTemplateInfo;
     @Autowired
@@ -52,14 +52,14 @@ public class SynchronizeTemplatesJob {
     @Scheduled(cron = "0 */15 * * * ?")
     public void synchronizeTemplates() {
         // 获取数据库中模板明细和概要信息
-        Map<String, AaListParamsStdModel> dbDetailMap = getDatabaseDetails();
-        Map<String, AaListParamsStdModelInfo> dbSummaryMap = getDatabaseSummaries();
+        Map<String, AaListParamsStdTemplate> dbDetailMap = getDatabaseDetails();
+        Map<String, AaListParamsStdTemplateInfo> dbSummaryMap = getDatabaseSummaries();
 
         // 比较并同步数据库模板明细和概要信息
         syncDatabaseDetailsAndSummaries(dbDetailMap, dbSummaryMap);
 
         // 比较并同步数据库概要信息与 Redis 数据
-        Map<String, AaListParamsStdModelInfo> reDbSummaryMap = getDatabaseSummaries();
+        Map<String, AaListParamsStdTemplateInfo> reDbSummaryMap = getDatabaseSummaries();
         syncDatabaseSummariesWithRedis(reDbSummaryMap);
 
         // 比较并同步数据库明细与 Redis 数据
@@ -71,7 +71,7 @@ public class SynchronizeTemplatesJob {
         log.info(">>>>> Synchronization process completed.");
     }
 
-    private void syncSummariesAndDetailsWithRedis(Map<String, AaListParamsStdModel> dbDetailMap) {
+    private void syncSummariesAndDetailsWithRedis(Map<String, AaListParamsStdTemplate> dbDetailMap) {
         List<Set<String>> sets = getRedisKeys();
         Set<String> modelKeys = sets.get(0);
         Set<String> modelInfoKeys = sets.get(1);
@@ -88,24 +88,24 @@ public class SynchronizeTemplatesJob {
         HashSet<String> onlyInInfo = new HashSet<>(modelInfoKeys);
         onlyInInfo.removeAll(modelKeys);
         onlyInInfo.forEach(prodType -> {
-            AaListParamsStdModel aaListParamsStdModel = dbDetailMap.get(prodType);
-            if (aaListParamsStdModel != null) {
-                redisTemplate.opsForValue().set(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType, aaListParamsStdModel);
+            AaListParamsStdTemplate aaListParamsStdTemplate = dbDetailMap.get(prodType);
+            if (aaListParamsStdTemplate != null) {
+                redisTemplate.opsForValue().set(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType, aaListParamsStdTemplate);
             }
         });
 
         // in both
     }
 
-    private Map<String, AaListParamsStdModel> getDatabaseDetails() {
-        return modelService.list().stream().filter(model -> model.getProdType() != null).collect(Collectors.toMap(AaListParamsStdModel::getProdType, model -> model));
+    private Map<String, AaListParamsStdTemplate> getDatabaseDetails() {
+        return modelService.list().stream().filter(model -> model.getProdType() != null).collect(Collectors.toMap(AaListParamsStdTemplate::getProdType, model -> model));
     }
 
-    private Map<String, AaListParamsStdModelInfo> getDatabaseSummaries() {
-        return modelInfoService.list().stream().filter(model -> model.getProdType() != null).collect(Collectors.toMap(AaListParamsStdModelInfo::getProdType, model -> model));
+    private Map<String, AaListParamsStdTemplateInfo> getDatabaseSummaries() {
+        return modelInfoService.list().stream().filter(model -> model.getProdType() != null).collect(Collectors.toMap(AaListParamsStdTemplateInfo::getProdType, model -> model));
     }
 
-    private void syncDatabaseDetailsAndSummaries(Map<String, AaListParamsStdModel> dbDetailMap, Map<String, AaListParamsStdModelInfo> dbSummaryMap) {
+    private void syncDatabaseDetailsAndSummaries(Map<String, AaListParamsStdTemplate> dbDetailMap, Map<String, AaListParamsStdTemplateInfo> dbSummaryMap) {
         Set<String> detailKeys = dbDetailMap.keySet();
         Set<String> summaryKeys = dbSummaryMap.keySet();
 
@@ -113,7 +113,7 @@ public class SynchronizeTemplatesJob {
         Set<String> onlyInDetails = new HashSet<>(detailKeys);
         onlyInDetails.removeAll(summaryKeys);
         onlyInDetails.forEach(prodType -> {
-            AaListParamsStdModel detailModel = dbDetailMap.get(prodType);
+            AaListParamsStdTemplate detailModel = dbDetailMap.get(prodType);
             if (detailModel != null) {
                 modelInfoService.saveOrUpdateStdModelInfo(detailModel);
                 log.info(">>>>> Inserted into Summary Table: {}", prodType);
@@ -124,7 +124,7 @@ public class SynchronizeTemplatesJob {
         Set<String> onlyInSummary = new HashSet<>(summaryKeys);
         onlyInSummary.removeAll(detailKeys);
         onlyInSummary.forEach(prodType -> {
-            modelInfoService.remove(new LambdaQueryWrapper<AaListParamsStdModelInfo>().eq(AaListParamsStdModelInfo::getProdType, prodType));
+            modelInfoService.remove(new LambdaQueryWrapper<AaListParamsStdTemplateInfo>().eq(AaListParamsStdTemplateInfo::getProdType, prodType));
             log.info(">>>>> Deleted from Summary Table: {}", prodType);
         });
 
@@ -132,10 +132,10 @@ public class SynchronizeTemplatesJob {
         Set<String> inBoth = new HashSet<>(detailKeys);
         inBoth.retainAll(summaryKeys);
         inBoth.forEach(prodType -> {
-            AaListParamsStdModel detailModel = dbDetailMap.get(prodType);
-            AaListParamsStdModelInfo summaryModel = dbSummaryMap.get(prodType);
+            AaListParamsStdTemplate detailModel = dbDetailMap.get(prodType);
+            AaListParamsStdTemplateInfo summaryModel = dbSummaryMap.get(prodType);
             if (detailModel != null && summaryModel != null) {
-                AaListParamsStdModelInfo updatedInfo = ModelDetailConvertToModelInfo.doConvert(detailModel);
+                AaListParamsStdTemplateInfo updatedInfo = ModelDetailConvertToModelInfo.doConvert(detailModel);
                 if (updatedInfo != null && !updatedInfo.equals(summaryModel)) {
                     updatedInfo.setUpdateBy("SYSTEM");
                     updatedInfo.setUpdateTime(new Date());
@@ -146,13 +146,13 @@ public class SynchronizeTemplatesJob {
         });
     }
 
-    private void syncDatabaseSummariesWithRedis(Map<String, AaListParamsStdModelInfo> dbSummaryMap) {
+    private void syncDatabaseSummariesWithRedis(Map<String, AaListParamsStdTemplateInfo> dbSummaryMap) {
         // Compare and Sync
         dbSummaryMap.forEach((prodType, dbModel) -> {
             String redisKey = REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType;
             try {
                 String redisData = redisTemplateInfo.opsForValue().get(redisKey);
-                AaListParamsStdModelInfo redisModel = redisData != null ? objectMapper.readValue(redisData, AaListParamsStdModelInfo.class) : null;
+                AaListParamsStdTemplateInfo redisModel = redisData != null ? objectMapper.readValue(redisData, AaListParamsStdTemplateInfo.class) : null;
 
                 if (!Objects.equals(dbModel, redisModel)) {
                     redisTemplateInfo.opsForValue().set(redisKey, objectMapper.writeValueAsString(dbModel));
@@ -164,10 +164,10 @@ public class SynchronizeTemplatesJob {
         });
     }
 
-    private void syncDatabaseDetailsWithRedis(Map<String, AaListParamsStdModel> dbDetailMap) {
+    private void syncDatabaseDetailsWithRedis(Map<String, AaListParamsStdTemplate> dbDetailMap) {
         dbDetailMap.forEach((prodType, dbModel) -> {
             String redisKey = REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType;
-            AaListParamsStdModel redisModel = redisTemplate.opsForValue().get(redisKey);
+            AaListParamsStdTemplate redisModel = redisTemplate.opsForValue().get(redisKey);
 
             if (!Objects.equals(dbModel, redisModel)) {
                 redisTemplate.opsForValue().set(redisKey, dbModel);

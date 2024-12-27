@@ -24,7 +24,7 @@ import java.util.*;
 @ToString(callSuper = true)
 @TableName(value = "IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL")
 @Data
-public class AaListParamsStdModel extends ImAaListParams {
+public class AaListParamsStdTemplate extends ImAaListParams {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     @TableId(value = "id", type = IdType.AUTO)

@@ -4,19 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
-import com.qtech.im.aa.domain.AaListParamsStdModel;
-import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
-import com.qtech.im.aa.service.IAaListParamsStdModelInfoService;
-import com.qtech.im.aa.service.IAaListParamsStdModelService;
+import com.qtech.im.aa.domain.AaListParamsStdTemplate;
+import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
+import com.qtech.im.aa.service.IAaListParamsStdTemplateInfoService;
+import com.qtech.im.aa.service.IAaListParamsStdTemplateService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,14 +31,14 @@ import static com.qtech.share.aa.constant.ComparisonConstants.REDIS_COMPARISON_M
 // @EnableScheduling
 @DataSource(DataSourceType.FOURTH)
 public class ChkAndSynchronousAaListModelJob {
-    private final IAaListParamsStdModelInfoService aaListParamsStdModelInfoService;
-    private final IAaListParamsStdModelService aaListParamsStdModelService;
-    private final RedisTemplate<String, AaListParamsStdModel> redisTemplate;
+    private final IAaListParamsStdTemplateInfoService aaListParamsStdModelInfoService;
+    private final IAaListParamsStdTemplateService aaListParamsStdModelService;
+    private final RedisTemplate<String, AaListParamsStdTemplate> redisTemplate;
     private final StringRedisTemplate redisTemplateInfo;
     private final ObjectMapper objectMapper;
 
     // @Autowired
-    public ChkAndSynchronousAaListModelJob(ObjectMapper objectMapper, RedisTemplate<String, AaListParamsStdModel> redisTemplate, StringRedisTemplate redisTemplateInfo, IAaListParamsStdModelService aaListParamsStdModelService, IAaListParamsStdModelInfoService aaListParamsStdModelInfoService) {
+    public ChkAndSynchronousAaListModelJob(ObjectMapper objectMapper, RedisTemplate<String, AaListParamsStdTemplate> redisTemplate, StringRedisTemplate redisTemplateInfo, IAaListParamsStdTemplateService aaListParamsStdModelService, IAaListParamsStdTemplateInfoService aaListParamsStdModelInfoService) {
         this.objectMapper = objectMapper;
         this.redisTemplate = redisTemplate;
         this.redisTemplateInfo = redisTemplateInfo;
@@ -54,10 +50,10 @@ public class ChkAndSynchronousAaListModelJob {
     public void chkAndSynchronousAaListModel() {
         try {
             // 从数据库中获取所有标准模板
-            List<AaListParamsStdModel> dbModels = aaListParamsStdModelService.list();
-            List<AaListParamsStdModelInfo> dbModelInfos = aaListParamsStdModelInfoService.list();
-            Map<String, AaListParamsStdModel> dbModelMap = dbModels.stream()
-                    .collect(Collectors.toMap(AaListParamsStdModel::getProdType, model -> model));
+            List<AaListParamsStdTemplate> dbModels = aaListParamsStdModelService.list();
+            List<AaListParamsStdTemplateInfo> dbModelInfos = aaListParamsStdModelInfoService.list();
+            Map<String, AaListParamsStdTemplate> dbModelMap = dbModels.stream()
+                    .collect(Collectors.toMap(AaListParamsStdTemplate::getProdType, model -> model));
 
             // 模版信息
             Set<String> keysToKeep = new HashSet<>();
@@ -78,11 +74,11 @@ public class ChkAndSynchronousAaListModelJob {
                 }
             }
 
-            Map<String, AaListParamsStdModel> redisModels = new HashMap<>();
+            Map<String, AaListParamsStdTemplate> redisModels = new HashMap<>();
             if (!redisModelKeys.isEmpty()) {
-                List<AaListParamsStdModel> list = redisTemplate.opsForValue().multiGet(redisModelKeys);
+                List<AaListParamsStdTemplate> list = redisTemplate.opsForValue().multiGet(redisModelKeys);
                 if (list != null) {
-                    for (AaListParamsStdModel template : list) {
+                    for (AaListParamsStdTemplate template : list) {
                         if (template != null) {
                             redisModels.put(template.getProdType(), template);
                         }
@@ -100,7 +96,7 @@ public class ChkAndSynchronousAaListModelJob {
             Set<String> onlyInDb = new HashSet<>(dbTemplateProdTypes);
             onlyInDb.removeAll(redisTemplateProdTypes);
             for (String prodType : onlyInDb) {
-                AaListParamsStdModel template = dbModelMap.get(prodType);
+                AaListParamsStdTemplate template = dbModelMap.get(prodType);
                 if (template != null) {
                     redisTemplate.opsForValue().set(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType, template);
                     // 模版信息
@@ -139,8 +135,8 @@ public class ChkAndSynchronousAaListModelJob {
             Set<String> inBoth = new HashSet<>(dbTemplateProdTypes);
             inBoth.retainAll(redisTemplateProdTypes);
             for (String prodType : inBoth) {
-                AaListParamsStdModel dbModel = dbModelMap.get(prodType);
-                AaListParamsStdModel redisModel = redisModels.get(prodType);
+                AaListParamsStdTemplate dbModel = dbModelMap.get(prodType);
+                AaListParamsStdTemplate redisModel = redisModels.get(prodType);
                 if (dbModel != null && redisModel != null && !dbModel.equals(redisModel)) {
                     redisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
                     redisTemplate.opsForValue().set(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType, dbModel);
@@ -149,7 +145,7 @@ public class ChkAndSynchronousAaListModelJob {
             }
 
             // 处理模版信息
-            for (AaListParamsStdModelInfo info : dbModelInfos) {
+            for (AaListParamsStdTemplateInfo info : dbModelInfos) {
                 String key = REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + info.getProdType();
                 if (info.getStatus() == 1) {
                     // 如果 status 为 1，确保键存在于 Redis 中

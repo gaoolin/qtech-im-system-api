@@ -1,7 +1,7 @@
 package com.qtech.im.aa.vo;
 
 import com.qtech.framework.aspectj.lang.annotation.Excel;
-import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
+import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
 import lombok.Data;
 
 import java.text.SimpleDateFormat;
@@ -38,18 +38,18 @@ public class AaListParamsStdModelInfoVo {
     @Excel(name = "备注")
     private String remark;
 
-    public AaListParamsStdModelInfoVo(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
-        this.id = aaListParamsStdModelInfo.getId();
-        this.prodType = aaListParamsStdModelInfo.getProdType();
-        this.listParams = aaListParamsStdModelInfo.getListParams();
-        this.itemParams = aaListParamsStdModelInfo.getItemParams();
-        this.status = aaListParamsStdModelInfo.getStatus();
-        this.provider = aaListParamsStdModelInfo.getProvider();
-        this.belongTo = aaListParamsStdModelInfo.getBelongTo();
-        this.createBy = aaListParamsStdModelInfo.getCreateBy();
-        this.createTime = aaListParamsStdModelInfo.getCreateTime() == null ? "" : new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(aaListParamsStdModelInfo.getCreateTime());
-        this.updateBy = aaListParamsStdModelInfo.getUpdateBy();
-        this.updateTime = aaListParamsStdModelInfo.getUpdateTime() == null ? "" : new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(aaListParamsStdModelInfo.getUpdateTime());
-        this.remark = aaListParamsStdModelInfo.getRemark();
+    public AaListParamsStdModelInfoVo(AaListParamsStdTemplateInfo aaListParamsStdTemplateInfo) {
+        this.id = aaListParamsStdTemplateInfo.getId();
+        this.prodType = aaListParamsStdTemplateInfo.getProdType();
+        this.listParams = aaListParamsStdTemplateInfo.getListParams();
+        this.itemParams = aaListParamsStdTemplateInfo.getItemParams();
+        this.status = aaListParamsStdTemplateInfo.getStatus();
+        this.provider = aaListParamsStdTemplateInfo.getProvider();
+        this.belongTo = aaListParamsStdTemplateInfo.getBelongTo();
+        this.createBy = aaListParamsStdTemplateInfo.getCreateBy();
+        this.createTime = aaListParamsStdTemplateInfo.getCreateTime() == null ? "" : new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(aaListParamsStdTemplateInfo.getCreateTime());
+        this.updateBy = aaListParamsStdTemplateInfo.getUpdateBy();
+        this.updateTime = aaListParamsStdTemplateInfo.getUpdateTime() == null ? "" : new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(aaListParamsStdTemplateInfo.getUpdateTime());
+        this.remark = aaListParamsStdTemplateInfo.getRemark();
     }
 }

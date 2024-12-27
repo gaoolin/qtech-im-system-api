@@ -8,8 +8,8 @@ import com.qtech.framework.aspectj.lang.enums.BusinessType;
 import com.qtech.framework.web.controller.BaseController;
 import com.qtech.framework.web.domain.AjaxResult;
 import com.qtech.framework.web.page.TableDataInfo;
-import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
-import com.qtech.im.aa.service.IAaListParamsStdModelInfoService;
+import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
+import com.qtech.im.aa.service.IAaListParamsStdTemplateInfoService;
 import com.qtech.im.aa.vo.AaListParamsStdModelInfoVo;
 import com.qtech.im.common.util.QtechImVoUtil;
 import com.qtech.project.system.service.ISysUserService;
@@ -28,25 +28,24 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/aa/params/model/info")
 public class AaListParamsStdModelInfoController extends BaseController {
-
     @Autowired
-    private IAaListParamsStdModelInfoService aaListParamsStdModelInfoService;
+    private IAaListParamsStdTemplateInfoService aaListParamsStdModelInfoService;
 
     @Autowired
     private ISysUserService sysUserService;
 
     @RequestMapping(value = "/list", produces = "application/json", method = RequestMethod.GET)
-    public TableDataInfo list(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
+    public TableDataInfo list(AaListParamsStdTemplateInfo aaListParamsStdTemplateInfo) {
         startPage();
-        QtechImVoUtil.QtechImVos<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdModelInfo);
+        QtechImVoUtil.QtechImVos<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdTemplateInfo);
         return QtechImVoUtil.getVoDataTable(list);
     }
 
     @RequestMapping(value = "/edit", produces = "application/json", method = RequestMethod.POST)
-    public AjaxResult edit(@RequestBody AaListParamsStdModelInfo aaListParamsStdModelInfo) {
-        aaListParamsStdModelInfo.setUpdateBy(sysUserService.selectUserByUserName(SecurityUtils.getUsername()).getNickName());
-        aaListParamsStdModelInfo.setUpdateTime(DateUtils.getNowDate());
-        return toAjax(aaListParamsStdModelInfoService.updateStdModelInfo(aaListParamsStdModelInfo));
+    public AjaxResult edit(@RequestBody AaListParamsStdTemplateInfo aaListParamsStdTemplateInfo) {
+        aaListParamsStdTemplateInfo.setUpdateBy(sysUserService.selectUserByUserName(SecurityUtils.getUsername()).getNickName());
+        aaListParamsStdTemplateInfo.setUpdateTime(DateUtils.getNowDate());
+        return toAjax(aaListParamsStdModelInfoService.updateStdModelInfo(aaListParamsStdTemplateInfo));
     }
 
     @RequestMapping(value = "/remove/{id}", produces = "application/json", method = RequestMethod.DELETE)
@@ -56,8 +55,8 @@ public class AaListParamsStdModelInfoController extends BaseController {
 
     @Log(title = "AA-List参数标准模版信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, AaListParamsStdModelInfo aaListParamsStdModelInfo) {
-        QtechImVoUtil.QtechImVos<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdModelInfo);
+    public void export(HttpServletResponse response, AaListParamsStdTemplateInfo aaListParamsStdTemplateInfo) {
+        QtechImVoUtil.QtechImVos<AaListParamsStdModelInfoVo> list = aaListParamsStdModelInfoService.selectStdModelInfoList(aaListParamsStdTemplateInfo);
         ExcelUtil<AaListParamsStdModelInfoVo> util = new ExcelUtil<AaListParamsStdModelInfoVo>(AaListParamsStdModelInfoVo.class);
         util.exportExcel(response, list.getData(), "AA-List参数标准模版信息");
     }

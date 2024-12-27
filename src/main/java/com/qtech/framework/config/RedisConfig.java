@@ -3,7 +3,7 @@ package com.qtech.framework.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.qtech.im.aa.domain.AaListParamsStdModel;
+import com.qtech.im.aa.domain.AaListParamsStdTemplate;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -54,8 +54,8 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public RedisTemplate<String, AaListParamsStdModel> aaListParamsStdModelRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, AaListParamsStdModel> template = new RedisTemplate<>();
+    public RedisTemplate<String, AaListParamsStdTemplate> aaListParamsStdModelRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, AaListParamsStdTemplate> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
         // 设置 Key 的序列化方式
@@ -63,7 +63,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         template.setHashKeySerializer(new StringRedisSerializer());
 
         // 设置 Value 的序列化方式
-        Jackson2JsonRedisSerializer<AaListParamsStdModel> serializer = new Jackson2JsonRedisSerializer<>(AaListParamsStdModel.class);
+        Jackson2JsonRedisSerializer<AaListParamsStdTemplate> serializer = new Jackson2JsonRedisSerializer<>(AaListParamsStdTemplate.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

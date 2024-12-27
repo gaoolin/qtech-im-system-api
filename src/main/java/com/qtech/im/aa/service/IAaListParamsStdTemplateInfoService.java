@@ -1,7 +1,7 @@
 package com.qtech.im.aa.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.qtech.im.aa.domain.AaListParamsStdModelInfo;
+import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
 import com.qtech.im.aa.vo.AaListParamsStdModelInfoVo;
 import com.qtech.im.common.util.QtechImVoUtil;
 
@@ -13,11 +13,11 @@ import com.qtech.im.common.util.QtechImVoUtil;
  */
 
 
-public interface IAaListParamsStdModelInfoService extends IService<AaListParamsStdModelInfo> {
+public interface IAaListParamsStdTemplateInfoService extends IService<AaListParamsStdTemplateInfo> {
 
-    public QtechImVoUtil.QtechImVos<AaListParamsStdModelInfoVo> selectStdModelInfoList(AaListParamsStdModelInfo aaListParamsStdModelInfo);
+    public QtechImVoUtil.QtechImVos<AaListParamsStdModelInfoVo> selectStdModelInfoList(AaListParamsStdTemplateInfo aaListParamsStdTemplateInfo);
 
-    public boolean updateStdModelInfo(AaListParamsStdModelInfo aaListParamsStdModelInfo);
+    public boolean updateStdModelInfo(AaListParamsStdTemplateInfo aaListParamsStdTemplateInfo);
 
     public boolean saveOrUpdateStdModelInfo(Object entity);
 

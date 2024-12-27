@@ -1,7 +1,7 @@
 package com.qtech.im.aa.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.qtech.im.aa.domain.AaListParamsStdModel;
+import com.qtech.im.aa.domain.AaListParamsStdTemplate;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,28 +13,28 @@ import java.util.Map;
 * @description 针对表【IM_AA_LIST_PARAMS_STD_MODEL】的数据库操作Service
 * @createDate 2024-10-29 14:30:19
 */
-public interface IAaListParamsStdModelService extends IService<AaListParamsStdModel> {
+public interface IAaListParamsStdTemplateService extends IService<AaListParamsStdTemplate> {
 
-    List<AaListParamsStdModel> selectList(AaListParamsStdModel AaListParamsStdModel);
+    List<AaListParamsStdTemplate> selectList(AaListParamsStdTemplate AaListParamsStdTemplate);
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRED)
-    boolean saveOrUpdateAaListParamsStdModel(AaListParamsStdModel AaListParamsStdModel);
+    boolean saveOrUpdateAaListParamsStdModel(AaListParamsStdTemplate AaListParamsStdTemplate);
 
-    int batchInsert(List<AaListParamsStdModel> paramsModelList);
+    int batchInsert(List<AaListParamsStdTemplate> paramsModelList);
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
-    boolean updateAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModelDetail);
+    boolean updateAaListParamsStdModel(AaListParamsStdTemplate aaListParamsStdTemplateDetail);
 
-    void deleteAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModelDetail);
+    void deleteAaListParamsStdModel(AaListParamsStdTemplate aaListParamsStdTemplateDetail);
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     boolean deleteAaListParamsStdModelByIds(List<Long> list);
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
-    Map<String, Object> uploadManual(List<AaListParamsStdModel> paramsModelList);
+    Map<String, Object> uploadManual(List<AaListParamsStdTemplate> paramsModelList);
 
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
-    Map<String, Object> uploadOnline(AaListParamsStdModel aaListParamsStdModelDetail);
+    Map<String, Object> uploadOnline(AaListParamsStdTemplate aaListParamsStdTemplateDetail);
 
-    AaListParamsStdModel selectOne(Long id);
+    AaListParamsStdTemplate selectOne(Long id);
 }
