@@ -1,6 +1,7 @@
 package com.qtech.im.aa.scheduleder;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
@@ -50,8 +51,8 @@ public class SynchronizeTemplatesJob {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // @Scheduled(cron = "0 */15 * * * ?")
-    @Scheduled(cron = "0 * * * * ?") // 每分钟检查一次数据一致性
+    @Scheduled(cron = "0 */15 * * * ?")
+    // @Scheduled(cron = "0 * * * * ?") // 每分钟检查一次数据一致性
     public void synchronizeTemplates() {
         // 获取数据库中模板明细和概要信息
         Map<String, AaListParamsStdTemplate> dbDetailMap = getDatabaseDetails();
@@ -81,7 +82,23 @@ public class SynchronizeTemplatesJob {
         // in detail
         HashSet<String> onlyInDetail = new HashSet<>(modelKeys);
         onlyInDetail.removeAll(modelInfoKeys);
-        onlyInDetail.forEach(this::deleteModelFromRedis);
+        onlyInDetail.forEach(prodType -> {
+            AaListParamsStdTemplate aaListParamsStdTemplate = dbDetailMap.get(prodType);
+            if (aaListParamsStdTemplate != null) {
+                AaListParamsStdTemplateInfo modelInfo = ModelDetailConvertToModelInfo.doConvert(aaListParamsStdTemplate);
+                if (modelInfo != null) {
+                    try {
+                        stringRedisTemplate.opsForValue().set(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, objectMapper.writeValueAsString(modelInfo));
+                    } catch (JsonProcessingException e) {
+                        log.error(">>>>> JSON解析失败, msg: {}", aaListParamsStdTemplate, e);
+                        throw new RuntimeException(e);
+                    }
+                    log.info(">>>>> Inserted into Detail Table: {}", prodType);
+                }
+            } else {
+                deleteModelFromRedis(prodType, false);
+            }
+        });
 
         // in info
         HashSet<String> onlyInInfo = new HashSet<>(modelInfoKeys);
@@ -90,6 +107,8 @@ public class SynchronizeTemplatesJob {
             AaListParamsStdTemplate aaListParamsStdTemplate = dbDetailMap.get(prodType);
             if (aaListParamsStdTemplate != null) {
                 redisTemplate.opsForValue().set(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType, aaListParamsStdTemplate);
+            } else {
+                deleteModelFromRedis(prodType, true);
             }
         });
 
@@ -207,9 +226,11 @@ public class SynchronizeTemplatesJob {
         return sets;
     }
 
-    public void deleteModelFromRedis(String prodType) {
+    public void deleteModelFromRedis(String prodType, boolean isSummary) {
+        String prefix = isSummary ? REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX : REDIS_COMPARISON_MODEL_KEY_PREFIX;
+
         try {
-            String key = REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType;
+            String key = prefix + prodType;
             log.info(">>>>> Attempting to delete Redis key: {}", key);
 
             // Check if the key exists before attempting to delete
