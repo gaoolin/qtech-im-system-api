@@ -9,6 +9,7 @@ import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
 import com.qtech.im.aa.service.IAaListParamsStdTemplateInfoService;
 import com.qtech.im.aa.service.IAaListParamsStdTemplateService;
 import com.qtech.im.aa.utils.ModelDetailConvertToModelInfo;
+import com.qtech.share.aa.pojo.ImAaListParams;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
@@ -43,13 +44,14 @@ public class SynchronizeTemplatesJob {
     @Autowired
     private IAaListParamsStdTemplateService modelService;
     @Autowired
-    private RedisTemplate<String, AaListParamsStdTemplate> redisTemplate;
+    private RedisTemplate<String, ImAaListParams> redisTemplate;
     @Autowired
-    private RedisTemplate<String, String> redisTemplateInfo;
+    private RedisTemplate<String, String> stringRedisTemplate;
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Scheduled(cron = "0 */15 * * * ?")
+    // @Scheduled(cron = "0 */15 * * * ?")
+    @Scheduled(cron = "0 * * * * ?") // 每分钟检查一次数据一致性
     public void synchronizeTemplates() {
         // 获取数据库中模板明细和概要信息
         Map<String, AaListParamsStdTemplate> dbDetailMap = getDatabaseDetails();
@@ -79,10 +81,7 @@ public class SynchronizeTemplatesJob {
         // in detail
         HashSet<String> onlyInDetail = new HashSet<>(modelKeys);
         onlyInDetail.removeAll(modelInfoKeys);
-        onlyInDetail.forEach(prodType -> {
-            redisTemplate.delete(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
-            log.info("Deleted from Redis: {}", prodType);
-        });
+        onlyInDetail.forEach(this::deleteModelFromRedis);
 
         // in info
         HashSet<String> onlyInInfo = new HashSet<>(modelInfoKeys);
@@ -151,11 +150,11 @@ public class SynchronizeTemplatesJob {
         dbSummaryMap.forEach((prodType, dbModel) -> {
             String redisKey = REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType;
             try {
-                String redisData = redisTemplateInfo.opsForValue().get(redisKey);
+                String redisData = stringRedisTemplate.opsForValue().get(redisKey);
                 AaListParamsStdTemplateInfo redisModel = redisData != null ? objectMapper.readValue(redisData, AaListParamsStdTemplateInfo.class) : null;
 
                 if (!Objects.equals(dbModel, redisModel)) {
-                    redisTemplateInfo.opsForValue().set(redisKey, objectMapper.writeValueAsString(dbModel));
+                    stringRedisTemplate.opsForValue().set(redisKey, objectMapper.writeValueAsString(dbModel));
                     log.info(">>>>> Updated Redis Template Info: {}", prodType);
                 }
             } catch (Exception e) {
@@ -167,11 +166,11 @@ public class SynchronizeTemplatesJob {
     private void syncDatabaseDetailsWithRedis(Map<String, AaListParamsStdTemplate> dbDetailMap) {
         dbDetailMap.forEach((prodType, dbModel) -> {
             String redisKey = REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType;
-            AaListParamsStdTemplate redisModel = redisTemplate.opsForValue().get(redisKey);
+            ImAaListParams redisModel = redisTemplate.opsForValue().get(redisKey);
 
             if (!Objects.equals(dbModel, redisModel)) {
                 redisTemplate.opsForValue().set(redisKey, dbModel);
-                log.info(">>>>> Updated Redis Template Detail: {}", prodType);
+                log.info(">>>>> Inserted Redis Template Detail: {}", prodType);
             }
         });
     }
@@ -188,10 +187,13 @@ public class SynchronizeTemplatesJob {
                 try (Cursor<byte[]> cursor = connection.scan(options)) {
                     while (cursor.hasNext()) {
                         String key = new String(cursor.next());
-                        if (key.endsWith(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX)) {
-                            redisModelInfoKeys.add(key);
+                        if (key.startsWith(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX)) {
+                            // 去掉前缀
+                            String keyWithoutPrefix = key.substring(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX.length());
+                            redisModelInfoKeys.add(keyWithoutPrefix);
                         } else {
-                            redisModelKeys.add(key);
+                            String keyWithoutPrefix = key.substring(REDIS_COMPARISON_MODEL_KEY_PREFIX.length());
+                            redisModelKeys.add(keyWithoutPrefix);
                         }
                     }
                 }
@@ -200,8 +202,30 @@ public class SynchronizeTemplatesJob {
                 return null;
             });
         } catch (Exception e) {
-            log.error("Redis scan operation failed", e);
+            log.error(">>>>> Redis scan operation failed", e);
         }
         return sets;
+    }
+
+    public void deleteModelFromRedis(String prodType) {
+        try {
+            String key = REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType;
+            log.info(">>>>> Attempting to delete Redis key: {}", key);
+
+            // Check if the key exists before attempting to delete
+            Boolean exists = redisTemplate.hasKey(key);
+            if (exists != null && exists) {
+                Boolean delete = redisTemplate.delete(key);
+                if (Boolean.TRUE.equals(delete)) {
+                    log.info(">>>>> Successfully deleted Redis key: {}", key);
+                } else {
+                    log.warn(">>>>> Failed to delete Redis key: {}. Key may not exist.", key);
+                }
+            } else {
+                log.warn(">>>>> Key does not exist in Redis: {}", key);
+            }
+        } catch (Exception e) {
+            log.error(">>>>> Error deleting Redis key for {}: {}", prodType, e.getMessage());
+        }
     }
 }

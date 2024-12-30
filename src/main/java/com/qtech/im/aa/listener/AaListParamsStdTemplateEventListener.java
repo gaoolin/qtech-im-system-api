@@ -5,7 +5,9 @@ import com.qtech.framework.redis.RedisCache;
 import com.qtech.im.aa.domain.AaListParamsStdTemplate;
 import com.qtech.im.aa.event.AaListParamsStdTemplateEvent;
 import com.qtech.im.aa.service.IAaListParamsStdTemplateService;
+import com.qtech.share.aa.pojo.ImAaListParams;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -35,6 +37,12 @@ public class AaListParamsStdTemplateEventListener {
         LambdaQueryWrapper<AaListParamsStdTemplate> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AaListParamsStdTemplate::getProdType, prodType);
         AaListParamsStdTemplate one = aaListParamsStdTemplateService.getOne(queryWrapper);
+        if (one == null) {
+            log.info("No data found for prodType: {}", prodType);
+            return;
+        }
+        ImAaListParams imAaListParams = new ImAaListParams();
+        BeanUtils.copyProperties(one, imAaListParams);
 
         try {
             switch (operation) {
@@ -42,19 +50,19 @@ public class AaListParamsStdTemplateEventListener {
                     log.info("Inserting Redis cache for prodType: {}", prodType);
                     log.info("Source: {}", event.getSource());
                     // 这里可以根据需要实现插入 Redis 缓存的逻辑
-                    redisCache.setCacheObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType, one);
+                    redisCache.setCacheObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType, imAaListParams);
                     break;
                 case "UPDATE":
                     log.info("Updating Redis cache for prodType: {}", prodType);
                     log.info("Source: {}", event.getSource());
                     // 这里可以根据需要实现更新 Redis 缓存的逻辑
                     redisCache.deleteObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
-                    redisCache.setCacheObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType, one);
+                    redisCache.setCacheObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType, imAaListParams);
                     break;
                 case "DELETE":
                     log.info("Deleting Redis cache for prodType: {}", prodType);
                     log.info("Source: {}", event.getSource());
-                    redisCache.deleteObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
+                    redisCache.deleteObject(REDIS_COMPARISON_MODEL_KEY_PREFIX + imAaListParams);
                     break;
                 default:
                     log.warn("Unknown operation: {}", operation);

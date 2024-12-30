@@ -3,12 +3,15 @@ package com.qtech.framework.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.qtech.im.aa.domain.AaListParamsStdTemplate;
+import com.qtech.share.aa.pojo.ImAaListParams;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisNode;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -24,6 +27,24 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        RedisClusterConfiguration clusterConfig = new RedisClusterConfiguration();
+        clusterConfig.addClusterNode(new RedisNode("10.170.6.24", 6379));
+        clusterConfig.addClusterNode(new RedisNode("10.170.6.25", 6379));
+        clusterConfig.addClusterNode(new RedisNode("10.170.6.26", 6379));
+        clusterConfig.addClusterNode(new RedisNode("10.170.6.141", 6379));
+        clusterConfig.addClusterNode(new RedisNode("10.170.6.142", 6379));
+        clusterConfig.addClusterNode(new RedisNode("10.170.1.68", 6379));
+        clusterConfig.setPassword("im@2024"); // 添加密码
+        clusterConfig.setMaxRedirects(3);
+
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(clusterConfig);
+        factory.afterPropertiesSet();
+        return factory;
+    }
+
     @Bean
     @SuppressWarnings(value = {"unchecked", "rawtypes"})
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
@@ -54,8 +75,8 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public RedisTemplate<String, AaListParamsStdTemplate> aaListParamsStdModelRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, AaListParamsStdTemplate> template = new RedisTemplate<>();
+    public RedisTemplate<String, ImAaListParams> aaListParamsStdModelRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, ImAaListParams> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
         // 设置 Key 的序列化方式
@@ -63,7 +84,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         template.setHashKeySerializer(new StringRedisSerializer());
 
         // 设置 Value 的序列化方式
-        Jackson2JsonRedisSerializer<AaListParamsStdTemplate> serializer = new Jackson2JsonRedisSerializer<>(AaListParamsStdTemplate.class);
+        Jackson2JsonRedisSerializer<ImAaListParams> serializer = new Jackson2JsonRedisSerializer<>(ImAaListParams.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.qtech.share.aa.pojo.ImAaListParams;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -20,16 +22,16 @@ import java.util.*;
  * desc   :
  */
 
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @TableName(value = "IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL")
 @Data
+@Accessors(chain = true)  // 与父类返回类型保持一致
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AaListParamsStdTemplate extends ImAaListParams {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    private String prodType;
 
     // 业务字段
     private String createBy;
@@ -51,5 +53,15 @@ public class AaListParamsStdTemplate extends ImAaListParams {
             clazz = clazz.getSuperclass();
         }
         return fields;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -23,6 +24,7 @@ import java.util.*;
 
 @ApiModel(value = "AA List参数解析对象", description = "AA List参数解析结果表")
 @Data
+@Accessors(chain = true)  // 与父类返回类型保持一致
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @TableName("qtech_eq_dwd.im_aa_list_parsed_detail")

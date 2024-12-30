@@ -30,7 +30,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/aa/params/model/detail")
-public class AaListParamsStdModelController extends BaseController {
+public class AaListParamsStdTemplateController extends BaseController {
 
     @Autowired
     private IAaListParamsStdTemplateService aaListParamsStdModelDetailService;

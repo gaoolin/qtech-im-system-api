@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.qtech.share.aa.pojo.ImAaListStdTemplateInfo;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Date;
@@ -22,6 +23,7 @@ import java.util.Map;
  */
 @Data
 @ToString(callSuper = true)
+@NoArgsConstructor  // jackson反序列化为对象时，忽略json中不存在的字段
 @TableName(value = "IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AaListParamsStdTemplateInfo extends ImAaListStdTemplateInfo {

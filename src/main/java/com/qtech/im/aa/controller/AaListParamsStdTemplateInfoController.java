@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/aa/params/model/info")
-public class AaListParamsStdModelInfoController extends BaseController {
+public class AaListParamsStdTemplateInfoController extends BaseController {
     @Autowired
     private IAaListParamsStdTemplateInfoService aaListParamsStdModelInfoService;
 
