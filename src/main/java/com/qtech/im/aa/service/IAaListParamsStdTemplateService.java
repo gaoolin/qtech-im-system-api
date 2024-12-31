@@ -1,7 +1,7 @@
 package com.qtech.im.aa.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.qtech.im.aa.domain.AaListParamsStdTemplate;
+import com.qtech.im.aa.domain.template.AaListParamsStdTemplate;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 

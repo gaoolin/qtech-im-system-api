@@ -1,8 +1,8 @@
 package com.qtech.im.aa.utils;
 
 import com.qtech.common.utils.StringUtils;
-import com.qtech.im.aa.domain.AaListParamsStdTemplate;
-import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
+import com.qtech.im.aa.domain.template.AaListParamsStdTemplate;
+import com.qtech.im.aa.domain.template.AaListParamsStdTemplateInfo;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;

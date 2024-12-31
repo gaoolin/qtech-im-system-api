@@ -1,7 +1,7 @@
 package com.qtech.im.aa.vo;
 
 import com.qtech.framework.aspectj.lang.annotation.Excel;
-import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
+import com.qtech.im.aa.domain.template.AaListParamsStdTemplateInfo;
 import lombok.Data;
 
 import java.text.SimpleDateFormat;

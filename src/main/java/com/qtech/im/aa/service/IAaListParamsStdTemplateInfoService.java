@@ -1,7 +1,7 @@
 package com.qtech.im.aa.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
+import com.qtech.im.aa.domain.template.AaListParamsStdTemplateInfo;
 import com.qtech.im.aa.vo.AaListParamsStdModelInfoVo;
 import com.qtech.im.common.util.QtechImVoUtil;
 

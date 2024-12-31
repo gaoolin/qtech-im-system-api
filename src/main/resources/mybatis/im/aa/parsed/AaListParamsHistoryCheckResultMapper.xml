@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.aa.mapper.parsed.AaListParamsHistoryCheckResultMapper">
+
+    <resultMap id="aaListParamsHistoryCheckResultListResult" type="AaListParamsCheckResult">
+        <result property="factoryName" column="company_name" />
+        <result property="groupName" column="group_name" />
+        <result property="eqId" column="eq_id" />
+        <result property="mcId" column="mc_id" />
+        <result property="prodType" column="prod_type" />
+        <result property="simId" column="sim_id" />
+        <result property="dt" column="chk_dt" />
+        <result property="statusCode" column="code" />
+        <result property="description" column="description" />
+    </resultMap>
+
+    <sql id="aaListParamsHistoryCheckResultSql">
+        select
+            company_name,
+            group_name,
+            eq_id,
+            mc_id,
+            prod_type,
+            sim_id,
+            chk_dt,
+            code,
+            description
+        from
+            (
+                select
+                    company_name,
+                    group_name,
+                    device_m_id as eq_id,
+                    machine_no as mc_id,
+                    prod_type,
+                    pbox_id as sim_id,
+                    chk_dt,
+                    code,
+                    description
+                from
+                    (
+                        select
+                            a.device_id,
+                            b.company_name,
+                            b.dep_name,
+                            b.group_name,
+                            a.device_m_id,
+                            devicetype,
+                            a.devicename,
+                            devicenetip,
+                            c.pbox_id,
+                            machine_no
+                        from
+                            qtech_eq_ods.ems_t_device a
+                        inner join qtech_eq_ods.ems_t_pbox_info c on
+                            c.dev_id = a.device_id
+                        left join qtech_eq_ods.ems_v_code_name b on
+                            a.hierarchy_code = b.hierarchy_show_code
+                        left join qtech_eq_ods.ems_t_collector_program d on
+                            c.collector_program_id = d.id
+                    ) ta,
+        ( select * from qtech_eq_dwd.im_aa_list_chk_result_detail
+        <where>
+            <choose>
+                <when test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                    and chk_dt between #{params.beginTime} and #{params.endTime}
+                </when>
+                <otherwise>
+                    and chk_dt > hours_sub(now(), 24)
+                </otherwise>
+            </choose>
+            <if test="simId != null">and sim_id like concat('%', #{simId}, '%') </if>
+            <if test="statusCode != null">and code = #{statusCode}</if>
+        </where>
+        ) tb
+        <where>
+            ta.pbox_id = tb.sim_id
+            <if test="factoryName != null">and company_name = #{factoryName} </if>
+            <if test="groupName != null">and group_name = #{groupName}</if>
+            <if test="eqId != null">and lower(device_m_id) like concat('%', lower(#{eqId}), '%') </if>
+            <if test="mcId != null">and lower(machine_no) like concat('%', lower(#{mcId}), '%') </if>
+            <if test="prodType != null">and lower(prod_type) like concat('%', lower(#{prodType}), '%') </if>
+        </where>
+        ) tc
+    </sql>
+
+    <select id="selectAaListParamsCheckResultList" resultMap="aaListParamsHistoryCheckResultListResult">
+        <include refid="aaListParamsHistoryCheckResultSql"/>
+        order by chk_dt desc
+    </select>
+</mapper>

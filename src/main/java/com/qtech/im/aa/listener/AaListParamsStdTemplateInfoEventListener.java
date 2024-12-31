@@ -3,12 +3,13 @@ package com.qtech.im.aa.listener;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.framework.redis.RedisCache;
-import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
+import com.qtech.im.aa.domain.template.AaListParamsStdTemplateInfo;
 import com.qtech.im.aa.event.AaListParamsStdTemplateInfoEvent;
 import com.qtech.im.aa.service.IAaListParamsStdTemplateInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import static com.qtech.share.aa.constant.ComparisonConstants.REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX;
@@ -24,7 +25,7 @@ import static com.qtech.share.aa.constant.ComparisonConstants.REDIS_COMPARISON_M
 @Component
 public class AaListParamsStdTemplateInfoEventListener {
     @Autowired
-    private RedisCache redisCache;
+    private RedisTemplate<String, Object> imRedisTemplate;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -43,18 +44,18 @@ public class AaListParamsStdTemplateInfoEventListener {
                 case "INSERT":
                     log.info("Inserting Redis cache for prodType: {}", prodType);
                     log.info("Source: {}", event.getSource());
-                    redisCache.setCacheObject(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, objectMapper.writeValueAsString(one));
+                    imRedisTemplate.opsForValue().set(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, one);
                     break;
                 case "UPDATE":
                     log.info("Updating Redis cache for prodType: {}", prodType);
                     log.info("Source: {}", event.getSource());
-                    redisCache.deleteObject(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
-                    redisCache.setCacheObject(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, objectMapper.writeValueAsString(one));
+                    imRedisTemplate.delete(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
+                    imRedisTemplate.opsForValue().set(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, one);
                     break;
                 case "DELETE":
                     log.info("Deleting Redis cache for prodType: {}", prodType);
                     log.info("Source: {}", event.getSource());
-                    redisCache.deleteObject(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
+                    imRedisTemplate.delete(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
                     break;
                 default:
                     break;

@@ -1,7 +1,7 @@
 package com.qtech.im.aa.vo;
 
 import com.qtech.framework.aspectj.lang.annotation.Excel;
-import com.qtech.im.aa.domain.AaListParamsIndex;
+import com.qtech.im.aa.domain.statistics.AaListParamsIndex;
 import lombok.Data;
 
 /**

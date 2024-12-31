@@ -1,6 +1,6 @@
 package com.qtech.im.aa.service;
 
-import com.qtech.im.aa.domain.AaStdProgramManagement;
+import com.qtech.im.aa.domain.files.AaStdProgramManagement;
 
 import java.util.List;
 

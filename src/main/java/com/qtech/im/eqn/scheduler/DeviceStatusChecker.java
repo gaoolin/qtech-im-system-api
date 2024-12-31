@@ -23,7 +23,7 @@ public class DeviceStatusChecker {
 
     private static final String DEVICE_STATUS_PREFIX = "device_status:";
     @Autowired
-    @Qualifier("iotRedisTemplate")
+    @Qualifier("imRedisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
     @Scheduled(fixedRate = 60000) // 每分钟检查一次

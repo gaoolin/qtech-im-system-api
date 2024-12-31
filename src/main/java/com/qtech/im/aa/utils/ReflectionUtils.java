@@ -1,7 +1,7 @@
 package com.qtech.im.aa.utils;
 
 
-import com.qtech.im.aa.domain.AaListParamsStdTemplate;
+import com.qtech.im.aa.domain.template.AaListParamsStdTemplate;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

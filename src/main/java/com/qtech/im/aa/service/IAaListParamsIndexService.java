@@ -1,11 +1,8 @@
 package com.qtech.im.aa.service;
 
-import com.qtech.im.aa.domain.AaListParamsIndex;
+import com.qtech.im.aa.domain.statistics.AaListParamsIndex;
 import com.qtech.im.aa.vo.AaListParamsIndexVo;
 import com.qtech.im.common.util.QtechImVoUtil;
-import com.qtech.im.wb.vo.WbOlpChkVo;
-
-import java.util.List;
 
 /**
  * author :  gaozhilin

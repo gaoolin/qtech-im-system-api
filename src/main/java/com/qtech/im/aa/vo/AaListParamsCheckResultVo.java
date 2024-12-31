@@ -1,7 +1,7 @@
 package com.qtech.im.aa.vo;
 
 import com.qtech.framework.aspectj.lang.annotation.Excel;
-import com.qtech.im.aa.domain.AaListParamsCheckResult;
+import com.qtech.im.aa.domain.parsed.AaListParamsCheckResult;
 import lombok.Data;
 
 import java.time.format.DateTimeFormatter;

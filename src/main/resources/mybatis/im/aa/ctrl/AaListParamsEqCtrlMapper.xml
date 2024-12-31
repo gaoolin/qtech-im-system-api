@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.aa.mapper.ctrl.AaListParamsEqCtrlMapper">
+    <resultMap id="aaListParamsEqResult" type="com.qtech.im.aa.vo.AaListParamsEqCtrlVo">
+        <result property="factoryName" column="company_name"/>
+        <result property="groupName" column="group_name"/>
+        <result property="eqId" column="eq_id"/>
+        <result property="mcId" column="mc_id"/>
+        <result property="prodType" column="prod_type"/>
+        <result property="simId" column="sim_id"/>
+        <result property="statusCode" column="status"/>
+        <result property="source" column="source"/>
+        <result property="opCnt" column="op_cnt"/>
+        <result property="remark" column="remark"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateDt" column="update_time"/>
+    </resultMap>
+
+    <sql id="Base_Sql">
+        SELECT b.company_name,
+               b.group_name,
+               a.device_m_id AS eq_id,
+               e.prod_type,
+               e.sim_id,
+               machine_no    AS mc_id,
+               e.status,
+               e.op_cnt,
+               e.update_time,
+               e.update_by,
+               e.remark
+        FROM (SELECT *
+              FROM qtech_eq_ods.ems_t_device
+              WHERE devicetype = 'AA') a
+                 LEFT JOIN qtech_eq_ods.ems_t_pbox_info c ON
+            c.dev_id = CAST(a.device_id AS DOUBLE)
+                 LEFT JOIN qtech_eq_ods.ems_v_code_name b ON
+            a.hierarchy_code = b.hierarchy_show_code
+                 LEFT JOIN qtech_eq_ods.ems_t_collector_program d ON
+            c.collector_program_id = d.id
+                 RIGHT JOIN (SELECT COALESCE(a.sim_id, b.sim_id) as sim_id,
+                                    prod_type,
+                                    chk_dt,
+                                    source,
+                                    status,
+                                    op_cnt,
+                                    update_by,
+                                    update_time,
+                                    remark
+                             FROM (select sim_id,
+                                          prod_type,
+                                          chk_dt
+                                   from (SELECT sim_id,
+                                                prod_type,
+                                                chk_dt,
+                                                ROW_NUMBER() OVER (
+                                        PARTITION BY sim_id
+                                    ORDER BY
+                                        chk_dt DESC
+                                    ) AS num
+                                         FROM qtech_eq_ads.im_eq_reverse_control_info
+                                         WHERE source = 'aa-list'
+                                           and chk_dt > DATE_SUB(NOW(), INTERVAL 7 DAY)) t
+                                   WHERE num = 1) a
+                                      FULL OUTER JOIN qtech_eq_ads.im_eq_reverse_ignore_info b on
+                                 a.sim_id = b.sim_id) e ON
+            c.pbox_id = e.sim_id
+    </sql>
+
+    <update id="updateSimIdAndSource">
+        UPDATE qtech_eq_ads.im_eq_reverse_ignore_info
+        <set>
+            <choose>
+                <when test="source != null or statusCode != null or updateBy != null or updateDt != null">
+                    <if test="source != null and source != ''">source = #{source},</if>
+                    <if test="statusCode != null">status = #{statusCode},</if>
+                    <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+                    <if test="updateDt != null">update_time = #{updateDt},</if>
+                    op_cnt = op_cnt + 1,
+                </when>
+                <otherwise>
+                    op_cnt = op_cnt + 1
+                </otherwise>
+            </choose>
+        </set>
+        <where>
+            source = 'aa-list'
+            <if test="simId != null">AND sim_id = #{simId}</if>
+        </where>
+    </update>
+
+
+    <select id="listFullInfo" parameterType="aaListParamsEqCtrl" resultMap="aaListParamsEqResult">
+        select * from (<include refid="Base_Sql"/>) tmp
+        <where>
+            <if test="factoryName != null and factoryName != ''">and company_name = #{factoryName}</if>
+            <if test="groupName != null and groupName != ''">and group_name = #{groupName}</if>
+            <if test="eqId != null and eqId != ''">and lower(eq_id) like concat('%', lower(#{eqId}),'%')</if>
+            <if test="mcId != null and mcId != ''">and lower(mc_id) like concat('%', lower(#{mcId}),'%')</if>
+            <if test="simId != null and simId != ''">and sim_id like concat('%',#{simId},'%')</if>
+            <if test="prodType != null and prodType != ''">and lower(prod_type) like concat('%', lower(#{prodType}),'%')</if>
+            <if test="statusCode != null">and status = #{statusCode}</if>
+        </where>
+        order by update_time desc, status desc, company_name, group_name, mc_id
+    </select>
+</mapper>

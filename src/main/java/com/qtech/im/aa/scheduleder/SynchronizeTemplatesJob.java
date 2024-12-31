@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
-import com.qtech.im.aa.domain.AaListParamsStdTemplate;
-import com.qtech.im.aa.domain.AaListParamsStdTemplateInfo;
+import com.qtech.im.aa.domain.template.AaListParamsStdTemplate;
+import com.qtech.im.aa.domain.template.AaListParamsStdTemplateInfo;
 import com.qtech.im.aa.service.IAaListParamsStdTemplateInfoService;
 import com.qtech.im.aa.service.IAaListParamsStdTemplateService;
 import com.qtech.im.aa.utils.ModelDetailConvertToModelInfo;
@@ -47,7 +47,7 @@ public class SynchronizeTemplatesJob {
     @Autowired
     private RedisTemplate<String, ImAaListParams> redisTemplate;
     @Autowired
-    private RedisTemplate<String, String> stringRedisTemplate;
+    private RedisTemplate<String, Object> imRedisTemplate;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -88,7 +88,7 @@ public class SynchronizeTemplatesJob {
                 AaListParamsStdTemplateInfo modelInfo = ModelDetailConvertToModelInfo.doConvert(aaListParamsStdTemplate);
                 if (modelInfo != null) {
                     try {
-                        stringRedisTemplate.opsForValue().set(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, objectMapper.writeValueAsString(modelInfo));
+                        imRedisTemplate.opsForValue().set(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, objectMapper.writeValueAsString(modelInfo));
                     } catch (JsonProcessingException e) {
                         log.error(">>>>> JSON解析失败, msg: {}", aaListParamsStdTemplate, e);
                         throw new RuntimeException(e);
@@ -113,6 +113,41 @@ public class SynchronizeTemplatesJob {
         });
 
         // in both
+
+        // others
+        fixData(modelInfoKeys);
+    }
+
+    public void fixData(Set<String> keysToFix) {
+        for (String key : keysToFix) {
+            String fullKey = REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + key;
+            Object value = imRedisTemplate.opsForValue().get(fullKey);
+            String redisData = null;
+            // 检查 Redis 中的数据是否为 null 或者是字符串
+            if (value == null) {
+                log.error(">>>>> Redis 数据为空, key: {}", fullKey);
+            } else if (value instanceof String) {
+                redisData = (String) value;
+            } else {
+                // 如果不是字符串，尝试将其转换为 JSON 字符串
+                try {
+                    redisData = objectMapper.writeValueAsString(value);
+                } catch (JsonProcessingException e) {
+                    log.error(">>>>> JSON解析失败, msg: {}", value, e);
+                }
+            }
+            if (redisData != null && redisData.startsWith("{")) {
+                // 如果value是转义的JSON字符串，重新存储
+                try {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    AaListParamsStdTemplateInfo object = objectMapper.readValue(redisData, AaListParamsStdTemplateInfo.class);
+                    imRedisTemplate.opsForValue().set(fullKey, object);
+                } catch (Exception e) {
+                    log.error(">>>>> JSON解析失败, msg: {}", value, e);
+                    log.error(">>>>> Error fixing data for key: " + fullKey);
+                }
+            }
+        }
     }
 
     private Map<String, AaListParamsStdTemplate> getDatabaseDetails() {
@@ -169,11 +204,23 @@ public class SynchronizeTemplatesJob {
         dbSummaryMap.forEach((prodType, dbModel) -> {
             String redisKey = REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType;
             try {
-                String redisData = stringRedisTemplate.opsForValue().get(redisKey);
+                Object redisDataObj = imRedisTemplate.opsForValue().get(redisKey);
+
+                String redisData;
+                // 检查 Redis 中的数据是否为 null 或者是字符串
+                if (redisDataObj == null) {
+                    redisData = null;
+                } else if (redisDataObj instanceof String) {
+                    redisData = (String) redisDataObj;
+                } else {
+                    // 如果不是字符串，尝试将其转换为 JSON 字符串
+                    redisData = objectMapper.writeValueAsString(redisDataObj);
+                }
+
                 AaListParamsStdTemplateInfo redisModel = redisData != null ? objectMapper.readValue(redisData, AaListParamsStdTemplateInfo.class) : null;
 
                 if (!Objects.equals(dbModel, redisModel)) {
-                    stringRedisTemplate.opsForValue().set(redisKey, objectMapper.writeValueAsString(dbModel));
+                    imRedisTemplate.opsForValue().set(redisKey, objectMapper.writeValueAsString(dbModel));
                     log.info(">>>>> Updated Redis Template Info: {}", prodType);
                 }
             } catch (Exception e) {

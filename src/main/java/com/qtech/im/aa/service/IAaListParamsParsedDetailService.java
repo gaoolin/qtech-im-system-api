@@ -1,7 +1,7 @@
 package com.qtech.im.aa.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.qtech.im.aa.domain.AaListParamsParsed;
+import com.qtech.im.aa.domain.parsed.AaListParamsParsed;
 
 import java.util.List;
 

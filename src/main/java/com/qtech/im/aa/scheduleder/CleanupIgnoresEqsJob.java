@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.qtech.framework.aspectj.lang.annotation.DataSource;
 import com.qtech.framework.aspectj.lang.enums.DataSourceType;
 import com.qtech.framework.redis.RedisCache;
-import com.qtech.im.aa.domain.AaListParamsEqCtrl;
+import com.qtech.im.aa.domain.ctrl.AaListParamsEqCtrl;
 import com.qtech.im.aa.service.IAaListParamsEqCtrlService;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;

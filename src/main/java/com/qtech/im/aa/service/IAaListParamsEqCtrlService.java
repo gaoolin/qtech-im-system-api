@@ -2,7 +2,7 @@ package com.qtech.im.aa.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.qtech.im.aa.domain.AaListParamsEqCtrl;
+import com.qtech.im.aa.domain.ctrl.AaListParamsEqCtrl;
 import com.qtech.im.aa.vo.AaListParamsEqCtrlVo;
 
 import java.util.List;

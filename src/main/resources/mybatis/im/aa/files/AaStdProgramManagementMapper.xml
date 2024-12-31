@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.im.aa.mapper.files.AaStdProgramManagementMapper">
+    <resultMap id="BaseResultMap" type="AaStdProgramManagement">
+        <id column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="PROD_TYPE" property="prodType" jdbcType="VARCHAR"/>
+        <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR"/>
+        <result column="VERSION" property="version" jdbcType="VARCHAR"/>
+        <result column="SIZE" property="size" jdbcType="NUMERIC"/>
+        <result column="STATUS" property="status" jdbcType="INTEGER"/>
+        <result column="DOWNLOAD_CNT" property="downloadCnt" jdbcType="BIGINT"/>
+        <result column="FACTORY_NAME" property="factoryName" jdbcType="VARCHAR"/>
+        <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="DATE"/>
+        <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ID, PROD_TYPE, FILE_NAME, VERSION, "SIZE", STATUS, DOWNLOAD_CNT, FACTORY_NAME, CREATE_BY, CREATE_TIME,
+        UPDATE_BY, UPDATE_TIME, REMARK
+    </sql>
+
+    <insert id="insertAaStdProgramManagement">
+        INSERT INTO IMBIZ.IM_AA_PROGRAM_FILES_MANAGEMENT_INFO
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prodType != null and prodType != ''">PROD_TYPE,</if>
+            <if test="fileName != null and fileName != ''">FILE_NAME,</if>
+            <if test="version != null and version != ''">VERSION,</if>
+            <if test="size != null">"SIZE",</if>
+            <if test="status != null">STATUS,</if>
+            <if test="downloadCnt != null">DOWNLOAD_CNT,</if>
+            <if test="factoryName != null and factoryName != ''">FACTORY_NAME,</if>
+            <if test="createBy != null and createBy != ''">CREATE_BY,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="updateBy != null and updateBy != ''">UPDATE_BY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+            <if test="remark != null and remark != ''">REMARK,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="prodType != null and prodType != ''">#{prodType},</if>
+            <if test="fileName != null and fileName != ''">#{fileName},</if>
+            <if test="version != null and version != ''">#{version},</if>
+            <if test="size != null">#{size},</if>
+            <if test="status != null">#{status},</if>
+            <if test="downloadCnt != null">#{downloadCnt},</if>
+            <if test="factoryName != null and factoryName != ''">#{factoryName},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAaStdProgramManagement">
+        UPDATE IMBIZ.IM_AA_PROGRAM_FILES_MANAGEMENT_INFO
+        <set>
+            <if test="prodType != null and prodType != ''">PROD_TYPE = #{prodType},</if>
+            <if test="version != null and version != ''">VERSION = #{version},</if>
+            <if test="size != null">"SIZE" = #{size},</if>
+           <if test="status != null">STATUS = #{status},</if>
+            <if test="downloadCnt != null">DOWNLOAD_CNT = #{downloadCnt},</if>
+            <if test="factoryName != null and factoryName != ''">FACTORY_NAME = #{factoryName},</if>
+            <if test="createBy != null and createBy != ''">CREATE_BY = #{createBy},</if>
+            <if test="createTime != null">CREATE_TIME = #{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">UPDATE_BY = #{updateBy},</if>
+            <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+            <if test="remark != null and remark != ''">REMARK = #{remark},</if>
+        </set>
+        WHERE file_name = #{fileName}
+    </update>
+
+    <delete id="deleteAaStdProgramManagementById">
+        DELETE FROM IMBIZ.IM_AA_PROGRAM_FILES_MANAGEMENT_INFO
+        WHERE ID = #{id}
+    </delete>
+
+    <select id="selectAaStdProgramManagementList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM IMBIZ.IM_AA_PROGRAM_FILES_MANAGEMENT_INFO
+        <where>
+            <choose>
+                <when test="flag == 0">
+                    <if test="id != null">ID = #{id}</if>
+                    <if test="prodType != null">AND PROD_TYPE = #{prodType}</if>
+                    <if test="fileName != null">AND FILE_NAME = #{fileName}</if>
+                    <if test="version != null">AND VERSION = #{version}</if>
+                    <if test="status != null">AND STATUS = #{status}</if>
+                    <if test="factoryName != null">AND FACTORY_NAME = #{factoryName}</if>
+                </when>
+                <otherwise>
+                    <if test="id != null">ID = #{id}</if>
+                    <if test="prodType != null">AND PROD_TYPE like ('%' || #{prodType} || '%')</if>
+                    <if test="fileName != null">AND FILE_NAME like ('%' || #{fileName} || '%')</if>
+                    <if test="version != null">AND VERSION = #{version}</if>
+                    <if test="status != null">AND STATUS = #{status}</if>
+                    <if test="factoryName != null">AND FACTORY_NAME like ('%' || #{factoryName} || '%')</if>
+                    <if test="params.beginDate != null and params.beginDate != '' and params.endDate != null and params.endDate != ''">
+                        AND CREATE_TIME BETWEEN TO_DATE(#{params.beginDate}, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#{params.endDate}, 'YYYY-MM-DD HH24:MI:SS')
+                    </if>
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY CREATE_TIME DESC
+    </select>
+
+    <select id="selectAaStdProgramManagementIsExist" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM IMBIZ.IM_AA_PROGRAM_FILES_MANAGEMENT_INFO
+        <where>
+            <if test="id != null"> ID = #{id} </if>
+            <if test="prodType != null"> AND PROD_TYPE = #{prodType}= </if>
+            <if test="fileName != null"> AND FILE_NAME = #{fileName}= </if>
+            <if test="version != null"> AND VERSION = #{version} </if>
+            <if test="status != null"> AND STATUS = #{status} </if>
+            <if test="factoryName != null"> AND FACTORY_NAME = #{factoryName} </if>
+            <if test="createTime != null"> AND CREATE_TIME #{createTime} </if>
+            <if test="updateTime != null"> AND UPDATE_TIME #{updateTime} </if>
+        </where>
+        ORDER BY CREATE_TIME DESC
+    </select>
+
+    <select id="selectAaStdProgramManagementById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM IMBIZ.IM_AA_PROGRAM_FILES_MANAGEMENT_INFO
+        WHERE ID = #{id}
+    </select>
+</mapper>
