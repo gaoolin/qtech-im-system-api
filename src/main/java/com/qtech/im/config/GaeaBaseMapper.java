@@ -58,6 +58,10 @@ public interface GaeaBaseMapper<T> extends BaseMapper<T> {
             if (field.getName().equals("id")) {
                 return;
             }
+            // 更新时不用更新机型
+            if (field.getName().equals("prodType")) {
+                return;
+            }
             Object value = metaObject.getValue(field.getName());
             updateWrapper.set(cameToUnderline(field.getName()), value);
         });

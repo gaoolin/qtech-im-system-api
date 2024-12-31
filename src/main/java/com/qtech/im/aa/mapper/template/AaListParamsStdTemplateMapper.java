@@ -16,5 +16,4 @@ import org.apache.ibatis.annotations.Mapper;
 public interface AaListParamsStdTemplateMapper extends GaeaBaseMapper<AaListParamsStdTemplate> {
     @Delete("DELETE FROM IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL WHERE PROD_TYPE = #{prodType}")
     int deleteByProdType(String prodType);
-
 }

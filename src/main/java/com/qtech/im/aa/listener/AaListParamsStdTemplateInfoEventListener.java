@@ -1,8 +1,6 @@
 package com.qtech.im.aa.listener;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.qtech.framework.redis.RedisCache;
 import com.qtech.im.aa.domain.template.AaListParamsStdTemplateInfo;
 import com.qtech.im.aa.event.AaListParamsStdTemplateInfoEvent;
 import com.qtech.im.aa.service.IAaListParamsStdTemplateInfoService;
@@ -26,8 +24,6 @@ import static com.qtech.share.aa.constant.ComparisonConstants.REDIS_COMPARISON_M
 public class AaListParamsStdTemplateInfoEventListener {
     @Autowired
     private RedisTemplate<String, Object> imRedisTemplate;
-    @Autowired
-    private ObjectMapper objectMapper;
     @Autowired
     private IAaListParamsStdTemplateInfoService aaListParamsStdTemplateInfoService;
 

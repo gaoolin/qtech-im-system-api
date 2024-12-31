@@ -64,7 +64,7 @@ public class AaListParamsStdTemplateServiceImpl extends ServiceImpl<AaListParams
     @Override
     public boolean saveOrUpdateAaListParamsStdModel(AaListParamsStdTemplate aaListParamsStdTemplate) {
         // 检查数据是否存在
-        LambdaUpdateWrapper<AaListParamsStdTemplate> updateWrapper = baseMapper.updateWithNullField(aaListParamsStdTemplate);
+
         LambdaQueryWrapper<AaListParamsStdTemplate> wrapper = buildQueryWrapper(aaListParamsStdTemplate);
         AaListParamsStdTemplate one = getOne(wrapper);
 
@@ -72,6 +72,13 @@ public class AaListParamsStdTemplateServiceImpl extends ServiceImpl<AaListParams
             // 数据已存在，执行更新操作
             aaListParamsStdTemplate.setUpdateBy(getLoginUser().getUser().getNickName());
             aaListParamsStdTemplate.setUpdateTime(DateUtils.getNowDate());
+            LambdaUpdateWrapper<AaListParamsStdTemplate> updateWrapper = baseMapper.updateWithNullField(aaListParamsStdTemplate);
+            if (one.getId() != null) {
+                updateWrapper.eq(AaListParamsStdTemplate::getId, one.getId());
+            }
+            if (one.getProdType() != null) {
+                updateWrapper.eq(AaListParamsStdTemplate::getProdType, one.getProdType());
+            }
             boolean a = update(updateWrapper);
             boolean b = aaListParamsStdModelInfoService.saveOrUpdateStdModelInfo(aaListParamsStdTemplate);
             if (!a || !b) {
@@ -107,7 +114,6 @@ public class AaListParamsStdTemplateServiceImpl extends ServiceImpl<AaListParams
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class}, propagation = Propagation.REQUIRES_NEW)
     @Override
     public boolean updateAaListParamsStdModel(AaListParamsStdTemplate aaListParamsStdTemplate) {
-        LambdaUpdateWrapper<AaListParamsStdTemplate> updateWrapper = baseMapper.updateWithNullField(aaListParamsStdTemplate);
         LambdaQueryWrapper<AaListParamsStdTemplate> wrapper = buildQueryWrapper(aaListParamsStdTemplate);
         AaListParamsStdTemplate one = getOne(wrapper);
 
@@ -118,6 +124,13 @@ public class AaListParamsStdTemplateServiceImpl extends ServiceImpl<AaListParams
             } else {
                 aaListParamsStdTemplate.setUpdateBy(getLoginUser().getUser().getNickName());
                 aaListParamsStdTemplate.setUpdateTime(DateUtils.getNowDate());
+                LambdaUpdateWrapper<AaListParamsStdTemplate> updateWrapper = baseMapper.updateWithNullField(aaListParamsStdTemplate);
+                if (one.getId() != null) {
+                    updateWrapper.eq(AaListParamsStdTemplate::getId, one.getId());
+                }
+                if (one.getProdType() != null) {
+                    updateWrapper.eq(AaListParamsStdTemplate::getProdType, one.getProdType());
+                }
                 b = update(updateWrapper);
                 boolean c = aaListParamsStdModelInfoService.saveOrUpdateStdModelInfo(aaListParamsStdTemplate);
                 if (!b || !c) {
