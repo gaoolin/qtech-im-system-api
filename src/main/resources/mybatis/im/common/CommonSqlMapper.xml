@@ -15,23 +15,23 @@
     <!-- 2. 车间排序规则 -->
     <sql id="groupOrder">
         (CASE
-            WHEN group_name LIKE "%COB一%" THEN 1
-            WHEN group_name LIKE "%COB二%" THEN 2
-            WHEN group_name LIKE "%COB三%" THEN 3
-            WHEN group_name LIKE "%COB四%" THEN 4
-            WHEN group_name LIKE "%COB五%" THEN 5
-            WHEN group_name LIKE "%COB六%" THEN 6
-            WHEN group_name LIKE "%COB七%" THEN 7
-            WHEN group_name LIKE "%COB八%" THEN 8
-            WHEN group_name LIKE "%COB九%" THEN 9
-            WHEN group_name LIKE "%COB十%" THEN 10
-            WHEN group_name LIKE "%试产一%" THEN 11
-            WHEN group_name LIKE "%试产二%" THEN 12
-            WHEN group_name LIKE "%试产三%" THEN 13
-            WHEN group_name LIKE "%一%" THEN 14
-            WHEN group_name LIKE "%二%" THEN 15
-            WHEN group_name LIKE "%三%" THEN 16
-            WHEN group_name LIKE "%修复%" THEN 17
+            WHEN group_name REGEXP '.*COB一.*' THEN 1
+            WHEN group_name REGEXP '.*COB二.*' THEN 2
+            WHEN group_name REGEXP '.*COB三.*' THEN 3
+            WHEN group_name REGEXP '.*COB四.*' THEN 4
+            WHEN group_name REGEXP '.*COB五.*' THEN 5
+            WHEN group_name REGEXP '.*COB六.*' THEN 6
+            WHEN group_name REGEXP '.*COB七.*' THEN 7
+            WHEN group_name REGEXP '.*COB八.*' THEN 8
+            WHEN group_name REGEXP '.*COB九.*' THEN 9
+            WHEN group_name REGEXP '.*COB十.*' THEN 10
+            WHEN group_name REGEXP '.*试产一.*' THEN 11
+            WHEN group_name REGEXP '.*试产二.*' THEN 12
+            WHEN group_name REGEXP '.*试产三.*' THEN 13
+            WHEN group_name REGEXP '.*一.*' THEN 14
+            WHEN group_name REGEXP '.*二.*' THEN 15
+            WHEN group_name REGEXP '.*三.*' THEN 16
+            WHEN group_name REGEXP '.*修复.*' THEN 17
             ELSE 20
         END)
     </sql>
@@ -44,6 +44,14 @@
             WHEN "HM" THEN 3
             WHEN "AA" THEN 4
             ELSE 5
+        END)
+    </sql>
+
+    <!-- 4. 机台号排序规则 -->
+    <sql id="machineNoOrder">
+        (CASE
+            WHEN mc_id REGEXP '^[0-9]+$' THEN machine_no
+            ELSE 999999999
         END)
     </sql>
 

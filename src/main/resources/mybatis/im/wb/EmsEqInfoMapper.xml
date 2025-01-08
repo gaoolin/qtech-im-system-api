@@ -54,6 +54,9 @@
             <if test="prodType != null and prodType != ''"> and prod_type like concat('%', #{prodType}, '%') </if>
             <if test="mcId != null and mcId != ''"> and mc_id like concat('%', #{mcId}, '%') </if>
         </where>
-        order by company_name asc, group_name asc, mc_id asc
+        order by
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder"></include>
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder"></include>
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.machineNoOrder"></include>
     </select>
 </mapper>

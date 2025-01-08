@@ -41,15 +41,7 @@
             wire_width,
             tf.qty as bom_wire_usage,
             percents,
-            if(
-                percents is null,
-                2,
-                if(
-                    percents > 0,
-                    1,
-                    0
-                )
-            ) as statusCode,
+            if(percents is null, 2, if(percents > 0, 1, 0)) as statusCode,
             yield
         from
             (
@@ -177,7 +169,7 @@
                                             sum(wire_usage) wire_dosage,
                                             sum(yield) yield
                                         from
-                                            qtech_biz_2.dwd_wb_wire_usage_detail
+                                                qtech_biz_2.dwd_wb_wire_usage_detail
                 <where>
                     <if test = "params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
                         and create_date between #{params.beginTime} and #{params.endTime}

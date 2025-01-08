@@ -103,36 +103,8 @@
         ) tc
         order by
             dt desc,
-            case
-                company_name
-                when '古城厂区' then 1
-                when '台虹厂区' then 2
-                when '汉浦厂区' then 3
-                when '总计' then 5
-                else 4
-            end asc,
-            case
-                when group_name like '%COB一%' then 1
-                when group_name like '%COB二%' then 2
-                when group_name like '%COB三%' then 3
-                when group_name like '%COB四%' then 4
-                when group_name like '%COB五%' then 5
-                when group_name like '%COB六%' then 6
-                when group_name like '%COB七%' then 7
-                when group_name like '%COB八%' then 8
-                when group_name like '%COB九%' then 9
-                when group_name like '%COB十%' then 10
-                when group_name like '%光学一%' then 11
-                when group_name like '%光学二%' then 12
-                when group_name like '%光学三%' then 13
-                when group_name like '%光学四%' then 14
-                when group_name like '%试产一%' then 15
-                when group_name like '%试产二%' then 16
-                when group_name like '%试产三%' then 17
-                when group_name like '小计' then 19
-                else 18
-            end asc,
-            eq_id asc
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder"></include>,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder"></include>
     </select>
 
 

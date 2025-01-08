@@ -9,7 +9,7 @@
         <result property="groupName" column="group_name" />
         <result property="deviceType" column="device_type" />
         <result property="eqId" column="device_m_id" />
-        <result property="mcId" column="machine_no" />
+        <result property="mcId" column="mc_id" />
         <result property="simId" column="pbox_id" />
         <result property="netStatus" column="net_status" />
         <result property="remoteCode" column="Remote_control" />
@@ -116,7 +116,7 @@
             group_name,
             devicetype as device_type,
             device_m_id,
-            machine_no,
+            machine_no as mc_id,
             pbox_id,
             recieve_date,
             Remote_control,
@@ -133,7 +133,7 @@
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" />,
-            machine_no
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.machineNoOrder" />
     </select>
 
     <select id="selectEqNetworkingAgg" parameterType="map" resultMap="qtechImEqsNetCntResult">
@@ -402,7 +402,7 @@
             group_name,
             devicetype as device_type,
             device_m_id,
-            machine_no,
+            machine_no as mc_id,
             pbox_id,
             receive_date,
             Remote_control,
@@ -440,6 +440,6 @@
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" />, -- 添加一个明确的排序字段
-            machine_no
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.machineNoOrder" />
     </select>
 </mapper>

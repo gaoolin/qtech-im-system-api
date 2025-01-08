@@ -203,7 +203,6 @@
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" />
-
     </select>
 
     <select id="selectQcpParamsList" resultMap="selectQcpParamsListResult">
