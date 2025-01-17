@@ -34,7 +34,7 @@
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5)
+            WHERE receive_date > minutes_sub(now(), 7)
         ),
 
         _eq_ttl_tb AS (
@@ -143,7 +143,7 @@
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5)
+            WHERE receive_date > minutes_sub(now(), 7)
         ),
 
         _eq_ttl_tb AS (
@@ -329,7 +329,8 @@
                 Remote_control
             FROM
                 QT_MODEL_DDC.ALL_DEVICE_REMOTE_CONTROL_DETAIL
-            WHERE receive_date > minutes_sub(now(), 5)
+            /*采集系统时间和本地系统之间有2分钟的时间差异*/
+            WHERE receive_date > minutes_sub(now(), 7)
         ),
 
         _eq_ttl_tb AS (
