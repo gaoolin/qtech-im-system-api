@@ -55,8 +55,8 @@
             <if test="mcId != null and mcId != ''"> and mc_id like concat('%', #{mcId}, '%') </if>
         </where>
         order by
-            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder"></include>
-            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder"></include>
-            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.machineNoOrder"></include>
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder"></include>,
+            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder"></include>,
+            mc_id
     </select>
 </mapper>

@@ -133,7 +133,7 @@
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" />,
-            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.machineNoOrder" />
+            mc_id
     </select>
 
     <select id="selectEqNetworkingAgg" parameterType="map" resultMap="qtechImEqsNetCntResult">
@@ -441,6 +441,6 @@
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.companyOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.groupOrder" />,
             <include refid="com.qtech.im.common.mapper.CommonSqlMapper.deviceTypeOrder" />, -- 添加一个明确的排序字段
-            <include refid="com.qtech.im.common.mapper.CommonSqlMapper.machineNoOrder" />
+            mc_id
     </select>
 </mapper>
